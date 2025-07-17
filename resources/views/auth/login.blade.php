@@ -96,7 +96,7 @@
                           <div class="col-12 text-center mt-4">
                             <p class="text-secondary mb-0">
                               Don't have an account? 
-                              <a href="#" class="text-primary text-decoration-none">Register</a>
+                              <a href="{{ route('register') }}" class="text-primary text-decoration-none">Register</a>
                             </p>
                           </div>
                         </div>

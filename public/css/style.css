@@ -46,8 +46,18 @@ table th, table td { border: 1px solid #e5e5e5; }
 
 /* user-login */
 .userlogin { background: #f1f1f1; }
-.userlogin .custom-card { height: calc(100vh - 6rem); overflow-y: scroll; }
-.userlogin .left-img {height: calc(100vh - 6rem) !important;}
+.userlogin .custom-card { height: 100vh; overflow-y: scroll; }
 span.rating img { width: 90px !important; margin-inline: 10px; }
 .card img.reviewuser { width: 140px; height: 140px; object-fit: cover; min-width: 140px; }
+.btn-primary { background: linear-gradient(90deg, #b58320 0%, #ffff78 52%, #f3ab0b 100%) !important; border-color: #f3ab0b !important; border-radius: 60px !important; color: #000 !important; }
+.userlogin .custom-card label.form-label { opacity: 0.7; }
+.bg-dark { background:#101010 !important; }
 
+.Benefit_cards ul li { display: flex ; align-items: baseline; }
+.Benefit_cards ul li:before { content: ''; width: 6px; height: 6px; min-width: 6px; min-height: 6px; background: #fff; border-radius: 50%; display: inline-block; margin-right: 8px; }
+.Benefit_cards label{ border-radius: 12px; overflow: hidden; padding: 1px; }
+.Benefit_cards input:checked[type=radio]+label { background: linear-gradient(180deg, rgba(181, 131, 32, 0.4) 0%, rgba(232, 232, 101, 0.4) 40%, rgba(243, 171, 11, 0.4) 100%);}
+.Benefit_cards .rounded { border-radius: 12px !important; }
+.Benefit_cards input { position: absolute; left: 0; visibility: hidden; }
+.Benefit_cards {position: relative; cursor: pointer;}
+.rounded_30{border-radius: 30px !important;}

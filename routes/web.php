@@ -16,6 +16,10 @@ Route::get('/login', function () {
     return redirect()->route('login');
 });
 
+Route::get('/register', function () {
+    return view('auth.register');
+})->name('register');
+
 // Login/Logout routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [AuthController::class, 'login']);
