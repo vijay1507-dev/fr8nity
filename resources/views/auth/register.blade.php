@@ -26,8 +26,9 @@
                         <form role="form">
                             <div class="row setup-content mx-0" id="step-1">
                                 <div class="col-md-12 px-0">
-                                    <div class="inputs-container row mt-3">                                       
-                                        <div class="row p-3 bg-dark rounded mx-0">
+                                    <h3 class="text-white text-center mb-3">Become a Member</h3>
+                                    <div class="inputs-container row bg-dark rounded mt-3">                                       
+                                        <div class="row p-3 pb-0 mx-0">
                                             <div class="mb-3 col-12 col-md-6">
                                                 <label class="form-label text-white">Name*</label>
                                                 <input type="text" class="form-control"
@@ -48,23 +49,53 @@
                                                 <input type="text" class="form-control"
                                                     placeholder="WhatsApp/Phone*">
                                             </div>
-                                        </div>
+                                            <div class="mb-3 col-12 col-md-6">
+                                                <label class="form-label text-white">Password*</label>
+                                                <input type="password" class="form-control"
+                                                    placeholder="Password*">
+                                            </div>
+                                            <div class="mb-3 col-12 col-md-6">
+                                                <label class="form-label text-white">Confirm Password*</label>
+                                                <input type="password" class="form-control"
+                                                    placeholder="Confirm Password*">
+                                            </div>
 
-                                    </div>
-                                    <div class="inputs-container row mt-3">                                       
-                                        <div class="row p-3 bg-dark rounded mx-0">
+                                        </div>
+                                        <div class="row p-3 pt-0 mx-0">
                                             <div class="mb-3 col-12 col-md-6">
                                                 <label class="form-label text-white">Company Name*</label>
                                                 <input type="text" class="form-control"
                                                     placeholder="Company Name*">
                                             </div>
                                              <div class="mb-3 col-12 col-md-6">
-                                                <label class="form-label text-white">Country & City*</label>
-                                                <input type="text" class="form-control"
-                                                    placeholder="Country & City*">
+                                                <label class="form-label text-white">Country*</label>
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>select Country</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
+                                            </div>
+                                              <div class="mb-3 col-12 col-md-6">
+                                                <label class="form-label text-white">City*</label>
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>select City</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
+                                            </div>
+                                              <div class="mb-3 col-12 col-md-6">
+                                                <label class="form-label text-white">Region*</label>
+                                                <select class="form-select" aria-label="Default select example">
+                                                    <option selected>select region</option>
+                                                    <option value="1">One</option>
+                                                    <option value="2">Two</option>
+                                                    <option value="3">Three</option>
+                                                </select>
                                             </div>
                                              <div class="mb-3 col-12">
-                                                <label class="form-label text-white">Freight Specializations</label>
+                                                <label class="form-label text-white">Specializations</label>
                                               <div class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap">
                                                       <div class="form-check mb-0">
                                                     <input class="form-check-input" type="checkbox" value="" id="checkDefault">
@@ -99,9 +130,9 @@
                                               </div>
                                             </div>
                                              <div class="mb-3 col-12 col-md-4">
-                                                <label class="form-label text-white">Year Incorporated*</label>
-                                                <input type="text" class="form-control"
-                                                    placeholder="Year Incorporated*">
+                                                <label class="form-label text-white">Incorporation Date*</label>
+                                                <input type="date" class="form-control"
+                                                    placeholder="Incorporation Date*">
                                             </div>
                                              <div class="mb-3 col-12 col-md-4">
                                                 <label class="form-label text-white">Tax ID*</label>
@@ -113,6 +144,8 @@
                                                 <input type="text" class="form-control"
                                                     placeholder="Website / LinkedIn*">
                                             </div>
+                                            
+
                                               <div class="mb-3 col-12">
                                                     <label class="form-label text-white">Freight Specializations</label>
                                                     <div class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap">
@@ -170,7 +203,7 @@
                                                             </label>
                                                             </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" name="currently" type="radio" value="no" id="currentlyNo">
+                                                            <input class="form-check-input" name="currently" type="radio" value="no" id="currentlyNo" selected>
                                                             <label class="form-check-label text-white" for="currentlyNo">
                                                                 No
                                                             </label>
@@ -185,6 +218,7 @@
                                         </div>
 
                                     </div>
+                                   
                                     <div class="d-flex justify-content-center mt-4">
                                         <button class="btn btn-primary nextBtn px-5" type="button">Next Step</button>
                                     </div>
