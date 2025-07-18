@@ -36,3 +36,8 @@ Route::post('/reset-password', [NewPasswordController::class, 'store'])->middlew
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
 });
+
+Route::get('/get-countries', [App\Http\Controllers\Auth\AuthController::class, 'getCountries'])->name('get.countries');
+Route::get('/get-states/{country_id}', [App\Http\Controllers\Auth\AuthController::class, 'getStates'])->name('get.states');
+Route::get('/get-cities/{state_id}', [App\Http\Controllers\Auth\AuthController::class, 'getCities'])->name('get.cities');
+Route::get('/get-regions', [App\Http\Controllers\Auth\AuthController::class, 'getRegions'])->name('get.regions');
