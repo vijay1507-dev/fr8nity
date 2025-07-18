@@ -1,13 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Login</title>
-  <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
-<body style="overflow:hidden;">
+@extends('layouts.auth')
+
+@section('title', 'login')
+
+@section('content')
+<body style="overflow: hidden;">
   <section class="p-0">
       <div class="w-100 userlogin">
         <div class="row bg-black justify-content-center mx-0">
@@ -113,4 +109,4 @@
       </div>
     </section>
 </body>
-</html>
+@endsection

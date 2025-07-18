@@ -8,9 +8,9 @@
                         When One Thrives,<br /> We All Rise
                     </h1>
                     <p class="fs-2">Logistics Network Reimagined</p>
-                    <button type="button" class="btn btnbg fe-semibold mt-3">
+                    <a href="{{ route('register') }}" class="btn btnbg fe-semibold mt-3">
                         <span>Become a Member</span>
-                    </button>
+                    </a>
                 </div>
             </div>
 
