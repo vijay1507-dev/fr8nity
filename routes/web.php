@@ -9,7 +9,10 @@ use App\Http\Controllers\Auth\NewPasswordController;
 // Redirect root to login page
 Route::get('/', function () {
     return view('index');
-    // return redirect()->route('login');
+});
+
+Route::get('/admin-login', function () {
+    return redirect()->route('admin-login');
 });
 
 Route::get('/login', function () {
@@ -22,6 +25,7 @@ Route::get('/register', function () {
 
 // Login/Logout routes
 Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::get('/admin-login', [AuthController::class, 'showAdminLoginForm'])->name('admin-login');
 Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

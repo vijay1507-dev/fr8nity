@@ -40,7 +40,7 @@
                       @endif
                       <form method="POST" action="{{ url('/login') }}">
                         @csrf
-                        <input type="hidden" name="is_member" value="true">
+                        <input type="hidden" name="is_admin" value="true">
                         <div class="row gy-3 overflow-hidden">
                           <div class="col-12">
                             <div class="">
@@ -73,30 +73,6 @@
                             <div class="d-grid">
                               <button class="btn btn-primary btn-lg" type="submit">LOGIN</button>
                             </div>
-                          </div>
-
-                          <div class="col-12 text-center mt-3">
-                            <div class="d-flex align-items-center justify-content-center gap-3">
-                              <hr class="w-25 text-secondary">
-                              <span class="text-secondary">or</span>
-                              <hr class="w-25 text-secondary">
-                            </div>
-                          </div>
-
-                          <div class="col-12 mt-3">
-                            <div class="d-grid">
-                              <a href="#" class="btn btn-outline-light btn-lg rounded_30">
-                                <img src="{{asset('images/google.png')}}" alt="Google" width="20" class="me-2">
-                                Sign in with Google
-                              </a>
-                            </div>
-                          </div>
-
-                          <div class="col-12 text-center mt-4">
-                            <p class="text-secondary mb-0">
-                              Don't have an account? 
-                              <a href="{{ route('register') }}" class="text-white text-decoration-none">Register</a>
-                            </p>
                           </div>
                         </div>
                       </form>
