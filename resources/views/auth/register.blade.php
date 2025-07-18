@@ -14,24 +14,27 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <style>
-        .progress-bar-container {
-            padding: 0 15px;
-        }
+        .progress-bar-container span.progress-step { width: 50px; height: 50px; border-radius: 50%; display: flex ; align-items: center; justify-content: center; position: relative; top: -33px; background: linear-gradient(90deg, #B58320 0%, #FFFF78 52%, #F3AB0B 100%); color: #000 !important; font-weight: 600; }
+        .progress-bar-container { padding: 0 170px; margin-top: 30px; margin-bottom: -20px !important; }
+      
         .progress {
             background-color: #2d2d2d;
         }
+
+        .form-control { font-size: 14px !important; }
         .progress-bar {
-            background-color: #0d6efd;
-            transition: width 0.3s ease;
+          transition: width 0.3s ease; background: linear-gradient(180deg, rgb(181 131 32 / 70%) 0%, rgba(232, 232, 101, 0.4) 39.9%, rgba(243, 171, 11, 0.4) 100%);
         }
         .progress-step {
-            font-size: 14px;
-            opacity: 0.7;
+            font-size: 18px;
+            opacity: 1;
             transition: opacity 0.3s ease;
         }
         .progress-step.active {
             opacity: 1;
         }
+
+        
         .country-option {
             display: flex;
             align-items: center;
@@ -56,7 +59,7 @@
             background-color: #fff;
             border: 1px solid #ced4da;
             border-radius: 0.375rem;
-            height: 38px;
+            height: 35px;
             padding: 0.375rem 0.75rem;
         }
         .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -102,7 +105,7 @@
             background-color: #fff !important;
             border: 1px solid #ced4da !important;
             border-radius: 0.375rem;
-            height: 38px;
+            height: 35px;
             padding: 0.375rem 0.75rem;
         }
         .select2-container--default .select2-selection--single .select2-selection__arrow {
@@ -233,7 +236,7 @@
 
         /* Select2 container and input styles */
         .select2-container--default .select2-selection--single {
-            height: 38px;
+            height: 35px;
             padding: 0.375rem 35px 0.375rem 0.75rem !important;
         }
         
@@ -312,7 +315,7 @@
                 <div class="col-12 col-md-4 left-img vh-100 d-flex justify-content-center p-4"
                     style="background: url(./images/admin-login.webp) no-repeat center / cover">
                     <div class="left-side">
-                        <img class="mb-3" src="{{asset('images/logo.svg')}}" alt="Logo" width="auto" height="78">
+                        <a href="/"><img class="mb-3" src="{{asset('images/logo.svg')}}" alt="Logo" width="auto" height="78"></a>
                     </div>
                 </div>
                 <div class="col-md-8 col-12 bg-black">
@@ -326,8 +329,8 @@
                                             <div class="progress-bar" role="progressbar" style="width: 50%;" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                         <div class="d-flex justify-content-between mt-1">
-                                            <span class="progress-step active text-white">Step 1</span>
-                                            <span class="progress-step text-white">Step 2</span>
+                                            <span class="progress-step active">1</span>
+                                            <span class="progress-step ">2</span>
                                         </div>
                                     </div>
                                     <div class="inputs-container row bg-dark rounded mt-3">                                       
@@ -374,12 +377,6 @@
                                                 <label class="form-label text-white">Country*</label>
                                                 <select class="form-select" id="country" name="country" required>
                                                     <option value="">Select Country</option>
-                                                </select>
-                                            </div>
-                                            <div class="mb-3 col-12 col-md-6">
-                                                <label class="form-label text-white">State*</label>
-                                                <select class="form-select" id="state" name="state" required disabled>
-                                                    <option value="">Select State</option>
                                                 </select>
                                             </div>
                                             <div class="mb-3 col-12 col-md-6">
@@ -529,19 +526,19 @@
                                 </div>
                             </div>
                            
-                            <div class="row setup-content" id="step-3" style="display: none;">
+                            <div class="row setup-content" id="step-2" style="display: none;">
                                 <div class="col-md-12 px-0">
                                     <h3 class="text-white text-center mb-3">Choose Your Plan</h3>
-                                    <div class="progress-bar-container mb-4">
-                                        <div class="progress" style="height: 3px;">
+                                    <div class="progress-bar-container progress_barmain mb-4">
+                                        <div class="progress" style="height: 3px;    margin-inline: 50px;">
                                             <div class="progress-bar" role="progressbar" style="width: 100%;" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                         </div>
                                         <div class="d-flex justify-content-between mt-1">
-                                            <span class="progress-step text-white">Step 1</span>
-                                            <span class="progress-step active text-white">Step 2</span>
+                                            <span class="progress-step">1</span>
+                                            <span class="progress-step active">2</span>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row mt-3">
                                         <div class="col-12 col-md-4">
                                              <div class="Benefit_cards h-100">
                                                 <input class="form-check-input" name="membership_tier" type="radio" value="" id="Benefit01">
@@ -721,18 +718,6 @@
             }).on('select2:clearing', function(e) {
                 e.preventDefault();
                 $(this).val(null).trigger('change');
-                $('#state, #city').val(null).trigger('change').prop('disabled', true);
-            });
-
-            // Initialize Select2 for state dropdown
-            $('#state').select2({
-                theme: 'default',
-                placeholder: 'Select State',
-                allowClear: true,
-                width: '100%'
-            }).on('select2:clearing', function(e) {
-                e.preventDefault();
-                $(this).val(null).trigger('change');
                 $('#city').val(null).trigger('change').prop('disabled', true);
             });
 
@@ -785,35 +770,14 @@
             // Handle country change
             $('#country').on('change', function() {
                 let countryId = $(this).val();
-                let stateSelect = $('#state');
-                let citySelect = $('#city');
-                
-                // Reset and disable state and city
-                stateSelect.empty().append('<option value="">Select State</option>').prop('disabled', !countryId);
-                citySelect.empty().append('<option value="">Select City</option>').prop('disabled', true);
-                
-                if(countryId) {
-                    // Load states based on selected country
-                    $.get('{{ url("get-states") }}/' + countryId, function(data) {
-                        data.forEach(function(state) {
-                            let option = new Option(state.name, state.id);
-                            stateSelect.append(option);
-                        });
-                    });
-                }
-            });
-
-            // Handle state change
-            $('#state').on('change', function() {
-                let stateId = $(this).val();
                 let citySelect = $('#city');
                 
                 // Reset and disable city
-                citySelect.empty().append('<option value="">Select City</option>').prop('disabled', !stateId);
+                citySelect.empty().append('<option value="">Select City</option>').prop('disabled', !countryId);
                 
-                if(stateId) {
-                    // Load cities based on selected state
-                    $.get('{{ url("get-cities") }}/' + stateId, function(data) {
+                if(countryId) {
+                    // Load cities based on selected country
+                    $.get('{{ url("get-cities") }}/' + countryId, function(data) {
                         data.forEach(function(city) {
                             let option = new Option(city.name, city.id);
                             citySelect.append(option);

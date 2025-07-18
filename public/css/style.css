@@ -50,7 +50,6 @@ table th, table td { border: 1px solid #e5e5e5; }
 span.rating img { width: 90px !important; margin-inline: 10px; }
 .card img.reviewuser { width: 140px; height: 140px; object-fit: cover; min-width: 140px; }
 .btn-primary { background: linear-gradient(90deg, #b58320 0%, #ffff78 52%, #f3ab0b 100%) !important; border-color: #f3ab0b !important; border-radius: 60px !important; color: #000 !important; }
-.userlogin .custom-card label.form-label { opacity: 0.7; }
 .bg-dark { background:#101010 !important; }
 
 .Benefit_cards ul li { display: flex ; align-items: baseline; }
@@ -61,3 +60,5 @@ span.rating img { width: 90px !important; margin-inline: 10px; }
 .Benefit_cards input { position: absolute; left: 0; visibility: hidden; }
 .Benefit_cards {position: relative; cursor: pointer;}
 .rounded_30{border-radius: 30px !important;}
+
+.form-control { font-size: 14px !important; }
