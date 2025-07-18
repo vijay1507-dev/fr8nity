@@ -14,6 +14,9 @@
     <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
     <link rel="stylesheet" href="{{asset('css/style.css')}}">
     <style>
+		.Benefit_cards input:checked[type=radio] + label {
+    background: linear-gradient(180deg, rgb(245, 183, 27) 0%, rgb(197, 134, 15) 40%, rgb(213, 150, 21) 100%) !important;
+}
         .progress-bar-container span.progress-step { width: 50px; height: 50px; border-radius: 50%; display: flex ; align-items: center; justify-content: center; position: relative; top: -33px; background: linear-gradient(90deg, #B58320 0%, #FFFF78 52%, #F3AB0B 100%); color: #000 !important; font-weight: 600; }
         .progress-bar-container { padding: 0 170px; margin-top: 30px; margin-bottom: -20px !important; }
       
@@ -36,6 +39,7 @@
 
         
         .country-option {
+            padding: 0px !important;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -541,7 +545,7 @@
                                     <div class="row mt-3">
                                         <div class="col-12 col-md-4">
                                              <div class="Benefit_cards h-100">
-                                                <input class="form-check-input" name="membership_tier" type="radio" value="" id="Benefit01">
+                                                <input class="form-check-input" name="membership_tier" type="radio" value="" id="Benefit01" checked>
                                                 <label class="h-100" for="Benefit01">
                                                      <div class="bg-dark p-3 rounded h-100">
                                                         <h4 class="text-white pb-2">Explorer's Benefit</h4>
@@ -599,7 +603,7 @@
                                             <label class="form-check-label text-white" for="consentCheckbox">
                                                 I consent to FR8NITY collecting, storing, and using my personal data to process my membership application, provide access to platform features, and contact me with relevant updates. I understand that my information will be handled in accordance with applicable data protection laws, including the PDPA and GDPR.<br>
                                                 <span class="d-block mt-2">
-                                                    🔗 You can read our full Privacy Policy to understand how we protect your data and your rights.
+                                                    Note : You can read our full Privacy Policy to understand how we protect your data and your rights.
                                                 </span>
                                             </label>
                                         </div>
