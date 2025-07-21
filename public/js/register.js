@@ -108,8 +108,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 { name: 'designation', label: 'Designation' },
                 { name: 'email', label: 'Email' },
                 { name: 'whatsapp_phone', label: 'WhatsApp/Phone' },
-                { name: 'password', label: 'Password' },
-                { name: 'password_confirmation', label: 'Confirm Password' },
                 { name: 'company_name', label: 'Company Name' },
                 { name: 'company_telephone', label: 'Company Telephone' },
                 { name: 'company_address', label: 'Company Address' },
@@ -167,14 +165,6 @@ document.addEventListener("DOMContentLoaded", function() {
                         isValid = false;
                     }
                 }
-            }
-
-            // Password match validation
-            const password = $('input[name="password"]');
-            const confirmPassword = $('input[name="password_confirmation"]');
-            if (password.val() && confirmPassword.val() && password.val() !== confirmPassword.val()) {
-                showError(confirmPassword, 'Passwords do not match');
-                isValid = false;
             }
 
             // Email format validation
@@ -304,164 +294,6 @@ document.addEventListener("DOMContentLoaded", function() {
             const $this = $(this);
             if ($this.val()) {
                 removeError($this);
-            }
-        });
-
-        // Password Strength Validation
-        const passwordInput = $('input[name="password"]');
-        const strengthMeter = $('.password-strength-meter');
-        const strengthBar = strengthMeter.find('.progress-bar');
-        const strengthText = strengthMeter.find('.strength-text');
-        const passwordTips = $('.password-tips');
-        const infoIcon = $('.password-info-icon');
-        const closeTips = $('.close-tips');
-        let tipsManuallyHidden = false;
-
-        // Hide tips when clicking outside password field area
-        $(document).on('click', function(e) {
-            if (!$(e.target).closest('.password-tips, input[name="password"], .password-info-icon').length) {
-                passwordTips.fadeOut();
-            }
-        });
-
-        // Hide tips when focusing on other form fields
-        $('input:not([name="password"]), select').on('focus', function() {
-            passwordTips.fadeOut();
-        });
-
-        function calculatePasswordStrength(password) {
-            let strength = 0;
-            const checks = {
-                length: password.length >= 8,
-                uppercase: /[A-Z]/.test(password),
-                lowercase: /[a-z]/.test(password),
-                numbers: /[0-9]/.test(password),
-                special: /[^A-Za-z0-9]/.test(password)
-            };
-
-            // Update visual indicators for each check
-            Object.entries(checks).forEach(([check, passed], index) => {
-                const tipItem = passwordTips.find('small').eq(index);
-                tipItem.find('.fa-check').toggleClass('d-none', !passed);
-                tipItem.find('.fa-times').toggleClass('d-none', passed);
-            });
-
-            // Calculate strength percentage
-            strength = Object.values(checks).filter(Boolean).length * 20;
-
-            // Check if all criteria are met
-            const allCriteriaMet = Object.values(checks).every(Boolean);
-
-            return {
-                score: strength,
-                checks: checks,
-                allCriteriaMet: allCriteriaMet
-            };
-        }
-
-        function updateStrengthMeter(strength) {
-            // Show strength meter when user starts typing
-            strengthMeter.show();
-
-            // Update progress bar
-            strengthBar.css('width', strength.score + '%');
-            strengthBar.removeClass('bg-danger bg-warning bg-info bg-success');
-
-            // Update color and text based on strength
-            if (strength.score <= 20) {
-                strengthBar.addClass('bg-danger');
-                strengthText.text('Very Weak');
-                strengthText.removeClass('text-warning text-info text-success').addClass('text-danger');
-            } else if (strength.score <= 40) {
-                strengthBar.addClass('bg-warning');
-                strengthText.text('Weak');
-                strengthText.removeClass('text-danger text-info text-success').addClass('text-warning');
-            } else if (strength.score <= 60) {
-                strengthBar.addClass('bg-info');
-                strengthText.text('Medium');
-                strengthText.removeClass('text-danger text-warning text-success').addClass('text-info');
-            } else if (strength.score <= 80) {
-                strengthBar.addClass('bg-success');
-                strengthText.text('Strong');
-                strengthText.removeClass('text-danger text-warning text-info').addClass('text-success');
-            } else {
-                strengthBar.addClass('bg-success');
-                strengthText.text('Very Strong');
-                strengthText.removeClass('text-danger text-warning text-info').addClass('text-success');
-            }
-
-            // Hide strength meter and info icon if all criteria are met
-            if (strength.allCriteriaMet) {
-                setTimeout(() => {
-                    strengthMeter.fadeOut();
-                    passwordTips.fadeOut();
-                    infoIcon.fadeOut();
-                    tipsManuallyHidden = false; // Reset the flag when all criteria are met
-                }, 1000);
-            } else {
-                infoIcon.fadeIn();
-            }
-        }
-
-        // Handle info icon click
-        infoIcon.on('click', function(e) {
-            e.stopPropagation(); // Prevent click from bubbling to document
-            passwordTips.fadeToggle();
-            tipsManuallyHidden = false; // Reset the flag when manually showing tips
-        });
-
-        // Handle close button click
-        closeTips.on('click', function(e) {
-            e.stopPropagation(); // Prevent click from bubbling
-            passwordTips.fadeOut();
-            tipsManuallyHidden = true; // Set the flag when manually hiding tips
-        });
-
-        // Prevent tips from hiding when clicking inside tips container
-        passwordTips.on('click', function(e) {
-            e.stopPropagation();
-        });
-
-        // Listen for password input changes
-        passwordInput.on('input', function() {
-            const password = $(this).val();
-            if (password) {
-                const strength = calculatePasswordStrength(password);
-                updateStrengthMeter(strength);
-                
-                // Show tips if they weren't manually hidden
-                if (!tipsManuallyHidden && !strength.allCriteriaMet) {
-                    passwordTips.fadeIn();
-                }
-            } else {
-                strengthMeter.hide();
-                passwordTips.hide();
-                infoIcon.fadeIn();
-                passwordTips.find('.fa-check').addClass('d-none');
-                passwordTips.find('.fa-times').removeClass('d-none');
-                tipsManuallyHidden = false; // Reset the flag when field is empty
-            }
-        });
-
-        // Show tips when password field is focused
-        passwordInput.on('focus', function(e) {
-            e.stopPropagation(); // Prevent focus event from bubbling
-            const password = $(this).val();
-            const strength = password ? calculatePasswordStrength(password) : null;
-            
-            // Show tips only if they weren't manually hidden and password isn't valid
-            if (!tipsManuallyHidden && (!strength?.allCriteriaMet)) {
-                passwordTips.fadeIn();
-            }
-        });
-
-        // Handle blur event
-        passwordInput.on('blur', function() {
-            const password = $(this).val();
-            if (!password) {
-                strengthMeter.hide();
-                infoIcon.fadeIn();
-                tipsManuallyHidden = false; // Reset the flag when field is empty
             }
         });
     });

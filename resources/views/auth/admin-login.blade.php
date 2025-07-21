@@ -44,7 +44,7 @@
                         <div class="row gy-3 overflow-hidden">
                           <div class="col-12">
                             <div class="">
-                                <label for="email" class="form-label text-white">Email</label>
+                                <label for="email" class="form-label text-white">Email Address</label>
                               <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
                                 placeholder="email">
                             
@@ -62,7 +62,7 @@
                               <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="remember" value="1"
                                   id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label class="form-check-label text-secondary" for="remember">
+                                <label class="form-check-label text-white" for="remember">
                                   Keep me logged in
                                 </label>
                               </div>

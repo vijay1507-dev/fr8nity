@@ -74,43 +74,6 @@
                                                     @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label text-white">Password*</label>
-                                                    <div class="position-relative">
-                                                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password*">
-                                                        <i class="fas fa-info-circle password-info-icon" style="position: absolute; right: 10px; top: 17px !important; transform: translateY(-50%); cursor: pointer; color: #6c757d;"></i>
-                                                    </div>
-                                                    <div class="password-strength-meter mt-2" style="display: none;">
-                                                        <div class="progress" style="height: 5px;">
-                                                            <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
-                                                        </div>
-                                                        <small class="strength-text text-white mt-1 d-block"></small>
-                                                    </div>
-                                                    <div class="password-tips text-white-50 mt-2" style="font-size: 0.875rem; display: none;">
-                                                        <small class="d-block mb-1"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> Minimum 8 characters</small>
-                                                        <small class="d-block mb-1"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> At least one uppercase letter</small>
-                                                        <small class="d-block mb-1"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> At least one lowercase letter</small>
-                                                        <small class="d-block mb-1"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> At least one number</small>
-                                                        <small class="d-block"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> At least one special character</small>
-                                                    </div>
-                                                    @error('password')
-                                                        <div class="invalid-feedback d-block text-danger">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label text-white">Confirm Password*</label>
-                                                    <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror"
-                                                        placeholder="Confirm Password*">
-                                                    @error('password_confirmation')
-                                                        <div class="invalid-feedback d-block text-danger">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </div>
-                                            </div>
-                                            <div class="row p-3 pt-0 mx-0">
-                                                <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Company Name*</label>
                                                     <input type="text" name="company_name" class="form-control @error('company_name') is-invalid @enderror" placeholder="Company Name*" value="{{ old('company_name') }}">
                                                     @error('company_name')

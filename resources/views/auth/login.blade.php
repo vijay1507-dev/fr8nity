@@ -49,7 +49,7 @@
                         <div class="row gy-3 overflow-hidden">
                           <div class="col-12">
                             <div class="">
-                                <label for="email" class="form-label text-white">Email</label>
+                                <label for="email" class="form-label text-white">Email Address</label>
                               <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
                                 placeholder="email">
                             
@@ -67,11 +67,11 @@
                               <div class="form-check">
                                 <input class="form-check-input" type="checkbox" name="remember" value="1"
                                   id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label class="form-check-label text-secondary" for="remember">
+                                <label class="form-check-label text-white" for="remember">
                                   Keep me logged in
                                 </label>
                               </div>
-                              <a href="{{ route('password.request') }}" class="text-white text-decoration-none">Forgot Password?</a>
+                              <a href="{{ route('password.request') }}" class="text-white text-decoration-underline">Forgot Password?</a>
                             </div>
                           </div>
                           <div class="col-12">
@@ -88,19 +88,19 @@
                             </div>
                           </div>
 
-                          <div class="col-12 mt-3">
+                          {{-- <div class="col-12 mt-3">
                             <div class="d-grid">
                               <a href="#" class="btn btn-outline-light btn-lg rounded_30">
                                 <img src="{{asset('images/google.png')}}" alt="Google" width="20" class="me-2">
                                 Sign in with Google
                               </a>
                             </div>
-                          </div>
+                          </div> --}}
 
                           <div class="col-12 text-center mt-4">
-                            <p class="text-secondary mb-0">
+                            <p class="text-white mb-0">
                               Don't have an account? 
-                              <a href="{{ route('register') }}" class="text-white text-decoration-none">Register</a>
+                              <a href="{{ route('register') }}" class="text-white text-decoration-underline">Register</a>
                             </p>
                           </div>
                         </div>

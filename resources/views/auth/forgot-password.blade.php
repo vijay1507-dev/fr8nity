@@ -63,7 +63,7 @@
                             </div>
                           </div>
                           <div class="col-12 text-center">
-                            <a href="{{ route('login') }}" class="text-primary text-decoration-none">
+                            <a href="{{ route('login') }}" class="text-white text-decoration-underline">
                               <i class="bi bi-arrow-left"></i> Back to Login
                             </a>
                           </div>
