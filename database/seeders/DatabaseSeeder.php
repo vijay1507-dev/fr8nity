@@ -2,22 +2,45 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Traits\TracksSeeder;
+use Illuminate\Support\Facades\File;
 
 class DatabaseSeeder extends Seeder
 {
-    /**
-     * Seed the application's database.
-     */
-    public function run(): void
-    {
-        // User::factory(10)->create();
+    use TracksSeeder;
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+    /**
+     * Get list of custom seeders
+     */
+    protected function getCustomSeeders(): array
+    {
+        $customPath = database_path('seeders/custom');
+        if (!File::exists($customPath)) {
+            return [];
+        }
+
+        $files = File::files($customPath);
+        $seeders = [];
+
+        foreach ($files as $file) {
+            $className = 'Database\\Seeders\\Custom\\' . $file->getBasename('.php');
+            if (class_exists($className)) {
+                $seeders[] = $className;
+            }
+        }
+
+        return $seeders;
+    }
+
+    public function run()
+    {
+        // Get all custom seeders
+        $seeders = $this->getCustomSeeders();
+
+        // Run each seeder
+        foreach ($seeders as $seeder) {
+            $this->callAndTrack($seeder);
+        }
     }
 }

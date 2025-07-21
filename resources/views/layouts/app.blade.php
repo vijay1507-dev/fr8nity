@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>@yield('title', 'Dashboard')</title>
   <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/admin.css') }}">
+  <link rel="stylesheet" href="{{ asset('css/admin.css?v=' . rand(1, 1000000)) }}">
 </head>
 <body>
   <div class="wrapper">

@@ -8,7 +8,6 @@
           <div class="mb-3">
             <h4>Welcome Back, </h4>
           </div>
-
           <div class="row">
             <div class="col-xl-3">
               <div class="card custom-card main-card-item primary bg-white">
@@ -116,8 +115,6 @@
               </div>
             </div>
           </div>
-          <!-- New admin page-->
-
         </div>
       </main>
 @endsection

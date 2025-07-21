@@ -1,318 +1,8 @@
 @extends('layouts.auth')
 
 @section('title', 'register')
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
-<script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
-<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-<style>
-    .Benefit_cards input:checked[type=radio]+label {
-        background: linear-gradient(180deg, rgb(245, 183, 27) 0%, rgb(197, 134, 15) 40%, rgb(213, 150, 21) 100%) !important;
-    }
-    .progress-bar-container span.progress-step {
-        width: 50px;
-        height: 50px;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: relative;
-        top: -33px;
-        background: linear-gradient(90deg, #B58320 0%, #FFFF78 52%, #F3AB0B 100%);
-        color: #000 !important;
-        font-weight: 600;
-    }
 
-    .progress-bar-container {
-        padding: 0 170px;
-        margin-top: 30px;
-        margin-bottom: -20px !important;
-    }
-    .progress {
-        background-color: #2d2d2d;
-    }
-    .form-control {
-        font-size: 14px !important;
-    }
-    .progress-bar {
-        transition: width 0.3s ease;
-        background: linear-gradient(180deg, rgb(181 131 32 / 70%) 0%, rgba(232, 232, 101, 0.4) 39.9%, rgba(243, 171, 11, 0.4) 100%);
-    }
-    .progress-step {
-        font-size: 18px;
-        opacity: 1;
-        transition: opacity 0.3s ease;
-    }
-    .progress-step.active {
-        opacity: 1;
-    }
-    .country-option {
-        padding: 0px !important;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-    .country-flag {
-        width: 21px;
-        height: 15px;
-        object-fit: cover;
-        border-radius: 2px;
-    }
-    .selected-country {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-    }
-
-    /* Common Select2 Styles for all dropdowns */
-    .select2-container {
-        width: 100% !important;
-    }
-    .select2-container--default .select2-selection--single {
-        background-color: #fff;
-        border: 1px solid #ced4da;
-        border-radius: 0.375rem;
-        height: 35px;
-        padding: 0.375rem 0.75rem;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 36px;
-        right: 8px;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 24px;
-        padding-left: 0;
-        color: #212529;
-    }
-    .select2-container--default .select2-results__option {
-        padding: 8px 12px;
-    }
-    .select2-container--default .select2-search--dropdown .select2-search__field {
-        padding: 8px;
-        border-radius: 4px;
-    }
-    .select2-dropdown {
-        border: 1px solid #ced4da;
-        border-radius: 0.375rem;
-    }
-    .select2-container--default .select2-results__option--highlighted[aria-selected] {
-        background-color: #0d6efd;
-    }
-
-    /* Dark theme for the form */
-    .dark-form .select2-container--default .select2-selection--single {
-        background-color: #2d2d2d;
-        border-color: #444;
-    }
-    .dark-form .select2-container--default .select2-selection--single .select2-selection__rendered {
-        color: #fff;
-    }
-    .dark-form .select2-container--default .select2-selection--single .select2-selection__placeholder {
-        color: #aaa;
-    }
-    /* Select2 Light Theme Styles */
-    .select2-container {
-        width: 100% !important;
-    }
-    .select2-container--default .select2-selection--single {
-        background-color: #fff !important;
-        border: 1px solid #ced4da !important;
-        border-radius: 0.375rem;
-        height: 35px;
-        padding: 0.375rem 0.75rem;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-        height: 36px;
-        right: 8px;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 24px;
-        padding-left: 0;
-        color: #212529 !important;
-    }
-    .select2-container--default .select2-selection--single .select2-selection__placeholder {
-        color: #6c757d !important;
-    }
-    .select2-dropdown {
-        background-color: #fff !important;
-        border: 1px solid #ced4da !important;
-        border-radius: 0.375rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    }
-    .select2-container--default .select2-search--dropdown .select2-search__field {
-        background-color: #fff !important;
-        border: 1px solid #ced4da !important;
-        color: #212529 !important;
-        padding: 8px;
-        border-radius: 4px;
-    }
-    .select2-container--default .select2-results__option {
-        padding: 8px 12px;
-        color: #212529 !important;
-    }
-    .select2-container--default .select2-results__option--highlighted[aria-selected] {
-        background-color: #0d6efd !important;
-        color: #fff !important;
-    }
-    .select2-container--default .select2-results__option[aria-selected=true] {
-        background-color: #e9ecef !important;
-        color: #212529 !important;
-    }
-    .select2-container--default.select2-container--open .select2-selection--single {
-        border-color: #86b7fe !important;
-        box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
-    }
-    /* Country option with flag styles */
-    .country-option {
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        padding: 4px 0;
-    }
-    .country-flag {
-        width: 24px;
-        height: 18px;
-        object-fit: cover;
-        border-radius: 2px;
-    }
-    /* Search box enhancements */
-    .select2-search--dropdown {
-        padding: 8px;
-    }
-    /* Dropdown positioning and animation */
-    .select2-container--open .select2-dropdown {
-        margin-top: 4px;
-        animation: selectDropdown 0.2s ease-out;
-    }
-    @keyframes selectDropdown {
-        from {
-            opacity: 0;
-            transform: translateY(-8px);
-        }
-
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    /* Flatpickr Custom Styles */
-    .flatpickr-calendar {
-        background: #fff;
-        border-radius: 0.375rem;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        border: 1px solid #ced4da;
-    }
-    .flatpickr-day.selected {
-        background: #0d6efd;
-        border-color: #0d6efd;
-    }
-    .flatpickr-day.today {
-        border-color: #0d6efd;
-    }
-    .flatpickr-day:hover {
-        background: #e9ecef;
-    }
-    .flatpickr-months .flatpickr-month {
-        background: #f8f9fa;
-    }
-    .flatpickr-current-month .flatpickr-monthDropdown-months {
-        background: #f8f9fa;
-    }
-    .flatpickr-current-month .flatpickr-monthDropdown-months:hover {
-        background: #e9ecef;
-    }
-    .flatpickr-input {
-        background-color: #fff !important;
-    }
-    /* Custom calendar icon */
-    .date-picker-wrapper {
-        position: relative;
-    }
-    .date-picker-wrapper .calendar-icon {
-        position: absolute;
-        right: 10px;
-        top: 50%;
-        transform: translateY(-50%);
-        pointer-events: none;
-        color: #6c757d;
-    }
-    /* Select2 clear button styles */
-    .select2-selection__clear {
-        color: #999 !important;
-        margin-right: 5px !important;
-        padding: 0 5px !important;
-        font-weight: bold !important;
-    }
-    .select2-selection__clear:hover {
-        color: #666 !important;
-    }
-    /* Select2 container and input styles */
-    .select2-container--default .select2-selection--single {
-        height: 35px;
-        padding: 0.375rem 35px 0.375rem 0.75rem !important;
-    }
-    /* Select2 clear button (cross icon) styles */
-    .select2-container--default .select2-selection--single .select2-selection__clear {
-        font-size: 18px;
-        line-height: 1;
-        color: #6c757d !important;
-        margin-right: 25px !important;
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        padding: 0 !important;
-        height: auto !important;
-        background: transparent !important;
-        border: none !important;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .select2-container--default .select2-selection--single .select2-selection__clear:hover {
-        color: #dc3545 !important;
-    }
-    /* Arrow positioning */
-    .select2-container--default .select2-selection--single .select2-selection__arrow {
-        right: 8px !important;
-        height: 100% !important;
-    }
-    /* Selected text positioning */
-    .select2-container--default .select2-selection--single .select2-selection__rendered {
-        line-height: 1.5 !important;
-        padding-right: 25px !important;
-    }
-    /* Country option specific styles */
-    .country-option {
-        padding: 4px 0;
-    }
-    /* Ensure proper spacing for flag images */
-    .country-flag {
-        margin-right: 8px;
-    }
-    /* Dropdown styling */
-    .select2-dropdown {
-        border-radius: 4px !important;
-        margin-top: 1px !important;
-    }
-    .select2-results__option {
-        padding: 8px 12px !important;
-    }
-    /* Search box styling */
-    .select2-search--dropdown {
-        padding: 8px !important;
-    }
-    .select2-search--dropdown .select2-search__field {
-        padding: 6px 8px !important;
-        border-radius: 4px !important;
-    }
-</style>
 @section('content')
-
-
     <body style="overflow: hidden;">
         <div class="wrapper userlogin p-0 bg-black">
             <main class="content">
@@ -326,7 +16,8 @@
                     </div>
                     <div class="col-md-8 col-12 bg-black">
                         <div class="custom-card m-0 p-md-4">
-                            <form role="form">
+                            <form role="form" method="POST" action="{{ route('register.post') }}">
+                                @csrf
                                 <div class="row setup-content mx-0" id="step-1">
                                     <div class="col-md-12 px-0">
                                         <h3 class="text-white text-center mb-3">Become a Member</h3>
@@ -337,242 +28,320 @@
                                             </div>
                                             <div class="d-flex justify-content-between mt-1">
                                                 <span class="progress-step active">1</span>
-                                                <span class="progress-step ">2</span>
+                                                <span class="progress-step">2</span>
                                             </div>
                                         </div>
+                                       
+                                        <!-- Step 1 Content -->
                                         <div class="inputs-container row bg-dark rounded mt-3">
+                                            <!-- ... All existing form fields from step 1 ... -->
                                             <div class="row p-3 pb-0 mx-0">
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Name*</label>
-                                                    <input type="text" class="form-control" placeholder="Name*">
+                                                    <input type="text" name="name" class="form-control @error('name') is-invalid @enderror" placeholder="Name*" value="{{ old('name') }}">
+                                                    @error('name')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Designation*</label>
-                                                    <input type="text" class="form-control" placeholder="Designation*">
+                                                    <input type="text" name="designation" class="form-control @error('designation') is-invalid @enderror" placeholder="Designation*" value="{{ old('designation') }}">
+                                                    @error('designation')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Email*</label>
-                                                    <input type="email" class="form-control" placeholder="Email*">
+                                                    <input type="email" name="email" class="form-control @error('email') is-invalid @enderror" placeholder="Email*" value="{{ old('email') }}">
+                                                    @error('email')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">WhatsApp/Phone*</label>
-                                                    <input type="text" class="form-control"
-                                                        placeholder="WhatsApp/Phone*">
+                                                    <input type="text" name="whatsapp_phone" class="form-control @error('whatsapp_phone') is-invalid @enderror"
+                                                        placeholder="WhatsApp/Phone*" value="{{ old('whatsapp_phone') }}">
+                                                    @error('whatsapp_phone')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Password*</label>
-                                                    <input type="password" class="form-control" placeholder="Password*">
+                                                    <div class="position-relative">
+                                                        <input type="password" name="password" class="form-control @error('password') is-invalid @enderror" placeholder="Password*">
+                                                        <i class="fas fa-info-circle password-info-icon" style="position: absolute; right: 10px; top: 17px !important; transform: translateY(-50%); cursor: pointer; color: #6c757d;"></i>
+                                                    </div>
+                                                    <div class="password-strength-meter mt-2" style="display: none;">
+                                                        <div class="progress" style="height: 5px;">
+                                                            <div class="progress-bar" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                                        </div>
+                                                        <small class="strength-text text-white mt-1 d-block"></small>
+                                                    </div>
+                                                    <div class="password-tips text-white-50 mt-2" style="font-size: 0.875rem; display: none;">
+                                                        <small class="d-block mb-1"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> Minimum 8 characters</small>
+                                                        <small class="d-block mb-1"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> At least one uppercase letter</small>
+                                                        <small class="d-block mb-1"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> At least one lowercase letter</small>
+                                                        <small class="d-block mb-1"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> At least one number</small>
+                                                        <small class="d-block"><i class="fas fa-check text-success d-none"></i> <i class="fas fa-times text-danger"></i> At least one special character</small>
+                                                    </div>
+                                                    @error('password')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Confirm Password*</label>
-                                                    <input type="password" class="form-control"
+                                                    <input type="password" name="password_confirmation" class="form-control @error('password_confirmation') is-invalid @enderror"
                                                         placeholder="Confirm Password*">
+                                                    @error('password_confirmation')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
-
                                             </div>
                                             <div class="row p-3 pt-0 mx-0">
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Company Name*</label>
-                                                    <input type="text" class="form-control" placeholder="Company Name*">
+                                                    <input type="text" name="company_name" class="form-control @error('company_name') is-invalid @enderror" placeholder="Company Name*" value="{{ old('company_name') }}">
+                                                    @error('company_name')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Company Telephone*</label>
-                                                    <input type="tel" class="form-control" name="company_telephone" placeholder="Company Telephone*">
+                                                    <input type="tel" name="company_telephone" class="form-control @error('company_telephone') is-invalid @enderror" placeholder="Company Telephone*" value="{{ old('company_telephone') }}">
+                                                    @error('company_telephone')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Company Address*</label>
-                                                    <input type="text" class="form-control" name="company_address"  placeholder="Company Address*">
+                                                    <input type="text" name="company_address" class="form-control @error('company_address') is-invalid @enderror" placeholder="Company Address*" value="{{ old('company_address') }}">
+                                                    @error('company_address')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Country*</label>
-                                                    <select class="form-select" id="country" name="country" required>
+                                                    <select class="form-select @error('country_id') is-invalid @enderror" id="country" name="country_id" data-old="{{ old('country_id') }}">
                                                         <option value="">Select Country</option>
                                                     </select>
+                                                    @error('country_id')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">City*</label>
-                                                    <select class="form-select" id="city" name="city" required
-                                                        disabled>
+                                                    <select class="form-select @error('city_id') is-invalid @enderror" id="city" name="city_id" data-old="{{ old('city_id') }}">
                                                         <option value="">Select City</option>
                                                     </select>
+                                                    @error('city_id')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Region*</label>
-                                                    <select class="form-select" id="region" name="region" required>
+                                                    <select class="form-select @error('region_id') is-invalid @enderror" id="region" name="region_id" data-old="{{ old('region_id') }}">
                                                         <option value="">Select Region</option>
                                                     </select>
+                                                    @error('region_id')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Referred by</label>
-                                                    <input type="text" class="form-control" name="referred_by" placeholder="Referred by">
+                                                    <input type="text" name="referred_by" class="form-control @error('referred_by') is-invalid @enderror" placeholder="Referred by" value="{{ old('referred_by') }}">
+                                                    @error('referred_by')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label text-white">Specializations</label>
-                                                    <div
-                                                        class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap">
+                                                    <label class="form-label text-white">Specializations*</label>
+                                                    <div class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap @error('specializations') is-invalid @enderror">
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox" value=""
-                                                                id="checkDefault">
-                                                            <label class="form-check-label text-white" for="checkDefault">
-                                                                Air
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="specializations[]" value="Air"
+                                                                id="checkAir" {{ is_array(old('specializations')) && in_array('Air', old('specializations')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="checkAir">Air</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="checkChecked">
-                                                            <label class="form-check-label text-white" for="checkChecked">
-                                                                Sea
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="specializations[]"
+                                                                value="Sea" id="checkSea" {{ is_array(old('specializations')) && in_array('Sea', old('specializations')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="checkSea">Sea</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="Land">
-                                                            <label class="form-check-label text-white" for="Land">
-                                                                Land
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="specializations[]"
+                                                                value="Land" id="Land" {{ is_array(old('specializations')) && in_array('Land', old('specializations')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="Land">Land</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="Multimodal">
-                                                            <label class="form-check-label text-white" for="Multimodal">
-                                                                Multimodal
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="specializations[]"
+                                                                value="Multimodal" id="Multimodal" {{ is_array(old('specializations')) && in_array('Multimodal', old('specializations')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="Multimodal">Multimodal</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="Cargo">
-                                                            <label class="form-check-label text-white" for="Cargo">
-                                                                Project Cargo
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="specializations[]"
+                                                                value="Project Cargo" id="Cargo" {{ is_array(old('specializations')) && in_array('Project Cargo', old('specializations')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="Cargo">Project Cargo</label>
                                                         </div>
                                                     </div>
+                                                    @error('specializations')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-4">
                                                     <label class="form-label text-white">Incorporation Date*</label>
                                                     <div class="date-picker-wrapper">
-                                                        <input type="text" class="form-control"
+                                                        <input type="text" class="form-control @error('incorporation_date') is-invalid @enderror"
                                                             id="incorporation_date" name="incorporation_date"
-                                                            placeholder="Select Date" required>
+                                                            placeholder="Select Date"  value="{{ old('incorporation_date') }}" >
                                                         <svg class="calendar-icon" width="16" height="16"
                                                             fill="currentColor" viewBox="0 0 16 16">
                                                             <path
                                                                 d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
                                                         </svg>
                                                     </div>
+                                                    @error('incorporation_date')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-4">
                                                     <label class="form-label text-white">Tax ID*</label>
-                                                    <input type="text" class="form-control" placeholder="Tax ID*">
+                                                    <input type="text" name="tax_id" class="form-control @error('tax_id') is-invalid @enderror" placeholder="Tax ID*" value="{{ old('tax_id') }}">
+                                                    @error('tax_id')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-4">
                                                     <label class="form-label text-white">Website / LinkedIn*</label>
-                                                    <input type="text" class="form-control"
-                                                        placeholder="Website / LinkedIn*">
+                                                    <input type="text" name="website_linkedin" class="form-control @error('website_linkedin') is-invalid @enderror"
+                                                        placeholder="Website / LinkedIn*" value="{{ old('website_linkedin') }}">
+                                                    @error('website_linkedin')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
 
-
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label text-white">What are you looking to
-                                                        gain?</label>
-                                                    <div
-                                                        class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap">
+                                                    <label class="form-label text-white">What are you looking to gain?*</label>
+                                                    <div class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap @error('looking_for') is-invalid @enderror">
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="Sales">
-                                                            <label class="form-check-label text-white" for="Sales">
-                                                                Sales leads
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
+                                                                value="Sales leads" id="Sales" {{ is_array(old('looking_for')) && in_array('Sales leads', old('looking_for')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="Sales">Sales leads</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="E-learning/training">
-                                                            <label class="form-check-label text-white"
-                                                                for="E-learning/training">
-                                                                E-learning/training
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
+                                                                value="E-learning/training" id="E-learning" {{ is_array(old('looking_for')) && in_array('E-learning/training', old('looking_for')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="E-learning">E-learning/training</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="Network">
-                                                            <label class="form-check-label text-white" for="Network">
-                                                                Network access
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
+                                                                value="Network access" id="Network" {{ is_array(old('looking_for')) && in_array('Network access', old('looking_for')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="Network">Network access</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="representation">
-                                                            <label class="form-check-label text-white"
-                                                                for="representation">
-                                                                Global representation
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
+                                                                value="Global representation" id="representation" {{ is_array(old('looking_for')) && in_array('Global representation', old('looking_for')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="representation">Global representation</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="credibility">
-                                                            <label class="form-check-label text-white" for="credibility">
-                                                                Brand credibility
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
+                                                                value="Brand credibility" id="credibility" {{ is_array(old('looking_for')) && in_array('Brand credibility', old('looking_for')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="credibility">Brand credibility</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="Exposure/Marketing">
-                                                            <label class="form-check-label text-white"
-                                                                for="Exposure/Marketing">
-                                                                Branding Exposure/Marketing
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
+                                                                value="Branding Exposure/Marketing" id="Exposure" {{ is_array(old('looking_for')) && in_array('Branding Exposure/Marketing', old('looking_for')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="Exposure">Branding Exposure/Marketing</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox"
-                                                                value="" id="Business">
-                                                            <label class="form-check-label text-white" for="Business">
-                                                                Business matching
-                                                            </label>
+                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
+                                                                value="Business matching" id="Business" {{ is_array(old('looking_for')) && in_array('Business matching', old('looking_for')) ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="Business">Business matching</label>
                                                         </div>
                                                     </div>
+                                                    @error('looking_for')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label text-white">Are you currently a member of any
-                                                        other network?</label>
-                                                    <div
-                                                        class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap">
+                                                    <label class="form-label text-white">Are you currently a member of any other network?*</label>
+                                                    <div class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap @error('is_network_member') is-invalid @enderror">
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" name="currently"
-                                                                type="radio" value="yes" id="currentlyYes">
-                                                            <label class="form-check-label text-white" for="currentlyYes">
-                                                                Yes
-                                                            </label>
+                                                            <input class="form-check-input" name="is_network_member"
+                                                                type="radio" value="yes" id="currentlyYes" {{ old('is_network_member') == 'yes' ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="currentlyYes">Yes</label>
                                                         </div>
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" name="currently"
-                                                                type="radio" value="no" id="currentlyNo" checked>
-                                                            <label class="form-check-label text-white" for="currentlyNo">
-                                                                No
-                                                            </label>
+                                                            <input class="form-check-input" name="is_network_member"
+                                                                type="radio" value="no" id="currentlyNo" {{ old('is_network_member', 'no') == 'no' ? 'checked' : '' }}>
+                                                            <label class="form-check-label text-white" for="currentlyNo">No</label>
                                                         </div>
                                                     </div>
+                                                    @error('is_network_member')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
-                                                <div class="mb-3 col-12 col-md-12" id="networkField"
-                                                    style="display:none;">
+                                                <div class="mb-3 col-12 col-md-12" id="networkField" style="display: none;">
                                                     <label class="form-label text-white">Network Name*</label>
-                                                    <input type="text" class="form-control"
-                                                        placeholder="Network Name*">
+                                                    <input type="text" name="network_name" class="form-control @error('network_name') is-invalid @enderror"
+                                                        placeholder="Network Name*" value="{{ old('network_name') }}">
+                                                    @error('network_name')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
                                                 </div>
                                             </div>
-
                                         </div>
-
                                         <div class="d-flex justify-content-center mt-4">
                                             <button class="btn btn-primary nextBtn px-5" type="button">Next Step</button>
                                         </div>
                                     </div>
                                 </div>
 
+                                <!-- Step 2 Content -->
                                 <div class="row setup-content" id="step-2" style="display: none;">
                                     <div class="col-md-12 px-0">
                                         <h3 class="text-white text-center mb-3">Choose Your Plan</h3>
                                         <div class="progress-bar-container progress_barmain mb-4">
-                                            <div class="progress" style="height: 3px;    margin-inline: 50px;">
+                                            <div class="progress" style="height: 3px; margin-inline: 50px;">
                                                 <div class="progress-bar" role="progressbar" style="width: 100%;"
                                                     aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
                                             </div>
@@ -585,65 +354,52 @@
                                             <div class="col-12 col-md-4">
                                                 <div class="Benefit_cards h-100">
                                                     <input class="form-check-input" name="membership_tier" type="radio"
-                                                        value="" id="Benefit01" checked>
+                                                        value="1" id="Benefit01" {{ old('membership_tier', '1') == '1' ? 'checked' : '' }}>
                                                     <label class="h-100" for="Benefit01">
                                                         <div class="bg-dark p-3 rounded h-100">
                                                             <h4 class="text-white pb-2">Explorer's Benefit</h4>
                                                             <ul class="list-group">
-                                                                <li class="text-white mb-2">Access to online member
-                                                                    directory</li>
+                                                                <li class="text-white mb-2">Access to online member directory</li>
                                                                 <li class="text-white mb-2">Member dashboard</li>
-                                                                <li class="text-white mb-2">Basic listing in logistics
-                                                                    partner network</li>
-                                                                <li class="text-white">Earn points through participation &
-                                                                    business referrals (lower earning rate)</li>
+                                                                <li class="text-white mb-2">Basic listing in logistics partner network</li>
+                                                                <li class="text-white">Earn points through participation & business referrals (lower earning rate)</li>
                                                             </ul>
                                                         </div>
                                                     </label>
                                                 </div>
-
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <div class="Benefit_cards h-100">
                                                     <input class="form-check-input" name="membership_tier" type="radio"
-                                                        value="" id="Benefit02">
+                                                        value="2" id="Benefit02" {{ old('membership_tier') == '2' ? 'checked' : '' }}>
                                                     <label class="h-100" for="Benefit02">
                                                         <div class="bg-dark p-3 rounded h-100">
                                                             <h4 class="text-white pb-2">Elevate Benefit</h4>
                                                             <ul class="list-group">
                                                                 <li class="text-white mb-2">All Explorer benefits</li>
-                                                                <li class="text-white mb-2">Priority access to in-person
-                                                                    events an online events</li>
-                                                                <li class="text-white mb-2">Featured company spotlight in
-                                                                    newsletters and Webpage</li>
-                                                                <li class="text-white">Priority business connection and
-                                                                    recommendation</li>
-                                                                <li class="text-white">Mid-tier points earning (higher
-                                                                    multiplier)</li>
+                                                                <li class="text-white mb-2">Priority access to in-person events and online events</li>
+                                                                <li class="text-white mb-2">Featured company spotlight in newsletters and Webpage</li>
+                                                                <li class="text-white">Priority business connection and recommendation</li>
+                                                                <li class="text-white">Mid-tier points earning (higher multiplier)</li>
                                                             </ul>
                                                         </div>
                                                     </label>
                                                 </div>
-
                                             </div>
                                             <div class="col-12 col-md-4">
                                                 <div class="Benefit_cards h-100">
                                                     <input class="form-check-input" name="membership_tier" type="radio"
-                                                        value="" id="Benefit03">
+                                                        value="3" id="Benefit03" {{ old('membership_tier') == '3' ? 'checked' : '' }}>
                                                     <label class="h-100" for="Benefit03">
                                                         <div class="bg-dark p-3 rounded h-100">
                                                             <h4 class="text-white pb-2">Summit Benefit</h4>
                                                             <ul class="list-group">
                                                                 <li class="text-white mb-2">All Elevate benefits</li>
-                                                                <li class="text-white mb-2">VIP invitation to annual global
-                                                                    summit</li>
-                                                                <li class="text-white mb-2">Speaking opportunities at
-                                                                    network events</li>
-                                                                <li class="text-white">Executive networking concierge
-                                                                    service</li>
+                                                                <li class="text-white mb-2">VIP invitation to annual global summit</li>
+                                                                <li class="text-white mb-2">Speaking opportunities at network events</li>
+                                                                <li class="text-white">Executive networking concierge service</li>
                                                                 <li class="text-white">Highest points earning rate</li>
-                                                                <li class="text-white">Opportunity to upgrade to Founder
-                                                                    Circlee</li>
+                                                                <li class="text-white">Opportunity to upgrade to Founder Circle</li>
                                                             </ul>
                                                         </div>
                                                     </label>
@@ -652,8 +408,8 @@
                                         </div>
                                         <div class="mt-4 mb-3 w-100">
                                             <div class="form-check">
-                                                <input class="form-check-input" type="checkbox" id="consentCheckbox"
-                                                    name="consent" required>
+                                                <input class="form-check-input @error('consent') is-invalid @enderror" type="checkbox" id="consentCheckbox"
+                                                    name="consent"  {{ old('consent') ? 'checked' : '' }}>
                                                 <label class="form-check-label text-white" for="consentCheckbox">
                                                     I consent to FR8NITY collecting, storing, and using my personal data to
                                                     process my membership application, provide access to platform features,
@@ -666,219 +422,24 @@
                                                     </span>
                                                 </label>
                                             </div>
+                                            @error('consent')
+                                                <div class="invalid-feedback d-block text-danger">
+                                                    {{ $message }}
+                                                </div>
+                                            @enderror
                                         </div>
                                         <div class="d-flex justify-content-center mt-4 pt-4 gap-3">
-                                            <button class="btn btn-secondary px-4 rounded_30 backBtn"
-                                                type="button">Back</button>
+                                            <button class="btn btn-secondary px-4 rounded_30 backBtn" type="button">Back</button>
                                             <button class="btn btn-primary pull-right px-4" type="submit">Submit</button>
                                         </div>
                                     </div>
-
                                 </div>
-
                             </form>
                         </div>
-
                     </div>
+                </div>
             </main>
         </div>
-        <script src="{{ asset('js/bootstrap.js') }}" defer></script>
-
-        <script>
-            document.addEventListener("DOMContentLoaded", function() {
-                $(document).ready(function() {
-                    var allWells = $('.setup-content'); // All steps
-                    var allNextBtn = $('.nextBtn'); // Next buttons
-                    var allBackBtn = $('.backBtn'); // Back buttons
-                    var progressBar = $('.progress-bar');
-                    var progressSteps = $('.progress-step');
-
-                    allWells.hide(); // Hide all steps initially
-                    $('#step-1').show(); // Show the first step
-                    updateProgress(1); // Initialize progress
-
-                    function updateProgress(step) {
-                        const totalSteps = 2;
-                        const progress = (step / totalSteps) * 100;
-                        progressBar.css('width', progress + '%');
-                        progressBar.attr('aria-valuenow', progress);
-
-                        // Update step labels
-                        progressSteps.removeClass('active');
-                        progressSteps.eq(step - 1).addClass('active');
-                    }
-
-                    allNextBtn.click(function() {
-                        var curStep = $(this).closest(".setup-content");
-                        var nextStep = curStep.next('.setup-content');
-
-                        if (nextStep.length === 0) {
-                            console.error("Next step not found!");
-                            return;
-                        }
-
-                        var isValid = true; // Temporarily bypass validation for testing
-                        if (isValid) {
-                            curStep.hide();
-                            nextStep.show();
-                            updateProgress(2); // Update progress to step 2
-                        } else {
-                            console.error("Validation failed!");
-                        }
-                    });
-
-                    allBackBtn.click(function() {
-                        var curStep = $(this).closest(".setup-content");
-                        var prevStep = curStep.prev('.setup-content');
-
-                        curStep.hide();
-                        prevStep.show();
-                        updateProgress(1); // Update progress back to step 1
-                    });
-                });
-            });
-        </script>
-
-
-        <script>
-            $(document).ready(function() {
-                $(".table_head").click(function() {
-                    $(this).next(".table_tbody").toggle();
-                });
-            });
-        </script>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {
-                const yesRadio = document.getElementById('currentlyYes');
-                const noRadio = document.getElementById('currentlyNo');
-                const networkField = document.getElementById('networkField');
-
-                function toggleNetworkField() {
-                    if (yesRadio.checked) {
-                        networkField.style.display = '';
-                    } else {
-                        networkField.style.display = 'none';
-                    }
-                }
-
-                yesRadio.addEventListener('change', toggleNetworkField);
-                noRadio.addEventListener('change', toggleNetworkField);
-            });
-        </script>
-
-        <script>
-            $(document).ready(function() {
-                // Initialize Select2 for country dropdown
-                $('#country').select2({
-                    theme: 'default',
-                    placeholder: 'Select Country',
-                    allowClear: true,
-                    width: '100%',
-                    templateResult: formatCountryOption,
-                    templateSelection: formatCountryOption
-                }).on('select2:clearing', function(e) {
-                    e.preventDefault();
-                    $(this).val(null).trigger('change');
-                    $('#city').val(null).trigger('change').prop('disabled', true);
-                });
-
-                // Initialize Select2 for city dropdown
-                $('#city').select2({
-                    theme: 'default',
-                    placeholder: 'Select City',
-                    allowClear: true,
-                    width: '100%'
-                }).on('select2:clearing', function(e) {
-                    e.preventDefault();
-                    $(this).val(null).trigger('change');
-                });
-
-                // Initialize Select2 for region dropdown
-                $('#region').select2({
-                    theme: 'default',
-                    placeholder: 'Select Region',
-                    allowClear: true,
-                    width: '100%'
-                }).on('select2:clearing', function(e) {
-                    e.preventDefault();
-                    $(this).val(null).trigger('change');
-                });
-
-                function formatCountryOption(country) {
-                    if (!country.id) {
-                        return country.text;
-                    }
-                    let $option = $(country.element);
-                    let $content = $($option.html());
-                    return $content;
-                }
-
-                // Load countries on page load
-                $.get('{{ route('get.countries') }}', function(data) {
-                    let countrySelect = $('#country');
-                    data.forEach(function(country) {
-                        let option = new Option(country.name, country.id);
-                        $(option).html(`<div class="country-option">
-                        <img src="https://flagcdn.com/w40/${country.code.toLowerCase()}.png" 
-                             class="country-flag" 
-                             alt="${country.name} flag">
-                        <span>${country.name}</span>
-                    </div>`);
-                        countrySelect.append(option);
-                    });
-                });
-
-                // Handle country change
-                $('#country').on('change', function() {
-                    let countryId = $(this).val();
-                    let citySelect = $('#city');
-
-                    // Reset and disable city
-                    citySelect.empty().append('<option value="">Select City</option>').prop('disabled', !
-                        countryId);
-
-                    if (countryId) {
-                        // Load cities based on selected country
-                        $.get('{{ url('get-cities') }}/' + countryId, function(data) {
-                            data.forEach(function(city) {
-                                let option = new Option(city.name, city.id);
-                                citySelect.append(option);
-                            });
-                        });
-                    }
-                });
-
-                // Load regions on page load
-                $.get('{{ route('get.regions') }}', function(data) {
-                    let regionSelect = $('#region');
-                    data.forEach(function(region) {
-                        let option = new Option(region.name, region.id);
-                        regionSelect.append(option);
-                    });
-                });
-            });
-        </script>
-
-        <script>
-            $(document).ready(function() {
-                // Initialize Flatpickr
-                flatpickr("#incorporation_date", {
-                    dateFormat: "Y-m-d",
-                    maxDate: "today",
-                    disableMobile: "true",
-                    allowInput: true,
-                    monthSelectorType: "dropdown",
-                    yearSelectorType: "dropdown",
-                    animate: true,
-                    onChange: function(selectedDates, dateStr, instance) {
-                        // Optional: Add any validation or additional logic here
-                        if (selectedDates[0]) {
-                            instance.element.classList.add('is-valid');
-                        }
-                    }
-                });
-            });
-        </script>
     </body>
+<script src="{{asset('js/register.js?v=' . rand(1, 1000000))}}"></script>
 @endsection
