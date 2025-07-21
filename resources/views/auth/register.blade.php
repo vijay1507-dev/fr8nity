@@ -65,8 +65,8 @@
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">WhatsApp/Phone*</label>
-                                                    <input type="text" name="whatsapp_phone" class="form-control @error('whatsapp_phone') is-invalid @enderror"
-                                                        placeholder="WhatsApp/Phone*" value="{{ old('whatsapp_phone') }}">
+                                                    <input type="tel" name="whatsapp_phone" class="form-control iti__tel-input @error('whatsapp_phone') is-invalid @enderror"
+                                                         value="{{ old('whatsapp_phone') }}">
                                                     @error('whatsapp_phone')
                                                         <div class="invalid-feedback d-block text-danger">
                                                             {{ $message }}
@@ -84,7 +84,8 @@
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Company Telephone*</label>
-                                                    <input type="tel" name="company_telephone" class="form-control @error('company_telephone') is-invalid @enderror" placeholder="Company Telephone*" value="{{ old('company_telephone') }}">
+                                                    <input type="tel" name="company_telephone" class="form-control iti__tel-input @error('company_telephone') is-invalid @enderror"
+                                                         value="{{ old('company_telephone') }}">
                                                     @error('company_telephone')
                                                         <div class="invalid-feedback d-block text-danger">
                                                             {{ $message }}

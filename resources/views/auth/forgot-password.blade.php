@@ -21,7 +21,7 @@
                         <div class="col-12">
                           <div class="mb-4">
                             <div class="text-center mb-4">
-                              <a href="#">
+                              <a href="/">
                                 <img src="{{asset('images/logo.svg')}}" alt="Logo" width="auto" height="78">
                               </a>
                             </div>

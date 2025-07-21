@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
+
 class NewPasswordController extends Controller
 {
     public function create(Request $request, string $token)
@@ -25,6 +28,17 @@ class NewPasswordController extends Controller
             'password' => ['required', 'confirmed', 'min:8'],
         ]);
 
+        // Check if user exists and is approved
+        $user = User::where('email', $request->email)->first();
+        
+        if (!$user) {
+            return back()->withErrors(['email' => 'We can\'t find a user with that email address.']);
+        }
+
+        if ($user->status !== 'approved') {
+            return back()->withErrors(['email' => 'Your account is not approved yet. Please wait for admin approval before resetting your password.']);
+        }
+
         $status = Password::reset(
             $request->only('email', 'password', 'password_confirmation', 'token'),
             function ($user) use ($request) {
@@ -32,6 +46,8 @@ class NewPasswordController extends Controller
                     'password' => Hash::make($request->password),
                     'remember_token' => Str::random(60),
                 ])->save();
+
+                event(new PasswordReset($user));
             }
         );
 

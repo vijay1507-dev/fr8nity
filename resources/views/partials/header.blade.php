@@ -15,19 +15,13 @@
               <a class="nav-link active" href="/">Home</a>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
-              <a class="nav-link" href="/about">About Us</a>
+              <a class="nav-link" href="{{route('about-us')}}">About Us</a>
             </li>
-
-            <!-- Membership Dropdown -->
-            <li class="nav-item dropdown d-flex justify-content-center align-items-center">
-              <a class="nav-link dropdown-toggle" href="#" id="membershipDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Membership</a>
-              <ul class="dropdown-menu" aria-labelledby="membershipDropdown">
-                <li><a class="dropdown-item" href="/membership/benefits">Your Benefits</a></li>
-                <li><a class="dropdown-item" href="/membership/points">Point System</a></li>
-                <li><a class="dropdown-item" href="/membership/faq">FAQ</a></li>
-              </ul>
+            @guest
+            <li class="nav-item d-flex justify-content-center align-items-center">
+              <a class="nav-link" href="{{route('membership')}}">Membership</a>
             </li>
-
+            @endguest
             <!-- Events Dropdown -->
             <li class="nav-item dropdown d-flex justify-content-center align-items-center">
               <a class="nav-link dropdown-toggle" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
@@ -50,9 +44,29 @@
             <li class="nav-item d-flex justify-content-center align-items-center">
               <a class="nav-link" href="/contact">Contact Us</a>
             </li>
-            <li class="nav-item d-flex justify-content-center align-items-center">
-              <a class="btn btnbg fw-semibold text-dark" href="{{url('login')}}">Login/Register</a>
-            </li>
+            @auth
+              <!-- My Account Dropdown for logged-in users -->
+              <li class="nav-item dropdown d-flex justify-content-center align-items-center">
+                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-user-circle me-2"></i>
+                  My Account
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
+                  <li><a class="dropdown-item" href="{{ route('dashboard') }}">My Profile</a></li>
+                  <li><hr class="dropdown-divider"></li>
+                  <li>
+                    <form method="POST" action="{{ route('logout') }}" class="dropdown-item p-0">
+                      @csrf
+                      <button type="submit" class="dropdown-item">Logout</button>
+                    </form>
+                  </li>
+                </ul>
+              </li>
+            @else
+              <li class="nav-item d-flex justify-content-center align-items-center">
+                <a class="btn btnbg fw-semibold text-dark" href="{{url('login')}}">Login/Register</a>
+              </li>
+            @endauth
           </div>
         </ul>
       </div>

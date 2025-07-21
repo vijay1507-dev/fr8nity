@@ -1,7 +1,7 @@
  <aside id="sidebar" class="js-sidebar">
      <div class="h-100">
          <div class="sidebar-logo text-center">
-             <a href="#"><img src="{{ asset('images/logo.svg') }}"> </a>
+             <a href="/"><img src="{{ asset('images/logo.svg') }}"> </a>
          </div>
          <ul class="sidebar-nav">
              <li class="sidebar-item">

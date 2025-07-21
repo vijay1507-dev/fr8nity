@@ -33,9 +33,9 @@ class AuthController extends Controller
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'designation' => ['required', 'string', 'max:255'],
-            'whatsapp_phone' => ['required', 'digits:10', 'numeric'],
+            'whatsapp_phone' => ['required'],
             'company_name' => ['required', 'string', 'max:255'],
-            'company_telephone' => ['required', 'digits:10', 'numeric'],
+            'company_telephone' => ['required'],
             'company_address' => ['required', 'string'],
             'country_id' => ['required', 'exists:countries,id'],
             'city_id' => ['required', 'exists:cities,id'],
@@ -99,6 +99,12 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $request->session()->regenerate();
             $user = Auth::user();
+            if ($user->status !== 'approved') {
+                Auth::logout();
+                return back()->withErrors([
+                    'email' => 'Your application is pending approval.',
+                ]);
+            }
             if ($request->has('is_member') && $user->role != User::MEMBER) {
                 Auth::logout();
                 return back()->withErrors([
