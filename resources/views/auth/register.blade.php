@@ -135,6 +135,43 @@
                                                     @enderror
                                                 </div>
                                                 <div class="mb-3 col-12 col-md-6">
+                                                    <label class="form-label text-white">Incorporation Date*</label>
+                                                    <div class="date-picker-wrapper">
+                                                        <input type="text" class="form-control @error('incorporation_date') is-invalid @enderror"
+                                                            id="incorporation_date" name="incorporation_date"
+                                                            placeholder="Select Date"  value="{{ old('incorporation_date') }}" >
+                                                        <svg class="calendar-icon" width="16" height="16"
+                                                            fill="currentColor" viewBox="0 0 16 16">
+                                                            <path
+                                                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
+                                                        </svg>
+                                                    </div>
+                                                    @error('incorporation_date')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                                <div class="mb-3 col-12 col-md-6">
+                                                    <label class="form-label text-white">Tax ID*</label>
+                                                    <input type="text" name="tax_id" class="form-control @error('tax_id') is-invalid @enderror" placeholder="Tax ID*" value="{{ old('tax_id') }}">
+                                                    @error('tax_id')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                                <div class="mb-3 col-12 col-md-6">
+                                                    <label class="form-label text-white">Website / LinkedIn*</label>
+                                                    <input type="text" name="website_linkedin" class="form-control @error('website_linkedin') is-invalid @enderror"
+                                                        placeholder="Website / LinkedIn*" value="{{ old('website_linkedin') }}">
+                                                    @error('website_linkedin')
+                                                        <div class="invalid-feedback d-block text-danger">
+                                                            {{ $message }}
+                                                        </div>
+                                                    @enderror
+                                                </div>
+                                                <div class="mb-3 col-12 col-md-6">
                                                     <label class="form-label text-white">Referred by</label>
                                                     <input type="text" name="referred_by" class="form-control @error('referred_by') is-invalid @enderror" placeholder="Referred by" value="{{ old('referred_by') }}">
                                                     @error('referred_by')
@@ -178,43 +215,8 @@
                                                         </div>
                                                     @enderror
                                                 </div>
-                                                <div class="mb-3 col-12 col-md-4">
-                                                    <label class="form-label text-white">Incorporation Date*</label>
-                                                    <div class="date-picker-wrapper">
-                                                        <input type="text" class="form-control @error('incorporation_date') is-invalid @enderror"
-                                                            id="incorporation_date" name="incorporation_date"
-                                                            placeholder="Select Date"  value="{{ old('incorporation_date') }}" >
-                                                        <svg class="calendar-icon" width="16" height="16"
-                                                            fill="currentColor" viewBox="0 0 16 16">
-                                                            <path
-                                                                d="M3.5 0a.5.5 0 0 1 .5.5V1h8V.5a.5.5 0 0 1 1 0V1h1a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H2a2 2 0 0 1-2-2V3a2 2 0 0 1 2-2h1V.5a.5.5 0 0 1 .5-.5zM1 4v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V4H1z" />
-                                                        </svg>
-                                                    </div>
-                                                    @error('incorporation_date')
-                                                        <div class="invalid-feedback d-block text-danger">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-3 col-12 col-md-4">
-                                                    <label class="form-label text-white">Tax ID*</label>
-                                                    <input type="text" name="tax_id" class="form-control @error('tax_id') is-invalid @enderror" placeholder="Tax ID*" value="{{ old('tax_id') }}">
-                                                    @error('tax_id')
-                                                        <div class="invalid-feedback d-block text-danger">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-3 col-12 col-md-4">
-                                                    <label class="form-label text-white">Website / LinkedIn*</label>
-                                                    <input type="text" name="website_linkedin" class="form-control @error('website_linkedin') is-invalid @enderror"
-                                                        placeholder="Website / LinkedIn*" value="{{ old('website_linkedin') }}">
-                                                    @error('website_linkedin')
-                                                        <div class="invalid-feedback d-block text-danger">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </div>
+                                               
+                                                
 
                                                 <div class="mb-3 col-12">
                                                     <label class="form-label text-white">What are you looking to gain?*</label>

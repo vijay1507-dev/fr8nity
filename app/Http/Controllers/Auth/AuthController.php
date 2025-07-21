@@ -11,9 +11,8 @@ use App\Models\Region;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-use Illuminate\Support\Facades\Mail;
-use App\Mail\NewRegistrationNotification;
-use App\Mail\RegistrationConfirmationMail;
+use App\Notifications\NewRegistrationNotification;
+use App\Notifications\RegistrationConfirmationNotification;
 
 class AuthController extends Controller
 {
@@ -33,7 +32,6 @@ class AuthController extends Controller
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'confirmed', Password::defaults()],
             'designation' => ['required', 'string', 'max:255'],
             'whatsapp_phone' => ['required', 'digits:10', 'numeric'],
             'company_name' => ['required', 'string', 'max:255'],
@@ -57,7 +55,6 @@ class AuthController extends Controller
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
             'designation' => $request->designation,
             'whatsapp_phone' => $request->whatsapp_phone,
             'company_name' => $request->company_name,
@@ -82,11 +79,11 @@ class AuthController extends Controller
         $superAdmin = User::where('role', User::SUPER_ADMIN)->first();
         // Send notification to admin
         if ($superAdmin) {
-            Mail::to($superAdmin->email)->queue(new NewRegistrationNotification($user));
+            $superAdmin->notify(new NewRegistrationNotification($user));
         }
         
         // Send confirmation email to the user
-        Mail::to($user->email)->queue(new RegistrationConfirmationMail($user));
+        $user->notify(new RegistrationConfirmationNotification($user));
 
         return redirect()->route('login')->with('success', 'Your registration request has been successfully submitted. We will notify you via email once your application is approved.');
     }

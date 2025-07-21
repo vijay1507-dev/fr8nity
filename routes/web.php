@@ -31,9 +31,8 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Registration route
-Route::post('/register', function(){
-    dd('ad');
-})->name('register.post');
+// Registration route
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 
 // Password Reset routes
 Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->middleware('guest')->name('password.request');
