@@ -317,61 +317,27 @@
                                             </div>
                                         </div>
                                         <div class="row mt-3">
+                                            @foreach($membershipTiers as $tier)
                                             <div class="col-12 col-md-4">
                                                 <div class="Benefit_cards h-100">
                                                     <input class="form-check-input" name="membership_tier" type="radio"
-                                                        value="1" id="Benefit01" {{ old('membership_tier', '1') == '1' ? 'checked' : '' }}>
-                                                    <label class="h-100" for="Benefit01">
+                                                        value="{{ $tier->id }}" id="Benefit{{ $tier->id }}" 
+                                                        {{ old('membership_tier', '1') == $tier->id ? 'checked' : '' }}>
+                                                    <label class="h-100" for="Benefit{{ $tier->id }}">
                                                         <div class="bg-dark p-3 rounded h-100">
-                                                            <h4 class="text-white pb-2">Explorer's Benefit</h4>
+                                                            <h4 class="text-white pb-2">{{ $tier->name }}</h4>
                                                             <ul class="list-group">
-                                                                <li class="text-white mb-2">Access to online member directory</li>
-                                                                <li class="text-white mb-2">Member dashboard</li>
-                                                                <li class="text-white mb-2">Basic listing in logistics partner network</li>
-                                                                <li class="text-white">Earn points through participation & business referrals (lower earning rate)</li>
+                                                                @foreach($tier->benefits as $benefit)
+                                                                    <li class="text-white mb-2">{{ $benefit->title }}</li>
+                                                                @endforeach
                                                             </ul>
                                                         </div>
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="col-12 col-md-4">
-                                                <div class="Benefit_cards h-100">
-                                                    <input class="form-check-input" name="membership_tier" type="radio"
-                                                        value="2" id="Benefit02" {{ old('membership_tier') == '2' ? 'checked' : '' }}>
-                                                    <label class="h-100" for="Benefit02">
-                                                        <div class="bg-dark p-3 rounded h-100">
-                                                            <h4 class="text-white pb-2">Elevate Benefit</h4>
-                                                            <ul class="list-group">
-                                                                <li class="text-white mb-2">All Explorer benefits</li>
-                                                                <li class="text-white mb-2">Priority access to in-person events and online events</li>
-                                                                <li class="text-white mb-2">Featured company spotlight in newsletters and Webpage</li>
-                                                                <li class="text-white">Priority business connection and recommendation</li>
-                                                                <li class="text-white">Mid-tier points earning (higher multiplier)</li>
-                                                            </ul>
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-12 col-md-4">
-                                                <div class="Benefit_cards h-100">
-                                                    <input class="form-check-input" name="membership_tier" type="radio"
-                                                        value="3" id="Benefit03" {{ old('membership_tier') == '3' ? 'checked' : '' }}>
-                                                    <label class="h-100" for="Benefit03">
-                                                        <div class="bg-dark p-3 rounded h-100">
-                                                            <h4 class="text-white pb-2">Summit Benefit</h4>
-                                                            <ul class="list-group">
-                                                                <li class="text-white mb-2">All Elevate benefits</li>
-                                                                <li class="text-white mb-2">VIP invitation to annual global summit</li>
-                                                                <li class="text-white mb-2">Speaking opportunities at network events</li>
-                                                                <li class="text-white">Executive networking concierge service</li>
-                                                                <li class="text-white">Highest points earning rate</li>
-                                                                <li class="text-white">Opportunity to upgrade to Founder Circle</li>
-                                                            </ul>
-                                                        </div>
-                                                    </label>
-                                                </div>
-                                            </div>
+                                            @endforeach
                                         </div>
+
                                         <div class="mt-4 mb-3 w-100">
                                             <div class="form-check">
                                                 <input class="form-check-input @error('consent') is-invalid @enderror" type="checkbox" id="consentCheckbox"

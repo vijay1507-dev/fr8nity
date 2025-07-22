@@ -9,6 +9,7 @@ use App\Models\Country;
 use App\Models\City;
 use App\Models\Region;
 use App\Models\User;
+use App\Models\MembershipTier;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Notifications\NewRegistrationNotification;
@@ -24,6 +25,16 @@ class AuthController extends Controller
     public function showAdminLoginForm()
     {
         return view('auth.admin-login');
+    }
+
+    public function showRegistrationForm()
+    {
+        $membershipTiers = MembershipTier::with('benefits')
+            ->where('is_active', true)
+            ->orderBy('order')
+            ->get();
+        
+        return view('auth.register', compact('membershipTiers'));
     }
     
     // Handle registration

@@ -25,9 +25,7 @@ Route::get('/about-us', function () {
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::get('/admin-login', [AuthController::class, 'showAdminLoginForm'])->name('admin-login');
-    Route::get('/register', function () {
-        return view('auth.register');
-    })->name('register');
+    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 
     // Password Reset routes
     Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
