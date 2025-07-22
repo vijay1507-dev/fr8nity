@@ -1,6 +1,6 @@
 @extends('layouts.main')
 
-@section('title', 'trader')
+@section('title', 'Trader')
 
 @section('content')
     <h1>trader</h1>

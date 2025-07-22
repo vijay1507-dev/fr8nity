@@ -1,6 +1,6 @@
 @extends('layouts.auth')
 
-@section('title', 'login')
+@section('title', 'Login')
 
 @section('content')
 <body style="overflow: hidden;">
@@ -46,7 +46,7 @@
                             <div class="">
                                 <label for="email" class="form-label text-white">Email Address</label>
                               <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
-                                placeholder="email">
+                                placeholder="Email Address">
                             
                             </div>
                           </div>

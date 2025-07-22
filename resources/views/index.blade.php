@@ -1,7 +1,7 @@
 
 @extends('layouts.main')
 
-@section('title', 'home')
+@section('title', 'Home')
 
 @section('content')
     @include('sections.hero')
