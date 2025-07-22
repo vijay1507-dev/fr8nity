@@ -11,15 +11,48 @@ use App\Http\Controllers\DashboardController;
 Route::get('/', function () {
     return view('index');
 });
-Route::get('/membership', function () {
-    return view('membership');
-})->name('membership');
+
+// Membership routes
+Route::prefix('membership')->group(function () {
+    Route::get('/', function () {
+        return view('membership');
+    })->name('membership');
+    Route::get('/benefits', function () {
+        return view('membership.benefits');
+    })->name('membership.benefits');
+    Route::get('/points', function () {
+        return view('membership.points');
+    })->name('membership.points');
+    Route::get('/faq', function () {
+        return view('membership.faq');
+    })->name('membership.faq');
+});
+
+// Events routes
+Route::prefix('events')->group(function () {
+    Route::get('/', function () {
+        return view('events');
+    })->name('events');
+    Route::get('/calendar', function () {
+        return view('events.calendar');
+    })->name('events.calendar');
+    Route::get('/conference', function () {
+        return view('events.conference');
+    })->name('events.conference');
+});
+
 Route::get('/trader', function () {
     return view('trader');
 })->name('trader');
 Route::get('/about-us', function () {
     return view('about-us');
 })->name('about-us');
+Route::get('/spotlight', function () {
+    return view('spotlight');
+})->name('spotlight');
+Route::get('/contact-us', function () {
+    return view('contact-us');
+})->name('contact-us');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 // Guest-only routes (redirect to dashboard if logged in)
 Route::middleware('guest')->group(function () {
@@ -42,6 +75,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
 });
 
 // Public API routes

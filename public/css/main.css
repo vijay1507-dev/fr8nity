@@ -342,7 +342,9 @@ footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
 .newsletter_sec .newsletter{padding-block: 60px; position: relative;}
 .newsletter_sec .newsletter button { padding: 8px 20px; position: absolute; right: 20px; font-size: 20px; }
 .newsletter_sec .newsletter input.form-control { border: 1px solid #424027; background: transparent; padding: 15px; border-radius: 60px; height: 70px;color: #fff; }
+.newsletter_sec .newsletter input.form-control::placeholder{color: #ffffff69;}
 .newsletter_sec .newsletter form { position: relative; display: flex ; align-items: center; max-width: 70%; margin-inline: auto; }
+.bg-dark { background: #101010 !important; }
 
 .no-focus-style:focus {
   outline: none !important;
@@ -372,6 +374,34 @@ footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
 .benefit_subtitle { font-size: 20px; font-family: "blauer_nuemedium"; line-height: 1.4; }
 .events_sec img.img-fluid { border-radius: 20px 20px 0 0; }
 
+/* FAQ Accordion Styles */
+.accordion-item {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 10px;
+}
+
+.accordion-button {
+  border: none;
+}
+
+.accordion-button:not(.collapsed) {
+  background: linear-gradient(90deg, #b58320 0%, #e8e865 49.04%, #f3ab0b 100%);
+  color: #000 !important;
+}
+
+.accordion-button::after {
+  filter: invert(1);
+}
+
+.accordion-button:not(.collapsed)::after {
+  filter: invert(0);
+}
+
+.accordion-body {
+  background: #1A1A1A;
+  color: #c0c0c0;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
 
 .benefits_sec .card {
          overflow: hidden;

@@ -19,19 +19,19 @@
             </li>
             <!-- Membership Dropdown -->
             <li class="nav-item dropdown d-flex justify-content-center align-items-center">
-              <a class="nav-link dropdown-toggle" href="#" id="membershipDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Membership</a>
+              <a class="nav-link dropdown-toggle {{ request()->is('membership*') ? 'active' : '' }}" href="#" id="membershipDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Membership</a>
               <ul class="dropdown-menu" aria-labelledby="membershipDropdown">
-                <li><a class="dropdown-item" href="/membership/benefits">Your Benefits</a></li>
-                <li><a class="dropdown-item" href="/membership/points">Point System</a></li>
-                <li><a class="dropdown-item" href="/membership/faq">FAQ</a></li>
+                <li><a class="dropdown-item {{ request()->is('membership/benefits') ? 'active' : '' }}" href="/membership/benefits">Your Benefits</a></li>
+                <li><a class="dropdown-item {{ request()->is('membership/points') ? 'active' : '' }}" href="/membership/points">Point System</a></li>
+                <li><a class="dropdown-item {{ request()->is('membership/faq') ? 'active' : '' }}" href="/membership/faq">FAQ</a></li>
               </ul>
             </li>
             <!-- Events Dropdown -->
             <li class="nav-item dropdown d-flex justify-content-center align-items-center">
-              <a class="nav-link dropdown-toggle" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
+              <a class="nav-link dropdown-toggle {{ request()->is('events*') ? 'active' : '' }}" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Events</a>
               <ul class="dropdown-menu" aria-labelledby="eventsDropdown">
-                <li><a class="dropdown-item" href="/events/calendar">Events Calendar</a></li>
-                <li><a class="dropdown-item" href="/events/conference">Conference</a></li>
+                <li><a class="dropdown-item {{ request()->is('events/calendar') ? 'active' : '' }}" href="/events/calendar">Events Calendar</a></li>
+                <li><a class="dropdown-item {{ request()->is('events/conference') ? 'active' : '' }}" href="/events/conference">Conference</a></li>
               </ul>
             </li>
           </div>
@@ -43,10 +43,10 @@
 
           <div class="navbar-nav d-flex flex-row flex-wrap align-items-center">
             <li class="nav-item d-flex justify-content-center align-items-center">
-              <a class="nav-link" href="/spotlight">Spotlight</a>
+              <a class="nav-link {{ request()->is('spotlight') ? 'active' : '' }}" href="{{route('spotlight')}}">Spotlight</a>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
-              <a class="nav-link" href="/contact">Contact Us</a>
+              <a class="nav-link {{ request()->is('contact-us') ? 'active' : '' }}" href="{{route('contact-us')}}">Contact Us</a>
             </li>
              <li class="nav-item d-flex justify-content-center align-items-center">
             </li>

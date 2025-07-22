@@ -15,4 +15,8 @@ class DashboardController extends Controller
     {
         return view('profile');
     }
+    public function editprofile()
+    {
+        return view('editprofile');
+    }
 }
