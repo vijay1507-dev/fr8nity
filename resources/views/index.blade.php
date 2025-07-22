@@ -10,5 +10,4 @@
     @include('sections.events')
     @include('sections.founders')
     @include('sections.coverage')
-    @include('sections.newsletter')
 @endsection

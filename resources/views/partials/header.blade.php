@@ -17,11 +17,15 @@
             <li class="nav-item d-flex justify-content-center align-items-center">
               <a class="nav-link" href="{{route('about-us')}}">About Us</a>
             </li>
-            @guest
-            <li class="nav-item d-flex justify-content-center align-items-center">
-              <a class="nav-link" href="{{route('membership')}}">Membership</a>
+            <!-- Membership Dropdown -->
+            <li class="nav-item dropdown d-flex justify-content-center align-items-center">
+              <a class="nav-link dropdown-toggle" href="#" id="membershipDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Membership</a>
+              <ul class="dropdown-menu" aria-labelledby="membershipDropdown">
+                <li><a class="dropdown-item" href="/membership/benefits">Your Benefits</a></li>
+                <li><a class="dropdown-item" href="/membership/points">Point System</a></li>
+                <li><a class="dropdown-item" href="/membership/faq">FAQ</a></li>
+              </ul>
             </li>
-            @endguest
             <!-- Events Dropdown -->
             <li class="nav-item dropdown d-flex justify-content-center align-items-center">
               <a class="nav-link dropdown-toggle" href="#" id="eventsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Events</a>

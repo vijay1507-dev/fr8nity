@@ -49,7 +49,7 @@
                         <div class="row gy-3 overflow-hidden">
                           <div class="col-12">
                             <div class="">
-                                <label for="email" class="form-label text-white">Email Address</label>
+                                <label for="email" class="form-label text-white">Email Address*</label>
                               <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
                                 placeholder="email">
                             
@@ -57,7 +57,7 @@
                           </div>
                           <div class="col-12">
                             <div class="mb-1">
-                                   <label for="password" class="form-label text-white">Password</label>
+                                   <label for="password" class="form-label text-white">Password*</label>
                               <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
                          
                             </div>
@@ -80,13 +80,7 @@
                             </div>
                           </div>
 
-                          <div class="col-12 text-center mt-3">
-                            <div class="d-flex align-items-center justify-content-center gap-3">
-                              <hr class="w-25 text-secondary">
-                              <span class="text-secondary">or</span>
-                              <hr class="w-25 text-secondary">
-                            </div>
-                          </div>
+                         
 
                           {{-- <div class="col-12 mt-3">
                             <div class="d-grid">

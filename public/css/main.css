@@ -222,7 +222,7 @@ Link {
   visibility: hidden;
 }
 
-.card-hover:hover .hover-reveal {
+.benefits_sec .card-hover:hover .hover-reveal {
   opacity: 1;
   transform: translateY(0);
   visibility: visible;
@@ -381,39 +381,39 @@ footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
 .events_sec img.img-fluid { border-radius: 20px 20px 0 0; }
 
 
- .card {
+.benefits_sec .card {
          overflow: hidden;
        transition: transform 0.3s ease;
       position: relative;
     }
 
-    .card img {
+  .benefits_sec .card img {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transition: all 0.6s;
     }
-    .card:hover img{
+    .benefits_sec .card:hover img{
     	transform: scale(1.1);
     }
 
-    .card-content {
+    .benefits_sec .card-content {
       padding: 20px;
       color: #fff;
       position: absolute;
-      background: #111;
+      background: #000000;
       z-index: 0;
       bottom: 0;
       left: 0;
     }
 
-    .card-title {
+   .benefits_sec .card-title {
        font-size: 20px;
     font-family: "blauer_nuemedium";
     line-height: 1.4
     }
 
-    .card-desc {
+    .benefits_sec .card-desc {
       font-size: 14px;
       color: #ccc;
       max-height: 0;
@@ -422,11 +422,11 @@ footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
       transition: max-height 0.9s ease, opacity 0.9s ease;
     }
 
-    .card:hover .card-desc {
+   .benefits_sec .card:hover .card-desc {
       max-height: 160px;
       opacity: 1;
     }
-    .cards{
+   .benefits_sec .cards{
     	display: grid;
   		grid-template-columns: auto auto auto auto;
   		gap: 15px;
@@ -497,8 +497,13 @@ footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
   border-radius: 3px;
 }
 
-
 .modal-dialog button.btn-close { background: #efb72e; width: 25px; height: 25px; position: absolute; top: 0; right: 0; z-index: 99; opacity: 1; border-radius: 50%; color: #000; outline: unset; border: 0;font-weight: 700; }
 .Membership_modal { display: flex ; flex-wrap: wrap; align-items: center; justify-content: start; }
 .Membership_modal a{background: linear-gradient(90deg, #b58320 0%, #ffff78 52%, #f3ab0b 100%); border-radius: 100px; width: auto; transition: all 0.4s; font-weight: 600; padding: 8px 20px; color: rgba(0, 0, 0, 1); margin: 10px;}
 .text-white { -webkit-background-clip: unset; -webkit-text-fill-color: unset; background-clip: unset; background: transparent; }
+
+
+/* team */
+section.ourteam_sec .card-title { font-size: 20px; font-weight: 600; line-height: 1.4; }
+section.ourteam_sec .card-content { color: #fff; }
+section.ourteam_sec img { height: 290px; object-fit: cover;border-radius: 12px 12px 0 0;}

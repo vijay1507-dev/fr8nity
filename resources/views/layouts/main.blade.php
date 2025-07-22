@@ -4,7 +4,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fr8nity</title>
+    <title>@yield('title', 'Fr8nity')</title>
+    <link rel="icon" type="image/x-icon" href="{{ asset('images/fr8nity_fav.png') }}">
     <link rel="manifest" href="manifest.json" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,6 +20,7 @@
     @include('partials.topbar')
     @include('partials.header')
     @yield('content')
+    @include('sections.newsletter')
     @include('partials.footer')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
