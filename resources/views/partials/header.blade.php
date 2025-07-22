@@ -9,7 +9,7 @@
 
       <!-- Collapsible content -->
       <div class="collapse navbar-collapse justify-content-center align-items-center" id="mainNavbar">
-        <ul class="header_nav d-flex align-items-center w-100 justify-content-between flex-wrap">
+        <ul class="header_nav">
           <div class="navbar-nav d-flex flex-row flex-wrap align-items-center">
             <li class="nav-item d-flex justify-content-center align-items-center">
               <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/">Home</a>
@@ -48,11 +48,13 @@
             <li class="nav-item d-flex justify-content-center align-items-center">
               <a class="nav-link" href="/contact">Contact Us</a>
             </li>
+             <li class="nav-item d-flex justify-content-center align-items-center">
+            </li>
             @auth
               <!-- My Account Dropdown for logged-in users -->
-              <li class="nav-item dropdown d-flex justify-content-center align-items-center">
+              <li class="nav-item dropdown d-flex justify-content-center align-items-center user_dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                  <i class="fas fa-user-circle me-2"></i>
+                  <img src="{{ asset('images/men-avtar.png') }}" alt="User Icon" class="" />
                   My Account
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">

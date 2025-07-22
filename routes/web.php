@@ -20,12 +20,11 @@ Route::get('/trader', function () {
 Route::get('/about-us', function () {
     return view('about-us');
 })->name('about-us');
-
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 // Guest-only routes (redirect to dashboard if logged in)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
     Route::get('/admin-login', [AuthController::class, 'showAdminLoginForm'])->name('admin-login');
-    Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 
     // Password Reset routes
     Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');

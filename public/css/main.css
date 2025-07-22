@@ -266,7 +266,7 @@ Link {
   align-items: center;
   width: 100%;
   padding: 0;
-  margin: 0;
+  margin: 0;gap: 30px;
   grid-template-columns: 1fr 0.3fr 1fr;
 }
 .header_nav .logo {
@@ -298,20 +298,12 @@ Link {
   gap: 20px;
 }
 .top_head {
-  padding: 10px;
+  padding: 5px;
   background: url(../images/headtop_bg.jpg) no-repeat center / cover;
-  position: relative;
+  position: relative;    background-position: 0% 0;
 }
-.top_head::before {
-  content: "";
-  background: #00000033;
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
+.top_head ul li img { width: 28px; margin-right: 5px; }
+
 .top_head ul a {
   color: #fff;
   font-size: 14px;
@@ -336,8 +328,8 @@ Link {
   }
 }
 
-
-
+.user_dropdown img { width: 37px; height: 37px; border-radius: 50%; object-fit: cover; margin-right: 10px; }
+.header_nav .navbar-nav .dropdown-toggle:after { border: 0; border-right: 2px solid; border-bottom: 2px solid; width: 8px; display: inline-block; height: 8px; border-color: #fff; transform: rotate(45deg); margin-left: 8px; }
 
 .logo_slide { border-radius: 100px; width: 150px; flex-shrink: 0; display: flex ; align-items: center; justify-content: center; background: #000; height: 100%; padding: 15px 11px; }
 .logo_slide img { width: auto; height: 42px; object-fit: contain; }
@@ -501,7 +493,6 @@ footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
 .Membership_modal { display: flex ; flex-wrap: wrap; align-items: center; justify-content: start; }
 .Membership_modal a{background: linear-gradient(90deg, #b58320 0%, #ffff78 52%, #f3ab0b 100%); border-radius: 100px; width: auto; transition: all 0.4s; font-weight: 600; padding: 8px 20px; color: rgba(0, 0, 0, 1); margin: 10px;}
 .text-white { -webkit-background-clip: unset; -webkit-text-fill-color: unset; background-clip: unset; background: transparent; }
-
 
 /* team */
 section.ourteam_sec .card-title { font-size: 20px; font-weight: 600; line-height: 1.4; }
