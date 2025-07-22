@@ -16,8 +16,32 @@ class MailTemplateSeeder extends Seeder
             'body' => '
 <h2>New User Registration</h2>
 <p>Hello Admin,</p>
-<p>A new user has registered on the platform.</p>
-<p>Registration Date: {{registration_date}}</p>',
+<p>A new user has registered on the platform. Below are the registration details:</p>
+
+<strong>Personal Information:</strong>
+<ul>
+    <li>Full Name: {{name}}</li>
+    <li>Email: {{email}}</li>
+    <li>Registration Date: {{registration_date}}</li>
+    <li>Membership Tier: {{membership_tier}}</li>
+</ul>
+
+<strong>Company Information:</strong>
+<ul>
+    <li>Company Name: {{company_name}}</li>
+    <li>Designation: {{designation}}</li>
+    <li>Company Phone: {{company_telephone}}</li>
+    <li>WhatsApp: {{whatsapp_phone}}</li>
+    <li>Company Address: {{company_address}}</li>
+</ul>
+
+<p>Please review the registration and take necessary action.</p>
+
+<div style="margin: 30px 0; text-align: center;">
+    <a href="{{ route(\'admin-login\') }}" style="background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Review Registration</a>
+</div>
+
+<p>Best regards,<br>Fr8nity Team</p>',
             'comment' => 'Email notification sent to admin when a new user registers',
             'variables' => [
                 'name',

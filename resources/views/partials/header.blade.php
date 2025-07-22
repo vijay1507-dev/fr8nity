@@ -12,10 +12,10 @@
         <ul class="header_nav d-flex align-items-center w-100 justify-content-between flex-wrap">
           <div class="navbar-nav d-flex flex-row flex-wrap align-items-center">
             <li class="nav-item d-flex justify-content-center align-items-center">
-              <a class="nav-link active" href="/">Home</a>
+              <a class="nav-link {{ request()->is('/') ? 'active' : '' }}" href="/">Home</a>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
-              <a class="nav-link" href="{{route('about-us')}}">About Us</a>
+              <a class="nav-link {{ request()->routeIs('about-us') ? 'active' : '' }}" href="{{route('about-us')}}">About Us</a>
             </li>
             <!-- Membership Dropdown -->
             <li class="nav-item dropdown d-flex justify-content-center align-items-center">
