@@ -19,7 +19,7 @@
                     <span class="ms-2">{{ $user ? $user->name : 'User' }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a href="profile.html" class="dropdown-item">Profile</a>
+                    <a href="{{ route('profile') }}" class="dropdown-item">Profile</a>
                     <form method="POST" action="{{ route('logout') }}">
                         @csrf
                         <button type="submit" class="dropdown-item">Logout</button>
