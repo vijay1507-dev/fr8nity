@@ -297,3 +297,7 @@ section.login-page .right.col-12 { min-height: 340px; }
 
 h4.table_head:after { top: 6px; right: -25px; }
 h4.table_head { width: fit-content; }
+
+.bg-dark { background: #101010 !important; }
+.btnbg { background: linear-gradient(90deg, #b58320 0%, #ffff78 52%, #f3ab0b 100%); border-radius: 100px; width: auto; transition: all 0.4s; font-weight: 600; padding: 8px 20px; color: rgba(0, 0, 0, 1); }
+.blacklight { background: #fff; border: 1px solid #eee; }
