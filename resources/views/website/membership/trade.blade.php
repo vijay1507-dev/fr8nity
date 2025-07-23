@@ -1,6 +1,6 @@
 @extends('layouts.website')
 
-@section('title', 'Trader')
+@section('title', 'Trade')
 
 @section('content')
    

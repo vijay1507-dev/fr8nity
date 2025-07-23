@@ -220,51 +220,6 @@
                                                 
 
                                                 <div class="mb-3 col-12">
-                                                    <label class="form-label text-white">What are you looking to gain?*</label>
-                                                    <div class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap @error('looking_for') is-invalid @enderror">
-                                                        <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
-                                                                value="Sales leads" id="Sales" {{ is_array(old('looking_for')) && in_array('Sales leads', old('looking_for')) ? 'checked' : '' }}>
-                                                            <label class="form-check-label text-white" for="Sales">Sales leads</label>
-                                                        </div>
-                                                        <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
-                                                                value="E-learning/training" id="E-learning" {{ is_array(old('looking_for')) && in_array('E-learning/training', old('looking_for')) ? 'checked' : '' }}>
-                                                            <label class="form-check-label text-white" for="E-learning">E-learning/training</label>
-                                                        </div>
-                                                        <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
-                                                                value="Network access" id="Network" {{ is_array(old('looking_for')) && in_array('Network access', old('looking_for')) ? 'checked' : '' }}>
-                                                            <label class="form-check-label text-white" for="Network">Network access</label>
-                                                        </div>
-                                                        <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
-                                                                value="Global representation" id="representation" {{ is_array(old('looking_for')) && in_array('Global representation', old('looking_for')) ? 'checked' : '' }}>
-                                                            <label class="form-check-label text-white" for="representation">Global representation</label>
-                                                        </div>
-                                                        <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
-                                                                value="Brand credibility" id="credibility" {{ is_array(old('looking_for')) && in_array('Brand credibility', old('looking_for')) ? 'checked' : '' }}>
-                                                            <label class="form-check-label text-white" for="credibility">Brand credibility</label>
-                                                        </div>
-                                                        <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
-                                                                value="Branding Exposure/Marketing" id="Exposure" {{ is_array(old('looking_for')) && in_array('Branding Exposure/Marketing', old('looking_for')) ? 'checked' : '' }}>
-                                                            <label class="form-check-label text-white" for="Exposure">Branding Exposure/Marketing</label>
-                                                        </div>
-                                                        <div class="form-check mb-0">
-                                                            <input class="form-check-input" type="checkbox" name="looking_for[]"
-                                                                value="Business matching" id="Business" {{ is_array(old('looking_for')) && in_array('Business matching', old('looking_for')) ? 'checked' : '' }}>
-                                                            <label class="form-check-label text-white" for="Business">Business matching</label>
-                                                        </div>
-                                                    </div>
-                                                    @error('looking_for')
-                                                        <div class="invalid-feedback d-block text-danger">
-                                                            {{ $message }}
-                                                        </div>
-                                                    @enderror
-                                                </div>
-                                                <div class="mb-3 col-12">
                                                     <label class="form-label text-white">Are you currently a member of any other network?*</label>
                                                     <div class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap @error('is_network_member') is-invalid @enderror">
                                                         <div class="form-check mb-0">

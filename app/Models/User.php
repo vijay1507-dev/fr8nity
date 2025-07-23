@@ -38,7 +38,6 @@ class User extends Authenticatable
         'incorporation_date',
         'tax_id',
         'website_linkedin',
-        'looking_for',
         'is_network_member',
         'network_name',
         'membership_tier',
@@ -69,7 +68,6 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
             'specializations' => 'array',
-            'looking_for' => 'array',
         ];
     }
 

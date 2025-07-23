@@ -22,7 +22,10 @@ Route::prefix('membership')->group(function () {
     })->name('membership.benefits');
     Route::get('/points', function () {
         return view('website.membership.points');
-    })->name('membership.points');   
+    })->name('membership.points');  
+    Route::get('/trade-member', function () {
+        return view('website.membership.trade');
+    })->name('membership.trade-member'); 
 });
 
 // Events routes
@@ -38,9 +41,7 @@ Route::prefix('events')->group(function () {
     })->name('events.conference');
 });
 
-Route::get('/trader', function () {
-    return view('website.trader');
-})->name('trader');
+
 Route::get('/about-us', function () {
     return view('website.about-us');
 })->name('about-us');

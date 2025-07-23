@@ -21,6 +21,8 @@
             <li class="nav-item dropdown d-flex justify-content-center align-items-center">
               <a class="nav-link dropdown-toggle {{ request()->is('membership*') ? 'active' : '' }}" href="#" id="membershipDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Membership</a>
               <ul class="dropdown-menu" aria-labelledby="membershipDropdown">
+                <li><a class="dropdown-item {{ request()->is('membership/register') ? 'active' : '' }}" href="{{route('register')}}">Freight Member</a></li>
+                <li><a class="dropdown-item {{ request()->is('membership/trade-member') ? 'active' : '' }}" href="{{route('membership.trade-member')}}">Trade Member</a></li>
                 <li><a class="dropdown-item {{ request()->is('membership/benefits') ? 'active' : '' }}" href="/membership/benefits">Your Benefits</a></li>
                 <li><a class="dropdown-item {{ request()->is('membership/points') ? 'active' : '' }}" href="/membership/points">Point System</a></li>
                

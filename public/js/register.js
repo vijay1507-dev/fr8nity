@@ -26,7 +26,9 @@ document.addEventListener("DOMContentLoaded", function() {
             input.addEventListener('blur', function() {
                 if (input.value.trim()) {
                     if (iti.isValidNumber()) {
-                        input.value = iti.getNumber();
+                        // Get only the national number without country code for display
+                        const nationalNumber = iti.getNumber().replace('+' + iti.getSelectedCountryData().dialCode, '');
+                        input.value = nationalNumber;
                         removeError($(input));
                     } else {
                         showError($(input), 'Please enter a valid phone number');
@@ -42,6 +44,11 @@ document.addEventListener("DOMContentLoaded", function() {
             // Handle country change
             input.addEventListener('countrychange', function() {
                 removeError($(input));
+                // If there's a value, update it to remove country code
+                if (input.value.trim()) {
+                    const nationalNumber = iti.getNumber().replace('+' + iti.getSelectedCountryData().dialCode, '');
+                    input.value = nationalNumber;
+                }
             });
         });
 
@@ -138,16 +145,6 @@ document.addEventListener("DOMContentLoaded", function() {
                 isValid = false;
             }
 
-            // Check looking_for
-            const lookingForContainer = $('input[name="looking_for[]"]').closest('.bg-black');
-            if (!$('input[name="looking_for[]"]:checked').length) {
-                lookingForContainer.addClass('is-invalid');
-                // Remove any existing error message before adding new one
-                lookingForContainer.siblings('.invalid-feedback').remove();
-                lookingForContainer.after('<div class="invalid-feedback d-block text-danger">Please select at least one option for what you are looking to gain</div>');
-                isValid = false;
-            }
-
             // Check is_network_member radio
             const networkMemberContainer = $('input[name="is_network_member"]').closest('.bg-black');
             if (!$('input[name="is_network_member"]:checked').length) {
@@ -229,7 +226,17 @@ document.addEventListener("DOMContentLoaded", function() {
         $('form').on('submit', function(e) {
             if (!validateStep2()) {
                 e.preventDefault(); // Prevent form submission if validation fails
+                return;
             }
+
+            // Add complete phone numbers with country code before submission
+            phoneInputs.forEach(function(input, index) {
+                const iti = phoneInstances[index];
+                if (input.value.trim()) {
+                    // Get the full number with country code
+                    input.value = iti.getNumber();
+                }
+            });
         });
 
         // Prevent multiple clicks on next button
@@ -276,14 +283,6 @@ document.addEventListener("DOMContentLoaded", function() {
         $('input[name="specializations[]"]').on('change', function() {
             const container = $(this).closest('.bg-black');
             if ($('input[name="specializations[]"]:checked').length > 0) {
-                container.removeClass('is-invalid');
-                container.siblings('.invalid-feedback').remove();
-            }
-        });
-
-        $('input[name="looking_for[]"]').on('change', function() {
-            const container = $(this).closest('.bg-black');
-            if ($('input[name="looking_for[]"]:checked').length > 0) {
                 container.removeClass('is-invalid');
                 container.siblings('.invalid-feedback').remove();
             }
