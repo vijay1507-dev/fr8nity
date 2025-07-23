@@ -8,15 +8,15 @@ class DashboardController extends Controller
 {
     public function index()
     {
-        return view('dashboard');
+        return view('dashboard.dashboard');
     }
 
     public function profile()
     {
-        return view('profile');
+        return view('dashboard.profile');
     }
     public function editprofile()
     {
-        return view('editprofile');
+        return view('dashboard.editprofile');
     }
 }

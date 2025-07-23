@@ -23,7 +23,7 @@
               <ul class="dropdown-menu" aria-labelledby="membershipDropdown">
                 <li><a class="dropdown-item {{ request()->is('membership/benefits') ? 'active' : '' }}" href="/membership/benefits">Your Benefits</a></li>
                 <li><a class="dropdown-item {{ request()->is('membership/points') ? 'active' : '' }}" href="/membership/points">Point System</a></li>
-                <li><a class="dropdown-item {{ request()->is('membership/faq') ? 'active' : '' }}" href="/membership/faq">FAQ</a></li>
+               
               </ul>
             </li>
             <!-- Events Dropdown -->
@@ -49,6 +49,7 @@
               <a class="nav-link {{ request()->is('contact-us') ? 'active' : '' }}" href="{{route('contact-us')}}">Contact Us</a>
             </li>
              <li class="nav-item d-flex justify-content-center align-items-center">
+              <a class="nav-link {{ request()->is('faq') ? 'active' : '' }}" href="{{route('faq')}}">FAQ</a>
             </li>
             @auth
               <!-- My Account Dropdown for logged-in users -->

@@ -6,13 +6,13 @@
   <title>@yield('title', 'Dashboard')</title>
   <link rel="icon" type="image/x-icon" href="{{ asset('images/fr8nity_fav.png') }}">
   <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/admin.css?v=' . rand(1, 1000000)) }}">
+  <link rel="stylesheet" href="{{ asset('css/dashboard.css?v=' . rand(1, 1000000)) }}">
 </head>
 <body>
   <div class="wrapper">
-    @include('partials.sidebar')
+    @include('dashboard.partials.sidebar')
     <div class="main">
-      @include('partials.navbar')
+      @include('dashboard.partials.navbar')
       <div class="content">
         @yield('content')
       </div>

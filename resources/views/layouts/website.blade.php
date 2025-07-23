@@ -14,14 +14,14 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Custom CSS -->
-    <link rel="stylesheet" href="{{ asset('css/main.css?v=' . rand(1, 1000000)) }}">
+    <link rel="stylesheet" href="{{ asset('css/website.css?v=' . rand(1, 1000000)) }}">
 </head>
 <body>
-    @include('partials.topbar')
-    @include('partials.header')
+    @include('website.partials.topbar')
+    @include('website.partials.header')
     @yield('content')
-    @include('sections.newsletter')
-    @include('partials.footer')
+    @include('website.sections.newsletter')
+    @include('website.partials.footer')
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

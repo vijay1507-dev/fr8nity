@@ -1,4 +1,4 @@
-@extends('layouts.main')
+@extends('layouts.website')
 
 @section('title', 'Contact Us - Fr8nity')
 

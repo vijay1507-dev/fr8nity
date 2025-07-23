@@ -1,39 +1,39 @@
-@extends('layouts.main')
+@extends('layouts.website')
 
-@section('title', 'Conference - Fr8nity')
+@section('title', 'Events Calendar - Fr8nity')
 
 @section('content')
 <div class="container py-5">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <h1 class="display-4 mb-4 text-center">Fr8nity Conference</h1>
+            <h1 class="display-4 mb-4 text-center">Events Calendar</h1>
             <div class="card shadow-sm">
                 <div class="card-body p-5">
                     <div class="row mb-4">
                         <div class="col-md-12">
-                            <h2 class="h4 mb-4 text-center">Annual Industry Conference Coming Soon</h2>
+                            <h2 class="h4 mb-4 text-center">Upcoming Industry Events</h2>
                             
                             <div class="alert alert-info mb-4">
-                                <h3 class="h5">🎉 Save the Date!</h3>
-                                <p class="mb-0">We are preparing to host the premier conference for freight and logistics professionals. Details will be announced shortly.</p>
+                                <h3 class="h5">📅 Event Calendar Coming Soon</h3>
+                                <p class="mb-0">We are currently organizing our event schedule to bring you the most valuable industry gatherings and networking opportunities.</p>
                             </div>
 
                             <div class="row g-4">
                                 <div class="col-md-6">
                                     <div class="border rounded p-4 h-100">
-                                        <h3 class="h5 mb-3">📋 Conference Highlights</h3>
+                                        <h3 class="h5 mb-3">🎯 Featured Events</h3>
                                         <ul class="list-unstyled mb-0">
                                             <li class="mb-3">
-                                                <strong>Industry Leaders</strong>
-                                                <p class="text-muted mb-0">Keynote speeches from renowned experts</p>
+                                                <strong>Industry Conferences</strong>
+                                                <p class="text-muted mb-0">Annual gatherings of freight and logistics professionals</p>
                                             </li>
                                             <li class="mb-3">
-                                                <strong>Panel Discussions</strong>
-                                                <p class="text-muted mb-0">Engaging debates on industry trends</p>
+                                                <strong>Networking Meetups</strong>
+                                                <p class="text-muted mb-0">Regular regional networking opportunities</p>
                                             </li>
                                             <li class="mb-0">
-                                                <strong>Networking Sessions</strong>
-                                                <p class="text-muted mb-0">Connect with industry professionals</p>
+                                                <strong>Workshop Series</strong>
+                                                <p class="text-muted mb-0">Hands-on learning and skill development sessions</p>
                                             </li>
                                         </ul>
                                     </div>
@@ -41,19 +41,19 @@
                                 
                                 <div class="col-md-6">
                                     <div class="border rounded p-4 h-100">
-                                        <h3 class="h5 mb-3">🎯 What to Expect</h3>
+                                        <h3 class="h5 mb-3">🌟 Event Categories</h3>
                                         <ul class="list-unstyled mb-0">
                                             <li class="mb-3">
-                                                <strong>Innovation Showcase</strong>
-                                                <p class="text-muted mb-0">Latest technology and solutions</p>
+                                                <strong>Professional Development</strong>
+                                                <p class="text-muted mb-0">Training and certification programs</p>
                                             </li>
                                             <li class="mb-3">
-                                                <strong>Workshop Tracks</strong>
-                                                <p class="text-muted mb-0">Specialized learning opportunities</p>
+                                                <strong>Industry Insights</strong>
+                                                <p class="text-muted mb-0">Expert panels and keynote presentations</p>
                                             </li>
                                             <li class="mb-0">
-                                                <strong>Business Opportunities</strong>
-                                                <p class="text-muted mb-0">Connect with potential partners</p>
+                                                <strong>Technology Showcases</strong>
+                                                <p class="text-muted mb-0">Latest innovations in freight and logistics</p>
                                             </li>
                                         </ul>
                                     </div>
@@ -62,8 +62,8 @@
                             
                             <div class="text-center mt-5">
                                 <p class="lead text-muted">
-                                    Join us for an unforgettable conference experience that will shape the future of freight and logistics. 
-                                    Registration details and conference schedule will be announced soon.
+                                    Our comprehensive events calendar will be launched soon, featuring industry conferences, 
+                                    networking events, and professional development opportunities.
                                 </p>
                             </div>
                         </div>

@@ -9,50 +9,50 @@ use App\Http\Controllers\DashboardController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
-    return view('index');
+    return view('website.index');
 });
 
 // Membership routes
 Route::prefix('membership')->group(function () {
     Route::get('/', function () {
-        return view('membership');
+        return view('website.membership');
     })->name('membership');
     Route::get('/benefits', function () {
-        return view('membership.benefits');
+        return view('website.membership.benefits');
     })->name('membership.benefits');
     Route::get('/points', function () {
-        return view('membership.points');
-    })->name('membership.points');
-    Route::get('/faq', function () {
-        return view('membership.faq');
-    })->name('membership.faq');
+        return view('website.membership.points');
+    })->name('membership.points');   
 });
 
 // Events routes
 Route::prefix('events')->group(function () {
     Route::get('/', function () {
-        return view('events');
+        return view('website.events');
     })->name('events');
     Route::get('/calendar', function () {
-        return view('events.calendar');
+        return view('website.events.calendar');
     })->name('events.calendar');
     Route::get('/conference', function () {
-        return view('events.conference');
+        return view('website.events.conference');
     })->name('events.conference');
 });
 
 Route::get('/trader', function () {
-    return view('trader');
+    return view('website.trader');
 })->name('trader');
 Route::get('/about-us', function () {
-    return view('about-us');
+    return view('website.about-us');
 })->name('about-us');
 Route::get('/spotlight', function () {
-    return view('spotlight');
+    return view('website.spotlight');
 })->name('spotlight');
 Route::get('/contact-us', function () {
-    return view('contact-us');
+    return view('website.contact-us');
 })->name('contact-us');
+Route::get('/faq', function () {
+    return view('website.membership.faq');
+})->name('faq');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 // Guest-only routes (redirect to dashboard if logged in)
 Route::middleware('guest')->group(function () {

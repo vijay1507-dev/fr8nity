@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <link rel="stylesheet" href="{{asset('css/bootstrap.css')}}">    
-    <link rel="stylesheet" href="{{asset('css/style.css?v=' . rand(1, 1000000))}}">
+    <link rel="stylesheet" href="{{asset('css/auth.css?v=' . rand(1, 1000000))}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
     @yield('content')
