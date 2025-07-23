@@ -10,11 +10,10 @@ use App\Models\City;
 use App\Models\Region;
 use App\Models\User;
 use App\Models\MembershipTier;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules\Password;
 use App\Notifications\NewRegistrationNotification;
 use App\Notifications\RegistrationConfirmationNotification;
-
+use App\Notifications\TwoFactorCodeNotification;
+use Illuminate\Support\Str;
 class AuthController extends Controller
 {
     // Show login form
@@ -22,9 +21,20 @@ class AuthController extends Controller
     {
         return view('auth.login');
     }
+
     public function showAdminLoginForm()
     {
         return view('auth.admin-login');
+    }
+
+    public function showTwoFactorForm()
+    {
+        return view('auth.two-factor-challenge');
+    }
+
+    public function showSecuritySettings()
+    {
+        return view('dashboard.security');
     }
 
     public function showRegistrationForm()
@@ -104,16 +114,19 @@ class AuthController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
+
         $remember = $request->boolean('remember');
+
         if (Auth::attempt($credentials, $remember)) {
-            $request->session()->regenerate();
             $user = Auth::user();
+            
             if ($user->status !== 'approved') {
                 Auth::logout();
                 return back()->withErrors([
                     'email' => 'Your application is pending approval.',
                 ]);
             }
+
             if ($request->has('is_member') && $user->role != User::MEMBER) {
                 Auth::logout();
                 return back()->withErrors([
@@ -125,11 +138,67 @@ class AuthController extends Controller
                     'email' => 'Only admins can log in.',
                 ]);
             }
+
+            // Only generate 2FA code if enabled
+            if ($user->two_factor_enabled) {
+                $user->two_factor_code = Str::random(6);
+                $user->two_factor_expires_at = now()->addMinutes(10);
+                $user->save();
+                $user->notify(new TwoFactorCodeNotification());
+                return redirect()->route('two-factor.show');
+            }
+
+            // If 2FA is not enabled, log in directly
+            $request->session()->regenerate();
             return redirect()->intended('dashboard');
         }
+
         return back()->withErrors([
             'email' => 'The provided credentials do not match our records.',
         ]);
+    }
+
+    public function verifyTwoFactor(Request $request)
+    {
+        $request->validate([
+            'two_factor_code' => 'required|string',
+        ]);
+
+        $user = Auth::user();
+
+        if (!$user->two_factor_enabled) {
+            return redirect()->intended('dashboard');
+        }
+
+        if ($user->validTwoFactorCode($request->two_factor_code)) {
+            $request->session()->regenerate();
+            $user->resetTwoFactorCode();
+            
+            return redirect()->intended('dashboard');
+        }
+
+        return back()->withErrors([
+            'two_factor_code' => 'The provided two factor code is invalid.',
+        ]);
+    }
+
+    public function enableTwoFactor(Request $request)
+    {
+        $user = Auth::user();
+        $user->two_factor_enabled = '1';
+        $user->save();
+
+        return redirect()->route('security.settings')
+            ->with('status', 'Two-factor authentication has been enabled.');
+    }
+
+    public function disableTwoFactor(Request $request)
+    {
+        $user = Auth::user();
+        $user->two_factor_enabled = '0';
+        $user->save();
+        return redirect()->route('security.settings')
+            ->with('status', 'Two-factor authentication has been disabled.');
     }
 
     // Logout user

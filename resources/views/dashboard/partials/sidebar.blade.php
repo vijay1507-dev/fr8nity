@@ -24,6 +24,12 @@
                      Dashboard
                  </a>
              </li>
+             <li class="sidebar-item">
+                 <a href="{{ route('security.settings') }}" class="sidebar-link">
+                     <i class="nav-icon fas fa-shield-alt"></i>
+                     <p>2FA Settings</p>
+                 </a>
+             </li>
          </ul>
      </div>
  </aside>

@@ -11,7 +11,7 @@
                     <h1 class="fw-bold size text_image mb-4">Are You Apply For</h1>
                     <div class="Membership_modal">
                         <a href="{{route('register')}}">Freight Network</a>
-                        <a href="{{route('trader')}}">Trade Network</a>
+                        <a href="{{route('membership.trade-member')}}">Trade Network</a>
                     </div>
                 </div>
 

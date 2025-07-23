@@ -12,7 +12,7 @@
         <h2 class="mb-1">My Profile</h2>
         <p class="fs-5 mb-0">A list of all patients in your clinic with their details.</p>
       </div>
-      <a class="btn btnbg mt-3 mt-sm-0" href="https://fr8nity.sistagging.com/edit-profile">Edit Profile</a>
+      <a class="btn btnbg mt-3 mt-sm-0" href="{{route('editprofile')}}">Edit Profile</a>
     </div>
 
     <!-- Profile Photo Card -->

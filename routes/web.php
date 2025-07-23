@@ -84,4 +84,15 @@ Route::get('/get-countries', [AuthController::class, 'getCountries'])->name('get
 Route::get('/get-cities/{country_id}', [AuthController::class, 'getCities'])->name('get.cities');
 Route::get('/get-regions', [AuthController::class, 'getRegions'])->name('get.regions');
 
+// Two Factor Authentication Routes
+Route::get('/two-factor-challenge', [AuthController::class, 'showTwoFactorForm'])->name('two-factor.show');
+Route::post('/two-factor-challenge', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
+
+// Security Settings Routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/security-settings', [AuthController::class, 'showSecuritySettings'])->name('security.settings');
+    Route::post('/two-factor/enable', [AuthController::class, 'enableTwoFactor'])->name('two-factor.enable');
+    Route::delete('/two-factor/disable', [AuthController::class, 'disableTwoFactor'])->name('two-factor.disable');
+});
+
 

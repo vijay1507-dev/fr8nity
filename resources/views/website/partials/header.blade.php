@@ -58,10 +58,10 @@
               <li class="nav-item dropdown d-flex justify-content-center align-items-center user_dropdown">
                 <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="accountDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                   <img src="{{ asset('images/men-avtar.png') }}" alt="User Icon" class="" />
-                  My Account
+                  {{Auth::user()->name}}
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="accountDropdown">
-                  <li><a class="dropdown-item" href="{{ route('dashboard') }}">My Profile</a></li>
+                  <li><a class="dropdown-item" href="{{ route('profile') }}">My Profile</a></li>
                   <li><hr class="dropdown-divider"></li>
                   <li>
                     <form method="POST" action="{{ route('logout') }}" class="dropdown-item p-0">
