@@ -14,8 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         SeedTrack::class
     ])
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\AdminAccess::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

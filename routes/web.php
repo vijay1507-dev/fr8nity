@@ -55,6 +55,7 @@ Route::get('/faq', function () {
     return view('website.membership.faq');
 })->name('faq');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+
 // Guest-only routes (redirect to dashboard if logged in)
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
@@ -80,8 +81,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/security-settings', [AuthController::class, 'showSecuritySettings'])->name('security.settings');
     Route::post('/two-factor/enable', [AuthController::class, 'enableTwoFactor'])->name('two-factor.enable');
     Route::delete('/two-factor/disable', [AuthController::class, 'disableTwoFactor'])->name('two-factor.disable');
-    // Member management routes
-    Route::prefix('members')->group(function () {
+    
+    // Member management routes - requires admin access
+    Route::middleware('admin')->prefix('members')->group(function () {
         Route::get('/', [MemberController::class, 'index'])->name('members.index');
         Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
         Route::patch('/{member}/status', [MemberController::class, 'updateStatus'])->name('members.update-status');
