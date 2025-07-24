@@ -20,12 +20,46 @@
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
                     <a href="{{ route('profile') }}" class="dropdown-item">Profile</a>
-                    <form method="POST" action="{{ route('logout') }}">
+                    <form id="logout-form" method="POST" action="{{ route('logout') }}" class="d-none">
                         @csrf
-                        <button type="submit" class="dropdown-item">Logout</button>
                     </form>
+                    <a href="#" class="dropdown-item" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                        Logout
+                    </a>
                 </div>
             </li>
         </ul>
     </div>
 </nav>
+
+<style>
+.dropdown-item {
+    cursor: pointer;
+}
+.nav-icon {
+    text-decoration: none;
+    color: #344767;
+    display: flex;
+    align-items: center;
+}
+.nav-icon:hover {
+    color: #435ebe;
+}
+.avatar {
+    width: 36px;
+    height: 36px;
+    object-fit: cover;
+}
+.dropdown-menu {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+    border: none;
+    padding: 0.5rem 0;
+}
+.dropdown-item {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+}
+.dropdown-item:hover {
+    background-color: #f8f9fa;
+}
+</style>

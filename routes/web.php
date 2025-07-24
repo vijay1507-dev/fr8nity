@@ -18,12 +18,6 @@ Route::prefix('membership')->group(function () {
     Route::get('/', function () {
         return view('website.membership');
     })->name('membership');
-    Route::get('/benefits', function () {
-        return view('website.membership.benefits');
-    })->name('membership.benefits');
-    Route::get('/points', function () {
-        return view('website.membership.points');
-    })->name('membership.points');  
     Route::get('/trade-member', function () {
         return view('website.membership.trade');
     })->name('membership.trade-member'); 
@@ -85,6 +79,8 @@ Route::middleware('auth')->group(function () {
     // Member management routes - requires admin access
     Route::middleware('admin')->prefix('members')->group(function () {
         Route::get('/', [MemberController::class, 'index'])->name('members.index');
+        Route::get('/add', [MemberController::class, 'create'])->name('members.add');
+        Route::post('/store', [MemberController::class, 'store'])->name('members.store');
         Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
         Route::patch('/{member}/status', [MemberController::class, 'updateStatus'])->name('members.update-status');
         Route::patch('/{member}/membership-tier', [MemberController::class, 'updateMembershipTier'])->name('members.update-membership-tier');
@@ -97,8 +93,8 @@ Route::get('/get-cities/{country_id}', [AuthController::class, 'getCities'])->na
 Route::get('/get-regions', [AuthController::class, 'getRegions'])->name('get.regions');
 
 // Two Factor Authentication Routes
-Route::get('/two-factor-challenge', [AuthController::class, 'showTwoFactorForm'])->name('two-factor.show');
-Route::post('/two-factor-challenge', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
+Route::get('/two-factor', [AuthController::class, 'showTwoFactorForm'])->name('two-factor.show');
+Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
 
 
 

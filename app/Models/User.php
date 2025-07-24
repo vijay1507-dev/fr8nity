@@ -160,6 +160,6 @@ class User extends Authenticatable
 
     public function membershipTier(): BelongsTo
     {
-        return $this->belongsTo(MembershipTier::class);
+        return $this->belongsTo(MembershipTier::class,'membership_tier');
     }
 }

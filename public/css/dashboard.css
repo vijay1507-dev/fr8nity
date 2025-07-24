@@ -289,8 +289,6 @@ header ul.navbar-nav a.nav-link { font-size: 16px; }
 .form-control { font-size: 14px; box-shadow: unset !important; min-height: 41px; }
 section.login-page .right.col-12 { min-height: 340px; }
 
-
-
 /* create-admin */
 .table_head { cursor: pointer; position: relative;}
 .table_head:after { content: ''; border-right: 2px solid; border-bottom: 2px solid; display: inline-block; width: 10px; height: 10px; position: absolute; right: 20px; top: 15px; transform: rotate(45deg); }
@@ -301,3 +299,12 @@ h4.table_head { width: fit-content; }
 .bg-dark { background: #101010 !important; }
 .btnbg { background: linear-gradient(90deg, #b58320 0%, #ffff78 52%, #f3ab0b 100%); border-radius: 100px; width: auto; transition: all 0.4s; font-weight: 600; padding: 8px 20px; color: rgba(0, 0, 0, 1); }
 .blacklight { background: #fff; border: 1px solid #eee; }
+
+
+/* dashboard */
+.dashboard_referrals a.btnbg { border-radius: 0 !important; background: #efbd31; }
+
+
+
+
+

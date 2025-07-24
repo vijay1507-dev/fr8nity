@@ -37,14 +37,17 @@ class AuthController extends Controller
         return view('dashboard.security');
     }
 
-    public function showRegistrationForm()
+    public function showRegistrationForm(Request $request)
     {
         $membershipTiers = MembershipTier::with('benefits')
             ->where('is_active', true)
             ->orderBy('order')
             ->get();
         
-        return view('auth.register', compact('membershipTiers'));
+        $selectedTier = $request->get('tier', 'explorer');
+        $memberType = $request->get('type', 'freight');
+        
+        return view('auth.register', compact('membershipTiers', 'selectedTier', 'memberType'));
     }
     
     // Handle registration
