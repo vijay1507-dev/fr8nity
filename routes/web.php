@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MemberController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
@@ -40,7 +41,6 @@ Route::prefix('events')->group(function () {
         return view('website.events.conference');
     })->name('events.conference');
 });
-
 
 Route::get('/about-us', function () {
     return view('website.about-us');
@@ -77,6 +77,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
+    Route::get('/security-settings', [AuthController::class, 'showSecuritySettings'])->name('security.settings');
+    Route::post('/two-factor/enable', [AuthController::class, 'enableTwoFactor'])->name('two-factor.enable');
+    Route::delete('/two-factor/disable', [AuthController::class, 'disableTwoFactor'])->name('two-factor.disable');
+    // Member management routes
+    Route::prefix('members')->group(function () {
+        Route::get('/', [MemberController::class, 'index'])->name('members.index');
+        Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
+        Route::patch('/{member}/status', [MemberController::class, 'updateStatus'])->name('members.update-status');
+        Route::patch('/{member}/membership-tier', [MemberController::class, 'updateMembershipTier'])->name('members.update-membership-tier');
+    });
 });
 
 // Public API routes
@@ -88,11 +98,5 @@ Route::get('/get-regions', [AuthController::class, 'getRegions'])->name('get.reg
 Route::get('/two-factor-challenge', [AuthController::class, 'showTwoFactorForm'])->name('two-factor.show');
 Route::post('/two-factor-challenge', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
 
-// Security Settings Routes
-Route::middleware(['auth'])->group(function () {
-    Route::get('/security-settings', [AuthController::class, 'showSecuritySettings'])->name('security.settings');
-    Route::post('/two-factor/enable', [AuthController::class, 'enableTwoFactor'])->name('two-factor.enable');
-    Route::delete('/two-factor/disable', [AuthController::class, 'disableTwoFactor'])->name('two-factor.disable');
-});
 
 

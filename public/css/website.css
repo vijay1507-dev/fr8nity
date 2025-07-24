@@ -528,3 +528,7 @@ footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
 section.ourteam_sec .card-title { font-size: 20px; font-weight: 600; line-height: 1.4; }
 section.ourteam_sec .card-content { color: #fff; }
 section.ourteam_sec img { height: 290px; object-fit: cover;border-radius: 12px 12px 0 0;}
+
+/* contact_page */
+.contactmap{width: 100%; height: 400px;}
+
