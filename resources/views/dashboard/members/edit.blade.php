@@ -7,10 +7,35 @@
             <h4 class="card-title">Edit Member</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('members.update', $member) }}" method="POST">
+            @if(auth()->user()->role == \App\Models\User::MEMBER)
+            <form action="{{ route('members.updateprofile', $member) }}" method="POST" enctype="multipart/form-data">
+            @else
+            <form action="{{ route('members.update', $member) }}" method="POST" enctype="multipart/form-data">
+            @endif
                 @csrf
                 @method('PATCH')
-                
+                @if(auth()->user()->role == \App\Models\User::MEMBER)
+                <div class="col-12 mb-4">
+                    <div class="d-flex align-items-center">
+                        <div class="me-4">
+                            @if($member->profile_photo)
+                                <img src="{{ Storage::url($member->profile_photo) }}" alt="Profile Photo" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                            @else
+                                <img src="{{ asset('images/men-avtar.png') }}" alt="Default Profile" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                            @endif
+                        </div>
+                        <div>
+                            <label class="form-label" for="profile_photo">Profile Photo</label>
+                            <input type="file" id="profile_photo" name="profile_photo" class="form-control" accept="image/*">
+                            <div class="form-text">Maximum file size: 2MB. Supported formats: JPG, PNG, GIF</div>
+                            @error('profile_photo')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
+                @endif
+
                 <div class="row">
                     <div class="mb-3 col-12 col-md-6">
                         <label for="name" class="form-label">Name*</label>
@@ -254,6 +279,6 @@
 @endsection
 
 @section('scripts')
-<link rel="stylesheet" href="{{asset('css/memberAdd.css')}}">
-<script src="{{asset('js/memberAdd.js')}}"></script>
+<link rel="stylesheet" href="{{asset('css/memberAdd.css')}}?v={{ rand(1, 1000000) }}">
+<script src="{{asset('js/memberAdd.js')}}?v={{ rand(1, 1000000) }}"></script>
 @endsection 

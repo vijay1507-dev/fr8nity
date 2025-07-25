@@ -2,117 +2,232 @@
 
 @section('title', 'Profile')
 
+@section('styles')
+   <link rel="stylesheet" href="{{asset('css/memberProfile.css')}}?v={{ rand(1, 1000000) }}">
+@endsection
+
 @section('content')
+    @if(auth()->user()->role === \App\Models\User::MEMBER)
+        <div class="container-fluid">
+            <div class="row">
+                <!-- Member Profile Header -->
+                <div class="col-12 mb-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-wrapper me-3">
+                                        @if(auth()->user()->profile_photo)
+                                    <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt="Profile Photo" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                                  @else
+                                    <img src="{{ asset('images/men-avtar.png') }}" alt="Default Profile" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                                  @endif
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-1">{{ auth()->user()->name }}</h4>
+                                        <p class="text-muted mb-0">{{ auth()->user()->designation }}</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <a href="{{ route('editmemberprofile',auth()->user()->id) }}" class="btn btn-outline-secondary">Edit Profile</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
- <div class="container py-4">
+                <!-- Member Details -->
+                <div class="col-12 col-lg-8">
+                    <div class="card">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="card-title mb-0">Member Information</h5>
+                        </div>
+                        <div class="card-body p-0">
+                            <!-- Contact Information -->
+                            <div class="info-section">
+                                <div class="info-header">
+                                    <h6 class="text-uppercase mb-0"><i class="bi bi-person me-2"></i>Contact Information</h6>
+                                </div>
+                                <div class="info-body">
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <span class="info-label">Email</span>
+                                            <span class="info-value">{{ auth()->user()->email }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">WhatsApp/Phone</span>
+                                            <span class="info-value">{{ auth()->user()->whatsapp_phone }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-    <!-- Header -->
-    <div class=" d-flex flex-column flex-sm-row align-items-start align-items-sm-center justify-content-between mb-4">
-      <div>
-        <h2 class="mb-1">My Profile</h2>
-        <p class="fs-5 mb-0">A list of all patients in your clinic with their details.</p>
-      </div>
-      <a class="btn btnbg mt-3 mt-sm-0" href="{{route('editprofile')}}">Edit Profile</a>
-    </div>
+                            <!-- Company Information -->
+                            <div class="info-section">
+                                <div class="info-header">
+                                    <h6 class="text-uppercase mb-0"><i class="bi bi-building me-2"></i>Company Information</h6>
+                                </div>
+                                <div class="info-body">
+                                    <div class="info-grid">
+                                        <div class="info-item">
+                                            <span class="info-label">Company Name</span>
+                                            <span class="info-value">{{ auth()->user()->company_name }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Company Telephone</span>
+                                            <span class="info-value">{{ auth()->user()->company_telephone }}</span>
+                                        </div>
+                                        <div class="info-item ">
+                                            <span class="info-label">Company Address</span>
+                                            <span class="info-value">{{ auth()->user()->company_address }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Country</span>
+                                            <span class="info-value">{{ auth()->user()->country->name ?? '-' }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">City</span>
+                                            <span class="info-value">{{ auth()->user()->city->name ?? '-' }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Region</span>
+                                            <span class="info-value">{{ auth()->user()->region->name ?? '-' }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Tax ID</span>
+                                            <span class="info-value">{{ auth()->user()->tax_id }}</span>
+                                        </div>
+                                        <div class="info-item">
+                                            <span class="info-label">Incorporation Date</span>
+                                            <span class="info-value">{{ auth()->user()->incorporation_date ? date('F j, Y', strtotime(auth()->user()->incorporation_date)) : '-' }}</span>
+                                        </div>
+                                        <div class="info-item full-width">
+                                            <span class="info-label">Website / LinkedIn</span>
+                                            <span class="info-value">
+                                                <a href="{{ auth()->user()->website_linkedin }}" target="_blank" class="text-primary">
+                                                    {{ auth()->user()->website_linkedin }}
+                                                </a>
+                                            </span>
+                                        </div>
+                                        <div class="info-item full-width">
+                                            <span class="info-label">Specializations</span>
+                                            <span class="info-value">
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    @php
+                                                        $specializations = is_string(auth()->user()->specializations)
+                                                            ? json_decode(auth()->user()->specializations)
+                                                            : auth()->user()->specializations;
+                                                    @endphp
+                                                    @foreach ($specializations ?? [] as $specialization)
+                                                        <span class="badge bg-primary">{{ $specialization }}</span>
+                                                    @endforeach
+                                                </div>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-    <!-- Profile Photo Card -->
-    <div class="blacklight p-4 rounded mb-3">
-      <h3 class="mb-4">Profile Photo</h3>
-      <div class="d-flex flex-column flex-sm-row align-items-center">
-        <!-- Profile Image Placeholder -->
-   <div id="profilePreview" class="doctor_profile d-flex justify-content-center align-items-center rounded-circle overflow-hidden mb-3 mb-sm-0"
-     style="background-color: brown; width: 120px; height: 120px;">
-  <img src="./images/user.png" alt="User Profile" style="width: 100%; height: 100%; object-fit: cover;">
-</div>
+                            <!-- Network Information -->
+                            <div class="info-section">
+                                <div class="info-header">
+                                    <h6 class="text-uppercase mb-0"><i class="bi bi-globe me-2"></i>Network Information</h6>
+                                </div>
+                                <div class="info-body">
+                                    <div class="info-grid">
+                                        <div class="info-item full-width">
+                                            <span class="info-label">Member of Other Network</span>
+                                            <span class="info-value">
+                                                {{ ucfirst(auth()->user()->is_network_member) }}
+                                                @if (auth()->user()->is_network_member === 'yes')
+                                                    - {{ auth()->user()->network_name }}
+                                                @endif
+                                            </span>
+                                        </div>
+                                        @if (auth()->user()->referred_by)
+                                            <div class="info-item full-width">
+                                                <span class="info-label">Referred By</span>
+                                                <span class="info-value">{{ auth()->user()->referred_by }}</span>
+                                            </div>
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
+                <!-- Membership Information -->
+                <div class="col-12 col-lg-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="card-title mb-0">Membership Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4">
+                                <label class="form-label text-muted mb-1">Current Tier</label>
+                                <div class="d-flex align-items-center">
+                                    <h4 class="mb-0 membership-tier-name">
+                                        {{ optional(auth()->user()->membershipTier)->name ?? 'No Tier' }}</h4>
+                                </div>
+                            </div>
 
-        <!-- Upload Section -->
-        <div class="ms-0 ms-sm-3 text-center text-sm-start">
-          <p class="mb-2 fw-semibold fs-5">{{ auth()->user()->name }}</p>
-          <p class="d-block">Designing</p>
+                            <div class="mb-4">
+                                <label class="form-label text-muted mb-2">Member Since</label>
+                                <p class="mb-0">{{ auth()->user()->created_at->format('F j, Y') }}</p>
+                            </div>
+
+                            @if (auth()->user()->membershipTier)
+                                <div>
+                                    <label class="form-label text-muted mb-2">Tier Benefits</label>
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach (auth()->user()->membershipTier->benefits as $benefit)
+                                            <li class="mb-2 d-flex align-items-center">
+                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                {{ $benefit->title }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-
-    <!-- Personal Details -->
-    <div class="mt-0 blacklight p-4 rounded  row mx-0">
-      <h3 class="pb-4">Personal Details</h3>
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Email*</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">WhatsApp/Phone</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Company Name</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Company Telephone</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Company Address</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Country*</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">City*</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Region</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Incorporation Date</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Tax ID*</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Website / LinkedIn</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Referred By</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Specializations</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">What are you looking to gain?</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-4">
-        <h5 class="">Are you currently a member of any other network?</h5>
-        <p class="">abdgsjfyikstik</p>
-      </div>
-
-    </div>
-  </div>
-
-@endsection 
+    @else
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12 mx-auto">
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">Profile</h5>
+                            <a href="{{ route('editprofile',auth()->user()->id) }}" class="btn btn-primary btn-sm">Edit Profile</a>
+                        </div>
+                        <div class="col-xl-12 text-center mb-4">
+                            @if(auth()->user()->profile_photo)
+                            <img src="{{ Storage::url(auth()->user()->profile_photo) }}" alt="Profile Photo" class="img-fluid" style="max-height: 100px;">
+                          @else
+                            <img src="{{ asset('images/men-avtar.png') }}" alt="Default Profile" class="img-fluid" style="max-height: 100px;">
+                          @endif
+                        </div>
+                        <div class="card-body">
+                            <form>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Full Name</label>
+                                        <input type="text" class="form-control" value="{{ auth()->user()->name }}" readonly>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control" value="{{ auth()->user()->email }}" readonly>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+@endsection

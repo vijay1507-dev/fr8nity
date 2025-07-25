@@ -38,6 +38,16 @@ table th, table td { border: 1px solid #e5e5e5; }
 ::-webkit-scrollbar-track{background:#f1f1f1;}
 ::-webkit-scrollbar-thumb{background:#333;border-radius: 10px;}
 
+.blacklight {
+    background: #0F0F0F !important;
+}
+.btnbg { background: linear-gradient(90deg, #b58320 0%, #ffff78 52%, #f3ab0b 100%); border-radius: 100px; width: auto; transition: all 0.4s; font-weight: 600; padding: 8px 20px; color: rgba(0, 0, 0, 1);border: 0;}
+.btnbg:hover {
+    color: #000;
+    transform: scale(1.05);
+}
+.gradient_rounded { background: linear-gradient(180deg, rgba(243, 171, 11, 0.4) 0%, rgba(232, 232, 101, 0.4) 44.23%, rgba(181, 131, 32, 0.4) 100%); padding: 1px; }
+.radies_20 { border-radius: 20px; }
 
 /* login */
 .login_img img{height: 100vh;}

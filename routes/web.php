@@ -72,6 +72,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
+    Route::post('/update-profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
     Route::get('/security-settings', [AuthController::class, 'showSecuritySettings'])->name('security.settings');
     Route::post('/two-factor/enable', [AuthController::class, 'enableTwoFactor'])->name('two-factor.enable');
     Route::delete('/two-factor/disable', [AuthController::class, 'disableTwoFactor'])->name('two-factor.disable');
@@ -87,6 +88,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
         Route::patch('/{member}', [MemberController::class, 'update'])->name('members.update');
     });
+    Route::get('/{member}/edit-profile', [MemberController::class, 'edit'])->name('editmemberprofile');
+    Route::patch('/{member}/update-profile', [MemberController::class, 'update'])->name('members.updateprofile');
 });
 
 // Public API routes

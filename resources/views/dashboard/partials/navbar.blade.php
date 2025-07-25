@@ -8,14 +8,12 @@
                 <a href="#" data-bs-toggle="dropdown" class="nav-icon pe-md-0">
                     @php
                         $user = auth()->user();
-                        $profileImage =
-                            $user && $user->profile_image
-                                ? asset("images/{$user->profile_image}")
-                                : asset('images/men-avtar.png');
                     @endphp
-
-                    <img src="{{ $profileImage }}" class="avatar img-fluid rounded"
-                        alt="{{ $user ? $user->name : 'User Avatar' }}">
+                    @if($user->profile_photo)
+                    <img src="{{ Storage::url($user->profile_photo) }}" alt="Profile Photo" class="avatar img-fluid rounded">
+                    @else
+                    <img src="{{ asset('images/men-avtar.png') }}" alt="Default Profile" class="avatar img-fluid rounded">
+                    @endif
                     <span class="ms-2">{{ $user ? $user->name : 'User' }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">

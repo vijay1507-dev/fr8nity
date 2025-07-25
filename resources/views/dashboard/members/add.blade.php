@@ -234,6 +234,6 @@
 @endsection
 
 @section('scripts')
-<link rel="stylesheet" href="{{asset('css/memberAdd.css')}}">
-<script src="{{asset('js/memberAdd.js')}}"></script>
+<link rel="stylesheet" href="{{ asset('css/memberAdd.css') }}?v={{ rand(1, 1000000) }}">
+<script src="{{asset('js/memberAdd.js')}}?v={{ rand(1, 1000000)"></script>
 @endsection 

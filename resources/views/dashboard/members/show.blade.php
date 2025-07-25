@@ -1,7 +1,7 @@
 @extends('layouts.dashboard')
 
 @section('styles')
-   <link rel="stylesheet" href="{{asset('css/memberProfile.css')}}">
+   <link rel="stylesheet" href="{{asset('css/memberProfile.css')}}?v={{ rand(1, 1000000) }}">
 @endsection
 @section('content')
     <div class="container-fluid">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Models\MembershipTier;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
@@ -185,7 +186,6 @@ class MemberController extends Controller
         if ($member->role !== User::MEMBER) {
             abort(404);
         }
-
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $member->id],
@@ -205,7 +205,12 @@ class MemberController extends Controller
             'is_network_member' => ['required', 'in:yes,no'],
             'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
             'membership_tier' => ['required'],
+            'profile_photo' => ['nullable', 'image', 'max:2048'],
         ]);
+
+        if ($request->hasFile('profile_photo')) {
+            $path = $request->file('profile_photo')->store('profile-photos', 'public');
+        }
 
         $member->update([
             'name' => $request->name,
@@ -226,9 +231,13 @@ class MemberController extends Controller
             'is_network_member' => $request->is_network_member,
             'network_name' => $request->network_name,
             'membership_tier' => $request->membership_tier,
+            'profile_photo' => $path ?? null,
         ]);
-
-        return redirect()->route('members.show', $member)
+        if(Auth::user()->role == \App\Models\User::MEMBER){
+            return redirect()->route('profile')->with('success', 'Profile updated successfully!');
+        }else{
+            return redirect()->route('members.show', $member)
             ->with('success', 'Member updated successfully!');
+        }
     }
 } 

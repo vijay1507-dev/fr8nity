@@ -3,87 +3,79 @@
 @section('title', 'Login')
 
 @section('content')
-<body style="overflow: hidden;">
-  <section class="p-0">
-      <div class="w-100 userlogin">
-        <div class="row bg-black justify-content-center mx-0">
-          <div class="col-12 p-0">
-            <div class="m-0">
-              <div class="row g-0">
-                <div class="col-12 col-md-6 p-0 login_img">
-                  <img class="img-fluid rounded-start w-100 object-fit-cover" loading="lazy"
-                    src="{{asset('images/admin-login.webp')}}" alt="Welcome back!">
-                </div>
-                <div class="col-12 col-md-6 d-flex align-items-center justify-content-center custom-card">
-                  <div class="col-12  col-lg-11 col-xl-10">
-                    <div class="card-body p-3 p-md-4 p-xl-5">
-                      <div class="row">
-                        <div class="col-12">
-                          <div class="mb-4">
-                            <div class="text-center mb-4">
-                              <a href="/">
-                                <img src="{{asset('images/logo.svg')}}" alt="Logo" width="auto" height="78">
-                              </a>
-                            </div>
-                            <h4 class="text-center h2 pb-3 text-white">Login</h4>
-                          </div>
-                        </div>
+<section class="min-vh-100 d-flex align-items-center justify-content-center py-4 px-2 bg-black">
+    <div class="container ">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-5 col-xl-5">
+          <div class="gradient_rounded radies_20 shadow-sm">
+            <div class="card-body blacklight px-3 px-sm-4 px-md-5 py-3 py-md-4 radies_20">
+
+              <!-- Logo -->
+              <div class="text-center mb-4">
+                <a href="/">
+                  <img src="./images/logo (3).svg" alt="Logo" height="80" class="img-fluid">
+                </a>
+              </div>
+
+              <!-- Error Display  -->
+              @if ($errors->any()) 
+              <div class="alert alert-danger mt-3 py-2 px-2">
+                <ul class="mb-0 ps-3">
+                  @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                  @endforeach
+                </ul>
+              </div>
+              @endif
+
+              
+              <form method="POST" action="{{ url('/login') }}">
+                 @csrf 
+                <input type="hidden" class="form-control p-2" name="is_admin" value="true">
+
+                <div class="row gy-3">
+                  <div class="col-12">
+                    <label for="email" class="form-label text-white fw-medium fs-6">Email</label>
+                    <input type="email" class="form-control logininput" id="email" name="email"
+                      value="{{ old('email') }}" placeholder="Email Address" required>
+                  </div>
+
+                  <div class="col-12">
+                    <label for="password" class="form-label text-white fw-medium fs-6">Password</label>
+                    <input type="password" class="form-control logininput" id="password" name="password"
+                      placeholder="Password" required>
+                  </div>
+
+
+                  <div class="col-12">
+                    <div class="form-check d-flex justify-content-between align-items-center">
+                      <div>
+                        <input class="form-check-input" type="checkbox" name="remember" id="remember" value="1"
+                          {{ old('remember') ? 'checked' : '' }}>
+                        <label class="form-check-label text-white fw-medium" for="remember">
+                          Remember me
+                        </label>
                       </div>
-                      @if ($errors->any())
-                        <div class="alert alert-danger">
-                          <ul class="mb-0">
-                            @foreach ($errors->all() as $error)
-                              <li>{{ $error }}</li>
-                            @endforeach
-                          </ul>
-                        </div>
-                      @endif
-                      <form method="POST" action="{{ url('/login') }}">
-                        @csrf
-                        <input type="hidden" name="is_admin" value="true">
-                        <div class="row gy-3 overflow-hidden">
-                          <div class="col-12">
-                            <div class="">
-                                <label for="email" class="form-label text-white">Email Address</label>
-                              <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
-                                placeholder="Email Address">
-                            
-                            </div>
-                          </div>
-                          <div class="col-12">
-                            <div class="mb-1">
-                                   <label for="password" class="form-label text-white">Password</label>
-                              <input type="password" class="form-control" name="password" id="password" placeholder="Password" required>
-                         
-                            </div>
-                          </div>
-                          <div class="col-12">
-                            <div class="d-flex justify-content-between align-items-center mb-3">
-                              <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="remember" value="1"
-                                  id="remember" {{ old('remember') ? 'checked' : '' }}>
-                                <label class="form-check-label text-white" for="remember">
-                                  Keep me logged in
-                                </label>
-                              </div>
-                              <a href="{{ route('password.request') }}" class="text-white text-decoration-none">Forgot Password?</a>
-                            </div>
-                          </div>
-                          <div class="col-12">
-                            <div class="d-grid">
-                              <button class="btn btn-primary btn-lg" type="submit">LOGIN</button>
-                            </div>
-                          </div>
-                        </div>
-                      </form>
+                      <a href="{{ route('password.request') }}" class="text-white text-decoration-underline">
+                        Forgot Password?
+                      </a>
+                    </div>
+                  </div>
+
+
+                  <div class="col-12">
+                    <div class="d-flex justify-content-center mt-3">
+                      <button class="btnbg w-100 py-2" type="submit">LOGIN</button>
                     </div>
                   </div>
                 </div>
-              </div>
+              </form>
+
             </div>
           </div>
         </div>
       </div>
-    </section>
-</body>
+    </div>
+  </section>
+
 @endsection
