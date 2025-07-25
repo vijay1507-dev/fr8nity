@@ -1,20 +1,21 @@
 @extends('layouts.dashboard')
-@section('title', 'Add Member')
+@section('title', 'Edit Member')
 @section('content')
 <div class="container-fluid">
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Add Member</h4>
+            <h4 class="card-title">Edit Member</h4>
         </div>
         <div class="card-body">
-            <form action="{{ route('members.store') }}" method="POST">
+            <form action="{{ route('members.update', $member) }}" method="POST">
                 @csrf
+                @method('PATCH')
                 
                 <div class="row">
                     <div class="mb-3 col-12 col-md-6">
                         <label for="name" class="form-label">Name*</label>
                         <input type="text" class="form-control @error('name') is-invalid @enderror" 
-                               id="name" name="name" value="{{ old('name') }}" >
+                               id="name" name="name" value="{{ old('name', $member->name) }}" >
                         @error('name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -23,7 +24,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="designation" class="form-label">Designation*</label>
                         <input type="text" class="form-control @error('designation') is-invalid @enderror" 
-                               id="designation" name="designation" value="{{ old('designation') }}" >
+                               id="designation" name="designation" value="{{ old('designation', $member->designation) }}" >
                         @error('designation')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -32,7 +33,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="email" class="form-label">Email*</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                               id="email" name="email" value="{{ old('email') }}" >
+                               id="email" name="email" value="{{ old('email', $member->email) }}" >
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -41,7 +42,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="whatsapp_phone" class="form-label">WhatsApp/Phone*</label>
                         <input type="tel" class="form-control iti__tel-input @error('whatsapp_phone') is-invalid @enderror" 
-                               id="whatsapp_phone" name="whatsapp_phone" value="{{ old('whatsapp_phone') }}">
+                               id="whatsapp_phone" name="whatsapp_phone" value="{{ old('whatsapp_phone', $member->whatsapp_phone) }}">
                         @error('whatsapp_phone')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -50,7 +51,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="company_name" class="form-label">Company Name*</label>
                         <input type="text" class="form-control @error('company_name') is-invalid @enderror" 
-                               id="company_name" name="company_name" value="{{ old('company_name') }}" >
+                               id="company_name" name="company_name" value="{{ old('company_name', $member->company_name) }}" >
                         @error('company_name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -59,7 +60,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="company_telephone" class="form-label">Company Telephone*</label>
                         <input type="tel" class="form-control iti__tel-input @error('company_telephone') is-invalid @enderror" 
-                               id="company_telephone" name="company_telephone" value="{{ old('company_telephone') }}">
+                               id="company_telephone" name="company_telephone" value="{{ old('company_telephone', $member->company_telephone) }}">
                         @error('company_telephone')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -68,7 +69,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="company_address" class="form-label">Company Address*</label>
                         <input type="text" class="form-control @error('company_address') is-invalid @enderror" 
-                               id="company_address" name="company_address" value="{{ old('company_address') }}" >
+                               id="company_address" name="company_address" value="{{ old('company_address', $member->company_address) }}" >
                         @error('company_address')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -77,7 +78,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="country_id" class="form-label">Country*</label>
                         <select class="form-select @error('country_id') is-invalid @enderror" 
-                                id="country" name="country_id" data-old="{{ old('country_id') }}">
+                                id="country" name="country_id" data-old="{{ old('country_id', $member->country_id) }}">
                             <option value="">Select Country</option>
                         </select>
                         @error('country_id')
@@ -88,7 +89,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="city_id" class="form-label">City*</label>
                         <select class="form-select @error('city_id') is-invalid @enderror" 
-                                id="city" name="city_id" data-old="{{ old('city_id') }}">
+                                id="city" name="city_id" data-old="{{ old('city_id', $member->city_id) }}">
                             <option value="">Select City</option>
                         </select>
                         @error('city_id')
@@ -96,23 +97,32 @@
                         @enderror
                     </div>
 
+                    {{-- <div class="mb-3 col-12 col-md-6">
+                        <label for="region_id" class="form-label">Region*</label>
+                        <select class="form-select @error('region_id') is-invalid @enderror" 
+                                id="region" name="region_id" data-old="{{ old('region_id', $member->region_id) }}">
+                            <option value="">Select Region</option>
+                        </select>
+                        @error('region_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div> --}}
                     <div class="mb-3 col-12 col-md-6">
                         <label for="region_id" class="form-label">Region*</label>
                         <select class="form-select @error('region_id') is-invalid @enderror" 
-                                id="region" name="region_id" data-old="{{ old('region_id') }}">
+                                id="region" name="region_id" data-old="{{ old('region_id', $member->region_id) }}">
                             <option value="">Select Region</option>
                         </select>
                         @error('region_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
                     <div class="mb-3 col-12 col-md-6">
                         <label for="incorporation_date" class="form-label">Incorporation Date*</label>
                         <div class="date-picker-wrapper">
                             <input type="text" class="form-control @error('incorporation_date') is-invalid @enderror" 
                                    id="incorporation_date" name="incorporation_date" 
-                                   placeholder="Select Date" value="{{ old('incorporation_date') }}">
+                                   placeholder="Select Date" value="{{ old('incorporation_date', $member->incorporation_date) }}">
                             <svg class="calendar-icon" width="16" height="16"
                                 fill="currentColor" viewBox="0 0 16 16">
                                 <path
@@ -127,7 +137,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="tax_id" class="form-label">Tax ID*</label>
                         <input type="text" class="form-control @error('tax_id') is-invalid @enderror" 
-                               id="tax_id" name="tax_id" value="{{ old('tax_id') }}" >
+                               id="tax_id" name="tax_id" value="{{ old('tax_id', $member->tax_id) }}" >
                         @error('tax_id')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -136,7 +146,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="website_linkedin" class="form-label">Website / LinkedIn*</label>
                         <input type="text" class="form-control @error('website_linkedin') is-invalid @enderror" 
-                               id="website_linkedin" name="website_linkedin" value="{{ old('website_linkedin') }}" >
+                               id="website_linkedin" name="website_linkedin" value="{{ old('website_linkedin', $member->website_linkedin) }}" >
                         @error('website_linkedin')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -145,7 +155,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="referred_by" class="form-label">Referred by</label>
                         <input type="text" class="form-control @error('referred_by') is-invalid @enderror" 
-                               id="referred_by" name="referred_by" value="{{ old('referred_by') }}">
+                               id="referred_by" name="referred_by" value="{{ old('referred_by', $member->referred_by) }}">
                         @error('referred_by')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -153,25 +163,33 @@
 
                     <div class="mb-3 col-12">
                         <label class="form-label">Specializations*</label>
+                        @php
+                            $specializations = is_string($member->specializations) ? json_decode($member->specializations) : $member->specializations;
+                        @endphp
                         <div class="d-flex gap-3 bg-light p-2 rounded align-items-center px-3 flex-wrap @error('specializations') is-invalid @enderror">
                             <div class="form-check mb-0">
-                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Air" id="checkAir">
+                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Air" id="checkAir"
+                                    {{ in_array('Air', $specializations) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="checkAir">Air</label>
                             </div>
                             <div class="form-check mb-0">
-                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Sea" id="checkSea">
+                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Sea" id="checkSea"
+                                    {{ in_array('Sea', $specializations) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="checkSea">Sea</label>
                             </div>
                             <div class="form-check mb-0">
-                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Land" id="Land">
+                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Land" id="Land"
+                                    {{ in_array('Land', $specializations) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="Land">Land</label>
                             </div>
                             <div class="form-check mb-0">
-                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Multimodal" id="Multimodal">
+                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Multimodal" id="Multimodal"
+                                    {{ in_array('Multimodal', $specializations) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="Multimodal">Multimodal</label>
                             </div>
                             <div class="form-check mb-0">
-                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Project Cargo" id="Cargo">
+                                <input class="form-check-input" type="checkbox" name="specializations[]" value="Project Cargo" id="Cargo"
+                                    {{ in_array('Project Cargo', $specializations) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="Cargo">Project Cargo</label>
                             </div>
                         </div>
@@ -184,11 +202,13 @@
                         <label class="form-label">Are you currently a member of any other network?*</label>
                         <div class="d-flex gap-3 bg-light p-2 rounded align-items-center px-3 flex-wrap @error('is_network_member') is-invalid @enderror">
                             <div class="form-check mb-0">
-                                <input class="form-check-input" name="is_network_member" type="radio" value="yes" id="currentlyYes">
+                                <input class="form-check-input" name="is_network_member" type="radio" value="yes" id="currentlyYes"
+                                    {{ $member->is_network_member === 'yes' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="currentlyYes">Yes</label>
                             </div>
                             <div class="form-check mb-0">
-                                <input class="form-check-input" name="is_network_member" type="radio" value="no" id="currentlyNo" checked>
+                                <input class="form-check-input" name="is_network_member" type="radio" value="no" id="currentlyNo"
+                                    {{ $member->is_network_member === 'no' ? 'checked' : '' }}>
                                 <label class="form-check-label" for="currentlyNo">No</label>
                             </div>
                         </div>
@@ -197,10 +217,10 @@
                         @enderror
                     </div>
 
-                    <div class="mb-3 col-12" id="networkField" style="display: none;">
+                    <div class="mb-3 col-12" id="networkField" style="{{ $member->is_network_member === 'yes' ? 'display: block;' : 'display: none;' }}">
                         <label for="network_name" class="form-label">Network Name*</label>
                         <input type="text" class="form-control @error('network_name') is-invalid @enderror" 
-                               id="network_name" name="network_name" value="{{ old('network_name') }}">
+                               id="network_name" name="network_name" value="{{ old('network_name', $member->network_name) }}">
                         @error('network_name')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -212,7 +232,7 @@
                                 id="membership_tier" name="membership_tier" >
                             <option value="">Select a membership tier</option>
                             @foreach($membershipTiers as $tier)
-                                <option value="{{ $tier->id }}" {{ old('membership_tier') == $tier->id ? 'selected' : '' }}>
+                                <option value="{{ $tier->id }}" {{ old('membership_tier', $member->membership_tier) == $tier->id ? 'selected' : '' }}>
                                     {{ $tier->name }}
                                 </option>
                             @endforeach
@@ -224,8 +244,8 @@
                 </div>
 
                 <div class="d-flex justify-content-between mt-4">
-                    <a href="{{ route('members.index') }}" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Create Member</button>
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">Update Member</button>
                 </div>
             </form>
         </div>

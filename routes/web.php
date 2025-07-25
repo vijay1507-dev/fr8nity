@@ -84,6 +84,8 @@ Route::middleware('auth')->group(function () {
         Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
         Route::patch('/{member}/status', [MemberController::class, 'updateStatus'])->name('members.update-status');
         Route::patch('/{member}/membership-tier', [MemberController::class, 'updateMembershipTier'])->name('members.update-membership-tier');
+        Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
+        Route::patch('/{member}', [MemberController::class, 'update'])->name('members.update');
     });
 });
 

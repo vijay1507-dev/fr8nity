@@ -209,6 +209,33 @@ document.addEventListener('DOMContentLoaded', function() {
         loadCities(countryId);
     });
 
+    // Initialize Select2 for region dropdown
+    $('#region').select2({
+        theme: 'default',
+        placeholder: 'Select Region',
+        allowClear: true,
+        width: '100%'
+    }).on('select2:clearing', function(e) {
+        e.preventDefault();
+        $(this).val(null).trigger('change');
+    });
+
+    // Load regions on page load
+    $.get('/get-regions', function(data) {
+        let regionSelect = $('#region');
+        let oldRegionId = regionSelect.data('old');
+        
+        data.forEach(function(region) {
+            let option = new Option(region.name, region.id);
+            regionSelect.append(option);
+        });
+
+        // Set old value if exists
+        if (oldRegionId) {
+            regionSelect.val(oldRegionId).trigger('change');
+        }
+    });
+
     // Handle network member radio buttons
     const networkRadios = document.querySelectorAll('input[name="is_network_member"]');
     const networkField = document.getElementById('networkField');
@@ -218,17 +245,6 @@ document.addEventListener('DOMContentLoaded', function() {
             networkField.style.display = this.value === 'yes' ? 'block' : 'none';
         });
     });
-
-    // Initialize regions
-    fetch("{{ route('get.regions') }}")
-        .then(response => response.json())
-        .then(data => {
-            const regionSelect = document.getElementById('region');
-            data.forEach(region => {
-                const option = new Option(region.name, region.id);
-                regionSelect.add(option);
-            });
-        });
 
     // Initialize international telephone input for both phone fields
     const phoneInputs = document.querySelectorAll('.iti__tel-input');
@@ -281,40 +297,17 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     // Form submission handler
     $('form').on('submit', function(e) {
-        e.preventDefault();
-        if (validateForm()) {
-            // Add complete phone numbers with country code before submission
-            phoneInputs.forEach(function(input, index) {
-                const iti = phoneInstances[index];
-                if (input.value.trim()) {
-                    input.value = iti.getNumber();
-                }
-            });
-            
-            // Submit the form
-            const form = this;
-            $.ajax({
-                url: form.action,
-                method: form.method,
-                data: $(form).serialize(),
-                success: function(response) {
-                    // Store success message in session storage
-                    sessionStorage.setItem('successMessage', 'Member added successfully!');
-                    // Redirect to members index
-                    window.location.href = "{{ route('members.index') }}";
-                },
-                error: function(xhr) {
-                    if (xhr.status === 422) {
-                        const errors = xhr.responseJSON.errors;
-                        Object.keys(errors).forEach(function(key) {
-                            const input = $(`[name="${key}"]`);
-                            showError(input, errors[key][0]);
-                        });
-                    } else {
-                        toastr.error('An error occurred while adding the member');
-                    }
-                }
-            });
+        if (!validateForm()) {
+            e.preventDefault();
+            return false;
         }
+        
+        // Add complete phone numbers with country code before submission
+        phoneInputs.forEach(function(input, index) {
+            const iti = phoneInstances[index];
+            if (input.value.trim()) {
+                input.value = iti.getNumber();
+            }
+        });
     });
 });

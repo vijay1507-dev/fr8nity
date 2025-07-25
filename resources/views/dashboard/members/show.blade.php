@@ -35,20 +35,23 @@
                                             <form action="{{ route('members.update-status', $member) }}" method="POST">
                                                 @csrf
                                                 @method('PATCH')
-                                                <input type="hidden" name="status" value="pending">
-                                                <button type="submit" class="dropdown-item">Set as Pending</button>
+                                                <input type="hidden" name="status" value="approved">
+                                                <button type="submit" class="dropdown-item">Set as Approved</button>
                                             </form>
                                         </li>
                                         <li>
                                             <form action="{{ route('members.update-status', $member) }}" method="POST">
                                                 @csrf
                                                 @method('PATCH')
-                                                <input type="hidden" name="status" value="approved">
-                                                <button type="submit" class="dropdown-item">Set as Approved</button>
+                                                <input type="hidden" name="status" value="pending">
+                                                <button type="submit" class="dropdown-item">Set as Pending</button>
                                             </form>
                                         </li>
                                     </ul>
                                 </div>
+                                @if($member->status === 'approved')
+                                <a href="{{ route('members.edit', $member) }}" class="btn btn-outline-secondary">Edit Details</a>
+                                @endif
                                 <a href="{{ route('members.index') }}" class="btn btn-outline-secondary">Back to List</a>
                             </div>
                         </div>
@@ -281,6 +284,20 @@
                         form.find('select option').each(function() {
                             $(this).prop('selected', $(this).val() === selectedTierId);
                         });
+
+                        // Update benefits list
+                        const benefitsContainer = $('.card-body ul.list-unstyled');
+                        benefitsContainer.empty();
+                        
+                        response.benefits.forEach(function(benefit) {
+                            benefitsContainer.append(`
+                                <li class="mb-2 d-flex align-items-center">
+                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                    ${benefit.title}
+                                </li>
+                            `);
+                        });
+
                         submitBtn.html(originalBtnText);
                         submitBtn.prop('disabled', false);
                         modal.modal('hide');

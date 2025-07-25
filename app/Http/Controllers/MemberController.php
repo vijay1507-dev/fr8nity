@@ -17,12 +17,17 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::query()->where('role', User::MEMBER);
+            $data = User::query()->where('role', User::MEMBER)->with('membershipTier');
 
             return DataTables::of($data)
                 ->addIndexColumn()
+                ->addColumn('current_tier', function($row) {
+                    return $row->membershipTier->name;
+                })
                 ->addColumn('action', function($row) {
-                    return '<a href="' . route('members.show', $row) . '" class="btn btn-sm">View</a>';
+                    $viewBtn = '<a href="' . route('members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
+                    $editBtn = '<a href="' . route('members.edit', $row) . '" class="btn btn-sm ms-2 btn-outline-success">Edit</a>';
+                    return $viewBtn . ' ' . $editBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -39,6 +44,7 @@ class MemberController extends Controller
         if ($member->role !== User::MEMBER) {
             abort(404);
         }
+        $member->load(['membershipTier', 'region', 'country', 'city']);
         $membershipName = $member->membershipTier->name;
         $membershipTiers = MembershipTier::all();
         return view('dashboard.members.show', compact('member', 'membershipTiers','membershipName'));
@@ -147,9 +153,82 @@ class MemberController extends Controller
         ]);
 
         if ($request->ajax()) {
-            return response()->json(['success' => true, 'message' => 'Membership tier updated successfully']);
+            $membershipTier = MembershipTier::with('benefits')->find($request->membership_tier);
+            return response()->json([
+                'success' => true, 
+                'message' => 'Membership tier updated successfully',
+                'benefits' => $membershipTier->benefits
+            ]);
         }
 
         return back()->with('success', 'Membership tier updated successfully');
+    }
+
+    /**
+     * Show the form for editing the specified member.
+     */
+    public function edit(User $member)
+    {
+        if ($member->role !== User::MEMBER) {
+            abort(404);
+        }
+        
+        $membershipTiers = MembershipTier::all();
+        return view('dashboard.members.edit', compact('member', 'membershipTiers'));
+    }
+
+    /**
+     * Update the specified member in storage.
+     */
+    public function update(Request $request, User $member)
+    {
+        if ($member->role !== User::MEMBER) {
+            abort(404);
+        }
+
+        $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $member->id],
+            'designation' => ['required', 'string', 'max:255'],
+            'whatsapp_phone' => ['required'],
+            'company_name' => ['required', 'string', 'max:255'],
+            'company_telephone' => ['required'],
+            'company_address' => ['required', 'string'],
+            'country_id' => ['required', 'exists:countries,id'],
+            'city_id' => ['required', 'exists:cities,id'],
+            'region_id' => ['required', 'exists:regions,id'],
+            'referred_by' => ['nullable', 'string', 'max:255'],
+            'specializations' => ['required', 'array'],
+            'incorporation_date' => ['required', 'date'],
+            'tax_id' => ['required', 'string', 'max:255'],
+            'website_linkedin' => ['required', 'string', 'max:255'],
+            'is_network_member' => ['required', 'in:yes,no'],
+            'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
+            'membership_tier' => ['required'],
+        ]);
+
+        $member->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'designation' => $request->designation,
+            'whatsapp_phone' => $request->whatsapp_phone,
+            'company_name' => $request->company_name,
+            'company_telephone' => $request->company_telephone,
+            'company_address' => $request->company_address,
+            'country_id' => $request->country_id,
+            'city_id' => $request->city_id,
+            'region_id' => $request->region_id,
+            'referred_by' => $request->referred_by,
+            'specializations' => json_encode($request->specializations),
+            'incorporation_date' => $request->incorporation_date,
+            'tax_id' => $request->tax_id,
+            'website_linkedin' => $request->website_linkedin,
+            'is_network_member' => $request->is_network_member,
+            'network_name' => $request->network_name,
+            'membership_tier' => $request->membership_tier,
+        ]);
+
+        return redirect()->route('members.show', $member)
+            ->with('success', 'Member updated successfully!');
     }
 } 

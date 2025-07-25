@@ -1,10 +1,10 @@
 @extends('layouts.dashboard')
-
+@section('title', 'Freight Members')
 @section('content')
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h4 class="card-title mb-0">Members</h4>
+            <h4 class="card-title mb-0">Freight Members</h4>
             <a href="{{ route('members.add') }}" class="btn btn-primary">Add Member</a>
         </div>
         <div class="card-body">
@@ -14,6 +14,9 @@
                         <th>No</th>
                         <th>Name</th>
                         <th>Email</th>
+                        <th>Company Name</th>
+                        <th>Company Telephone</th>
+                        <th>Current Tier</th>
                         <th>Status</th>
                         <th width="100px">Action</th>
                     </tr>
@@ -38,6 +41,9 @@
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
+                {data: 'company_name', name: 'company_name'},
+                {data: 'company_telephone', name: 'company_telephone'},
+                {data: 'current_tier', name: 'current_tier'},
                 {
                     data: 'status', 
                     name: 'status',
