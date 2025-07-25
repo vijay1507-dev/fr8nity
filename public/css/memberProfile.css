@@ -1,0 +1,166 @@
+.badge {
+    font-weight: 500;
+    padding: 6px 12px;
+    font-size: 0.75rem;
+}
+
+.form-label {
+    font-size: 0.875rem;
+    color: #344767 !important;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card-title {
+    color: #344767;
+    font-weight: 600;
+}
+
+.text-muted {
+    color: #344767 !important;
+    opacity: 0.7;
+}
+
+.dropdown-item {
+    cursor: pointer;
+}
+
+.btn-link {
+    color: var(--bs-primary);
+}
+
+.btn-link:hover {
+    color: var(--bs-primary-dark);
+}
+
+h6.text-uppercase {
+    color: #344767;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+}
+
+p.mb-0 {
+    color: #344767;
+    font-weight: 500;
+}
+
+.modal-title {
+    color: #344767;
+    font-weight: 600;
+}
+
+.list-unstyled li {
+    color: #344767;
+    font-weight: 500;
+}
+
+.btn-success {
+    background-color: #2dce89;
+    border-color: #2dce89;
+}
+
+.btn-warning {
+    background-color: #fb6340;
+    border-color: #fb6340;
+    color: #fff;
+}
+
+.btn-outline-secondary {
+    color: #344767;
+    border-color: #8392ab;
+}
+
+.btn-outline-secondary:hover {
+    background-color: #8392ab;
+    border-color: #8392ab;
+}
+
+/* Member Information Styling */
+.info-section {
+    border-bottom: 1px solid #e9ecef;
+}
+
+.info-section:last-child {
+    border-bottom: none;
+}
+
+.info-header {
+    padding: 1rem 1.5rem;
+    background-color: #f8f9fa;
+}
+
+.info-header h6 {
+    color: #344767;
+    font-weight: 600;
+    font-size: 0.75rem;
+    letter-spacing: 0.5px;
+    display: flex;
+    align-items: center;
+}
+
+.info-body {
+    padding: 1.5rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.info-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.info-label {
+    font-size: 0.75rem;
+    color: #8392ab;
+    font-weight: 600;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.5px;
+}
+
+.info-value {
+    color: #344767;
+    font-weight: 500;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 6px 0 rgba(67, 89, 113, 0.12);
+}
+
+.card-header {
+    background-color: white;
+    border-bottom: none;
+}
+
+.text-primary {
+    color: #435ebe !important;
+}
+
+.bg-primary {
+    background-color: #435ebe !important;
+}
+
+@media (max-width: 768px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .info-body {
+        padding: 1rem;
+    }
+
+    .info-header {
+        padding: 1rem;
+    }
+}

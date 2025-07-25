@@ -429,20 +429,4 @@ document.addEventListener('DOMContentLoaded', function() {
     new Chart(ctx, config);
 });
 </script>
-
-<style>
-.border {
-    border-color: #dee2e6 !important;
-}
-.chart-container {
-    width: 100%;
-    max-height: 200px;
-}
-h6 {
-    color: #344767;
-    font-weight: 600;
-    font-size: 0.75rem;
-    letter-spacing: 0.5px;
-}
-</style>
 @endsection

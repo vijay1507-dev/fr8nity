@@ -27,61 +27,9 @@
 @endsection
 
 @section('scripts')
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-<style>
-/* Toastr customization */
-.toast-success {
-    background-color: #51A351 !important;
-}
-#toast-container > .toast-success {
-    background-image: none !important;
-}
-#toast-container > div {
-    padding: 15px 15px 15px 15px;
-    width: 300px;
-    opacity: 1;
-    border-radius: 4px;
-}
-</style>
-
 <script type="text/javascript">
-// Configure toastr options
-toastr.options = {
-    "closeButton": true,
-    "debug": false,
-    "newestOnTop": false,
-    "progressBar": true,
-    "positionClass": "toast-top-right",
-    "preventDuplicates": false,
-    "onclick": null,
-    "showDuration": "300",
-    "hideDuration": "1000",
-    "timeOut": "5000",
-    "extendedTimeOut": "1000",
-    "showEasing": "swing",
-    "hideEasing": "linear",
-    "showMethod": "fadeIn",
-    "hideMethod": "fadeOut"
-};
-
-// Show success message if exists in session storage
-document.addEventListener('DOMContentLoaded', function() {
-    const successMessage = sessionStorage.getItem('successMessage');
-    if (successMessage) {
-        toastr.success(successMessage);
-        sessionStorage.removeItem('successMessage');
-    }
-
-    // Show Laravel flash message if exists
-    @if(session('success'))
-        toastr.success("{{ session('success') }}");
-    @endif
-});
-
-// Initialize DataTable
-window.addEventListener('load', function() {
-    if (typeof jQuery !== 'undefined' && typeof jQuery.fn.DataTable !== 'undefined') {
+    // Initialize DataTable
+    $(function () {
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
@@ -102,9 +50,6 @@ window.addEventListener('load', function() {
                 },
             ]
         });
-    } else {
-        console.error('Required libraries not loaded');
-    }
-});
+    });
 </script>
 @endsection
