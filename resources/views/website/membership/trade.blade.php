@@ -8,7 +8,13 @@
 <section class="trader_sec">
      <div class="col-12 col-md-8 mx-auto bg-dark p-5 rounded my-5">
         <div class="tittle d-flex justify-content-center align-items-center">
-            <h1 class="mb-4 fw-semibold text-center">Looking for a Trusted <br>Freight Partner?</h1>
+           <div class="pb-3">  <h1 class="mb-4 fw-semibold text-center">Looking for a Trusted <br>Freight Partner?</h1>
+            <div class="col-md-10 mx-auto text-center">
+                 <p>At FR8NITY, we believe in building a trusted ecosystem where quality trade meets seamless logistics.</p>
+            <p>As a Trade Member, your business will be registered in our exclusive database — complimentary and commitment-free. When vetted buyer enquiries arise, you may be among the first we recommend. This isn’t just a listing — it’s a gateway to better business. Join FR8NITY and be part of a network where every connection counts.</p>
+            </div>
+            </div>
+
         </div>
 
         <form>
@@ -78,7 +84,7 @@
                 </div>
 
                 <div class="col-12">
-                    <label class="form-label">Freight Specializations</label>
+                    <label class="form-label">What are you looking for?</label>
                     <div class="checkbox-group d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap ">
                         <div class="form-check">
                             <input class="form-check-input checkboxpadding" type="checkbox" id="Speed">
@@ -122,13 +128,15 @@
                     <label class="form-label">WhatsApp/Phone</label>
                     <input type="tel" class="form-control inputbox" placeholder="WhatsApp/Phone*">
                 </div>
-
+                <div class="col-12">
+                    <label class="form-label">Let us know how we can support you</label>
+                    <input type="text" class="form-control inputbox" placeholder="Let us know how we can support you">
+                </div>
                 <div class="col-12">
                     <label class="form-label">Consent</label>
                     <div class="form-check">
                         <input class="form-check-input checkboxpadding" type="checkbox" id="verifiedforwarder">
-                        <label class="form-check-label" for="verifiedforwarder">I want to be matched with a verified
-                            forwarder</label>
+                        <label class="form-check-label" for="verifiedforwarder">By submitting this form, you consent to FR8NITY sharing your shipment details with relevant and trusted freight partners within our network for the purpose of quotation and coordination. We do not sell your data or pass it to third parties outside the network.</label>
                     </div>
                 </div>
 

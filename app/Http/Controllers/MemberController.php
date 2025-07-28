@@ -201,7 +201,8 @@ class MemberController extends Controller
         if ($member->role !== User::MEMBER) {
             abort(404);
         }
-        $request->validate([
+
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $member->id],
             'designation' => ['required', 'string', 'max:255'],
@@ -221,13 +222,20 @@ class MemberController extends Controller
             'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
             'membership_tier' => ['required'],
             'profile_photo' => ['nullable', 'image', 'max:2048'],
-        ]);
+        ];
+
+        // Add password validation rules if password is being updated
+        if ($request->filled('password')) {
+            $rules['password'] = ['required', 'confirmed', Password::defaults()];
+        }
+
+        $request->validate($rules);
 
         if ($request->hasFile('profile_photo')) {
             $path = $request->file('profile_photo')->store('profile-photos', 'public');
         }
 
-        $member->update([
+        $updateData = [
             'name' => $request->name,
             'email' => $request->email,
             'designation' => $request->designation,
@@ -247,7 +255,15 @@ class MemberController extends Controller
             'network_name' => $request->network_name,
             'membership_tier' => $request->membership_tier,
             'profile_photo' => $path ?? null,
-        ]);
+        ];
+
+        // Add password to update data if it's being changed
+        if ($request->filled('password')) {
+            $updateData['password'] = Hash::make($request->password);
+        }
+
+        $member->update($updateData);
+
         if(Auth::user()->role == \App\Models\User::MEMBER){
             return redirect()->route('profile')->with('success', 'Profile updated successfully!');
         }else{

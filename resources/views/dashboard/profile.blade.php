@@ -28,6 +28,18 @@
                                         <p class="text-muted mb-0">{{ auth()->user()->designation }}</p>
                                     </div>
                                 </div>
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar-wrapper me-3">
+                                        @if(auth()->user()->company_logo)
+                                    <img src="{{ Storage::url(auth()->user()->company_logo) }}" alt="Company Logo" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                                  @else
+                                    <img src="" alt="Company Logo" class="rounded-circle" width="100" height="100" id="CompanyLogoPreview">
+                                  @endif
+                                    </div>
+                                    <div>
+                                        <h4 class="mb-1">{{ auth()->user()->company_name }}</h4>
+                                    </div>
+                                </div>
                                 <div>
                                     <a href="{{ route('editmemberprofile',auth()->user()->id) }}" class="btn btn-outline-secondary">Edit Profile</a>
                                 </div>

@@ -15,7 +15,8 @@
                 @csrf
                 @method('PATCH')
                 @if(auth()->user()->role == \App\Models\User::MEMBER)
-                <div class="col-12 mb-4">
+                <div class="row">
+                <div class="col-6 mb-4">
                     <div class="d-flex align-items-center">
                         <div class="me-4">
                             @if($member->profile_photo)
@@ -33,6 +34,27 @@
                             @enderror
                         </div>
                     </div>
+                </div>
+                <div class="col-6 mb-4">
+                    <div class="d-flex align-items-center">
+                        <div class="me-4">
+                           
+                            @if($member->company_logo)
+                                <img src="{{ Storage::url($member->company_logo) }}" alt="Profile Photo" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                            @else
+                                <img src="" alt="Company Logo" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                            @endif
+                        </div>
+                        <div>
+                            <label class="form-label" for="company_logo">Company Logo</label>
+                            <input type="file" id="company_logo" name="company_logo" class="form-control" accept="image/*">
+                            <div class="form-text">Maximum file size: 2MB. Supported formats: JPG, PNG, GIF</div>
+                            @error('company_logo')
+                                <div class="text-danger">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                </div>
                 </div>
                 @endif
 
@@ -58,7 +80,9 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="email" class="form-label">Email*</label>
                         <input type="email" class="form-control @error('email') is-invalid @enderror" 
-                               id="email" name="email" value="{{ old('email', $member->email) }}" >
+                               id="email" name="email" value="{{ old('email', $member->email) }}"
+                               {{ auth()->user()->role == \App\Models\User::MEMBER ? 'readonly' : '' }}>
+                        <div class="form-text">Email cannot be changed as it is used for login.</div>
                         @error('email')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -265,6 +289,32 @@
                         @error('membership_tier')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+                </div>
+
+                <!-- Password Update Section -->
+                <div class="card mt-4 mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Update Password</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="mb-3 col-12 col-md-6">
+                                <label for="password" class="form-label">New Password</label>
+                                <input type="password" class="form-control @error('password') is-invalid @enderror" 
+                                       id="password" name="password" autocomplete="new-password">
+                                <div class="form-text">Leave blank to keep current password</div>
+                                @error('password')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="mb-3 col-12 col-md-6">
+                                <label for="password_confirmation" class="form-label">Confirm New Password</label>
+                                <input type="password" class="form-control" 
+                                       id="password_confirmation" name="password_confirmation" autocomplete="new-password">
+                            </div>
+                        </div>
                     </div>
                 </div>
 

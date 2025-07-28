@@ -31,6 +31,7 @@ class User extends Authenticatable
         'designation',
         'whatsapp_phone',
         'company_name',
+        'company_logo',
         'company_telephone',
         'company_address',
         'country_id',

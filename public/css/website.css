@@ -335,6 +335,8 @@ Link {
 .logo_slide img { width: auto; height: 42px; object-fit: contain; }
 .logo_items .gradient_rounded { border-radius: 80px; }
 .logo_items { display: flex ; gap: 20px; animation: slide 30s linear infinite; }
+li.dropdown-submenu>a { display: flex ; align-items: baseline; justify-content: space-between; }
+li.dropdown-submenu>a:after { content: ''; border-right: 2px solid; border-bottom: 2px solid; display: inline-block; width: 7px; height: 7px; margin-left: 8px; transform: rotate(-40deg); }
 
 /* footer */
 footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
@@ -469,8 +471,6 @@ footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
   gap: 20px;
   animation: slide 30s linear infinite;
 }
-
-
 
 /* uuderline */
 .underline {
