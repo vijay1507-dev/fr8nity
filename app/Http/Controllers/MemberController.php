@@ -208,6 +208,7 @@ class MemberController extends Controller
             'designation' => ['required', 'string', 'max:255'],
             'whatsapp_phone' => ['required'],
             'company_name' => ['required', 'string', 'max:255'],
+            'company_logo' => ['nullable', 'image', 'max:2048'],
             'company_telephone' => ['required'],
             'company_address' => ['required', 'string'],
             'country_id' => ['required', 'exists:countries,id'],
@@ -234,12 +235,16 @@ class MemberController extends Controller
         if ($request->hasFile('profile_photo')) {
             $path = $request->file('profile_photo')->store('profile-photos', 'public');
         }
+                if ($request->hasFile('company_logo')) {
+            $companyLogoPath = $request->file('company_logo')->store('company-logos', 'public');
+        }
 
         $updateData = [
             'name' => $request->name,
             'email' => $request->email,
             'designation' => $request->designation,
             'whatsapp_phone' => $request->whatsapp_phone,
+            'company_logo' => $companyLogoPath ?? null,
             'company_name' => $request->company_name,
             'company_telephone' => $request->company_telephone,
             'company_address' => $request->company_address,
