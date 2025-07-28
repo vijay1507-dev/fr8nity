@@ -37,6 +37,14 @@ Route::prefix('membership')->group(function () {
     Route::get('/founder', function () {
         return view('website.membership.founder');
     })->name('membership.founder');
+    Route::get('/join-member', function () {
+        return view('website.membership.join-member');
+    })->name('membership.join-member');
+    
+    Route::get('/shipment-enquiry', function () {
+        return view('website.membership.shipment-enquiry');
+    })->name('membership.shipment-enquiry');
+    
 });
 
 // Events routes

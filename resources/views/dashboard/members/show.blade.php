@@ -222,6 +222,12 @@
                 </div>
             </div>
         </div>
+        <!-- Back Button -->
+        <div class="position-fixed bottom-0 end-0 p-4">
+            <a href="{{ url()->previous() }}" class="btn btn-secondary rounded-circle shadow-sm" style="width: 50px; height: 50px; padding: 9px;">
+                <i class="bi bi-arrow-left" style="font-size: 20px;"></i>
+            </a>
+        </div>
     </div>
 
     <!-- Change Tier Modal -->

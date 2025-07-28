@@ -33,8 +33,8 @@
                 <li class="dropdown-submenu">
                   <a class="dropdown-item {{ request()->is('membership/trade-member') ? 'active' : '' }}" href="{{route('membership.trade-member')}}">Trade Member</a>
                   <ul class="dropdown-menu frt_submenu">
-                    <li><a class="dropdown-item" href="#">Join as Member</a></li>
-                    <li><a class="dropdown-item" href="#">Submit Shipment Enquiry</a></li>
+                    <li><a class="dropdown-item" href="{{route('membership.join-member')}}">Join as Member</a></li>
+                    <li><a class="dropdown-item" href="{{route('membership.shipment-enquiry')}}">Submit Shipment Enquiry</a></li>
                   </ul>
                 </li>
               </ul>
