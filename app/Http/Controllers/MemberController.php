@@ -105,7 +105,7 @@ class MemberController extends Controller
             'network_name' => $request->network_name,
             'membership_tier' => $request->membership_tier,
             'role' => User::MEMBER,
-            'status' => 'approved',
+            'status' => 'pending',
         ]);
 
         if ($request->ajax()) {
