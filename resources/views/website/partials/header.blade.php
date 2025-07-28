@@ -22,7 +22,7 @@
               <a class="nav-link dropdown-toggle {{ request()->is('membership*') ? 'active' : '' }}" href="#" id="membershipDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Membership</a>
               <ul class="dropdown-menu" aria-labelledby="membershipDropdown">
                 <li class="dropdown-submenu">
-                  <a class="dropdown-item {{ request()->is('membership/register') ? 'active' : '' }}" href="#">Freight Member</a>
+                  <a class="dropdown-item {{ request()->is('membership/register') ? 'active' : '' }}" href="{{route('register')}}">Freight Member</a>
                   <ul class="dropdown-menu frt_submenu">
                     <li><a class="dropdown-item" href="{{route('register', ['type' => 'freight', 'tier' => 'explorer'])}}">Explorer</a></li>
                     <li><a class="dropdown-item" href="{{route('register', ['type' => 'freight', 'tier' => 'elevate'])}}">Elevate</a></li>
