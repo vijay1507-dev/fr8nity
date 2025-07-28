@@ -30,7 +30,13 @@
                     <li><a class="dropdown-item" href="{{route('register', ['type' => 'freight', 'tier' => 'founder'])}}">Founder</a></li>
                   </ul>
                 </li>
-                <li><a class="dropdown-item {{ request()->is('membership/trade-member') ? 'active' : '' }}" href="{{route('membership.trade-member')}}">Trade Member</a></li>
+                <li class="dropdown-submenu">
+                  <a class="dropdown-item {{ request()->is('membership/trade-member') ? 'active' : '' }}" href="{{route('membership.trade-member')}}">Trade Member</a>
+                  <ul class="dropdown-menu frt_submenu">
+                    <li><a class="dropdown-item" href="#">Join as Member</a></li>
+                    <li><a class="dropdown-item" href="#">Submit Shipment Enquiry</a></li>
+                  </ul>
+                </li>
               </ul>
             </li>
             <!-- Events Dropdown -->
