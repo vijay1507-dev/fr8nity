@@ -13,7 +13,7 @@
                     <h1 class="fw-bold size text_image">
                        About Us
                     </h1>
-                    <p class="fs-2">Lorem Ipsum is simply dummy text of the printing and typesetting industry.</p>
+                    <p class="">Where Experience Meets Evolution Fr8nity isn’t just another freight forwarding network — we’re a generational alliance shaped by legacy, powered by innovation, and committed to rising together.</p>
                     <a href="{{ route('membership') }}" class="btn btnbg fe-semibold mt-3">
                         <span>Become a Member</span>
                     </a>
@@ -31,51 +31,47 @@
 <!-- About Section -->
 <section class="about_sec">
     <div class="container py-5">
-        <div class="container">
-            <div class="">
-                <div class="row align-items-center justify-content-center p-3">
-                    <div class="col-12 col-md-6 text-center mb-4 mb-md-0 px-md-4">
-                        <div class="gradient_rounded radies_20">
-                            <div class="blacklight radies_20 p-3">
-                                 <img src="{{asset('images/ourStory.png')}}" alt="Our Story"
-                            class="img-fluid rounded-4 shadow object-fit-cover w-100 radies_20"
-                            style="height: 100%; max-height: 450px; object-position: center;" />
-                            </div>    
-                        </div>    
-                    </div>
-                    <div class="col-12 col-md-6">
-                        <h2 class="mb-3 fw-bold">About The FR8NITY </h2>
-                        <div class="underline mb-4">
-                            <span class="move delay-0"></span>
-                            <span class="move delay-1"></span>
-                        </div>
-                        <p class="fs-6">
-                            FR8NITY is more than a freight forwarding network. It's a movement - where credibility moves faster than cargo.
-                        </p>
-                        <p class="fs-6">
-                            Born from years in the trenches of logistics, FR8NITY was built to connect forwarders globally, offering not just access - but advantage.
-                        </p>
-                         <p class="fs-6">
-                            It's a space where professionalism meets partnership. Where independent players rise together through shared trust, verified referrals, and meaningful growth.
-                        </p>
-                         <p class="fs-6">
-                           Because in this fast-paced, high-pressure industry, no one should have to move alone.
-                        </p>
-                        <a href="#" type="button" class="btn btnbg fe-semibold mt-4">
-                            Contact Us
-                        </a>
-                    </div>
+         <div class="row align-items-center justify-content-center p-3">
+            <div class="col-12 col-md-6 text-center mb-4 mb-md-0 px-md-4">
+                <div class="gradient_rounded radies_20">
+                    <div class="blacklight radies_20 p-3">
+                            <img src="{{asset('images/ourStory.png')}}" alt="Our Story"
+                    class="img-fluid rounded-4 shadow object-fit-cover w-100 radies_20"
+                    style="height: 100%; max-height: 450px; object-position: center;" />
+                    </div>    
+                </div>    
+            </div>
+            <div class="col-12 col-md-6">
+                <h2 class="mb-3 fw-bold">About The FR8NITY </h2>
+                <div class="underline mb-4">
+                    <span class="move delay-0"></span>
+                    <span class="move delay-1"></span>
                 </div>
+                <p class="fs-6">
+                    FR8NITY is more than a freight forwarding network. It's a movement - where credibility moves faster than cargo.
+                </p>
+                <p class="fs-6">
+                    Born from years in the trenches of logistics, FR8NITY was built to connect forwarders globally, offering not just access - but advantage.
+                </p>
+                    <p class="fs-6">
+                    It's a space where professionalism meets partnership. Where independent players rise together through shared trust, verified referrals, and meaningful growth.
+                </p>
+                    <p class="fs-6">
+                    Because in this fast-paced, high-pressure industry, no one should have to move alone.
+                </p>
+                <a href="#" type="button" class="btn btnbg fe-semibold mt-4">
+                    Contact Us
+                </a>
             </div>
         </div>
     </div>
 </section>
 
 
-<section>
+<section class="founders_sec">
     <div class="container py-5 px-2">
         <div class="text-center">
-            <h2 class="text-center fw-bold fs-2">Founders</h2>
+            <h2 class="text-center fw-bold fs-2">Meet Our Founders</h2>
             <div class="underline mb-4 mx-auto">
                 <span class="move delay-0"></span>
                 <span class="move delay-1"></span>
@@ -84,16 +80,14 @@
 
         <div class="row mx-auto align-items-stretch">
             <div class="col-12 col-lg-6 mb-3">
-                <div class="gradient_rounded radies_20 m-2">
+                <div class="gradient_rounded radies_20 m-2 h-100">
                     <div class="p-3 h-100 radies_20 blacklight">
-                        <img src="{{ asset('images/funder1.png') }}" alt="Cheryl Tan" class="img-fluid mb-3" />
+                        <img src="{{ asset('images/creryl.webp') }}" alt="Cheryl Tan" class="img-fluid mb-3" />
                         <div class="px-4 d-flex flex-column">
-                            <h3 class="h5 textcolor">
-                                Cheryl Tan
+                            <h3 class="h4 textcolor">
+                                 Cheryl – The Firestarter 
                             </h3>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                unknown printer took a galley of type and scrambled it to make a type specimen book.
+                            <p class="mb-0">Cheryl brings a vibrant edge with more than a decade in customer service, sales, and leadership. She’s a digital-native leader — people-first, future-focused — with a sharp instinct for building meaningful relationships and driving growth.
                             </p>
                         </div>
                     </div>
@@ -101,16 +95,14 @@
             </div>
 
             <div class="col-12 col-lg-6 mb-3">
-                <div class="gradient_rounded radies_20 m-2">
+                <div class="gradient_rounded radies_20 m-2 h-100">
                     <div class="p-3 h-100 radies_20 blacklight">
-                        <img src="{{ asset('images/funder2.png') }}" alt="Dawn Tan" class="img-fluid mb-3" />
+                        <img src="{{ asset('images/dawn.webp') }}" alt="Dawn Tan" class="img-fluid mb-3" />
                         <div class="px-4 d-flex flex-column">
-                            <h3 class="h5 textcolor">
-                                Dawn Tan
+                            <h3 class="h4 textcolor">
+                                Dawn – The Trailblazer
                             </h3>
-                            <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                                Ipsum has been the industry's standard dummy text ever since the 1500s, when an
-                                unknown printer took a galley of type and scrambled it to make a type specimen book.
+                            <p class="mb-0">With 30+ years of industry expertise, Dawn is a seasoned freight forwarder whose career was built container by container. Her depth of experience, operational precision, and unwavering grit ensure Fr8nity remains grounded in what works.
                             </p>
                         </div>
                     </div>
@@ -120,6 +112,49 @@
         
     </div>
 </section> 
+
+
+<section class="about_sec">
+    <div class="container py-5">
+         <div class="row align-items-center justify-content-center p-3">
+             <div class="col-12 col-md-6">
+                <h2 class="mb-3 fw-bold">A New Kind of Network</h2>
+                <div class="underline mb-4">
+                    <span class="move delay-0"></span>
+                    <span class="move delay-1"></span>
+                </div>
+                <p class="fs-6">
+                    Freight forwarding is rooted in tradition — but Fr8nity believes tradition shouldn’t limit innovation.
+                </p>
+               
+                <p class="fs-6">
+                    We blend experience and energy to create something stronger:
+                </p>
+                <ul class="p-0">
+                    <li>🤝 We build trust with every layer we lay</li>
+                    <li>🌱 We nurture partnerships that evolve with us</li>
+                    <li>📈 We commit to elevation at every step</li>
+                </ul>
+                <p class="fs-6">
+                    More than business, freight is connection — across borders, industries, and lives. Dawn and Cheryl, united by a love for travel and discovery, see freight forwarding as a chance to connect people, move ideas, and build bridges.
+                </p>
+                <p class="fs-6">
+                   Fr8nity is that bridge. A place where all forwarders — seasoned or new — thrive together.
+                </p>
+            </div>
+            <div class="col-12 col-md-6 text-center mb-4 mb-md-0 px-md-4">
+                <div class="gradient_rounded radies_20">
+                    <div class="blacklight radies_20 p-3">
+                            <img src="{{asset('images/ourStory.png')}}" alt="Our Story"
+                    class="img-fluid rounded-4 shadow object-fit-cover w-100 radies_20"
+                    style="height: 100%; max-height: 450px; object-position: center;" />
+                    </div>    
+                </div>    
+            </div>
+           
+        </div>
+    </div>
+</section>
 
 
 <section class="ourteam_sec">

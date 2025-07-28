@@ -129,9 +129,24 @@ class MemberController extends Controller
             'status' => ['required', 'in:pending,approved'],
         ]);
 
-        $member->update([
-            'status' => $request->status,
-        ]);
+        // If status is being changed to approved
+        if ($request->status === 'approved' && $member->status !== 'approved') {
+            // Create and send notification
+            $notification = new \App\Notifications\ProfileApprovalNotification();
+            
+            // Update member with generated password
+            $member->update([
+                'status' => $request->status,
+                'password' => Hash::make($notification->getPassword())
+            ]);
+
+            // Send notification with login credentials
+            $member->notify($notification);
+        } else {
+            $member->update([
+                'status' => $request->status,
+            ]);
+        }
 
         return back()->with('success', 'Member status updated successfully.');
     }

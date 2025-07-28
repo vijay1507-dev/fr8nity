@@ -97,6 +97,30 @@ class MailTemplateSeeder extends Seeder
                 'reset_url'
             ]
         ],
+
+        'profile_approval' => [
+            'subject' => 'Welcome to Fr8nity - Your Login Credentials',
+            'body' => '
+<h2>Welcome to Fr8nity!</h2>
+<p>Dear {{name}},</p>
+<p>Congratulations! Your Fr8nity profile has been approved.</p>
+<p>You can now login using the following credentials:</p>
+<div style="background: #f8f9fa; padding: 15px; border-radius: 5px; margin: 20px 0;">
+    <p style="margin: 5px 0;"><strong>Email:</strong> {{email}}</p>
+    <p style="margin: 5px 0;"><strong>Password:</strong> {{password}}</p>
+</div>
+<p>Please change your password after your first login for security purposes.</p>
+<div style="text-align: center; margin-top: 30px;">
+    <a href="{{login_url}}" style="background-color: #007bff; color: white; padding: 12px 25px; text-decoration: none; border-radius: 5px; font-weight: bold;">Login Now</a>
+</div>',
+            'comment' => 'Email sent to user when their profile is approved with login credentials',
+            'variables' => [
+                'name',
+                'email',
+                'password',
+                'login_url',
+            ]
+        ],
     ];
 
     public function run()

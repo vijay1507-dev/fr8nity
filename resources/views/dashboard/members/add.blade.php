@@ -223,7 +223,7 @@
                     </div>
                 </div>
 
-                <div class="d-flex justify-content-between mt-4">
+                <div class="d-flex justify-content-center gap-3 mt-4">
                     <a href="{{ route('members.index') }}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary">Create Member</button>
                 </div>
