@@ -24,10 +24,10 @@
                 <li class="dropdown-submenu">
                   <a class="dropdown-item {{ request()->is('membership/register') ? 'active' : '' }}" href="{{route('register')}}">Freight Member</a>
                   <ul class="dropdown-menu frt_submenu">
-                    <li><a class="dropdown-item" href="{{route('register', ['type' => 'freight', 'tier' => 'explorer'])}}">Explorer</a></li>
-                    <li><a class="dropdown-item" href="{{route('register', ['type' => 'freight', 'tier' => 'elevate'])}}">Elevate</a></li>
-                    <li><a class="dropdown-item" href="{{route('register', ['type' => 'freight', 'tier' => 'summit'])}}">Summit</a></li>
-                    <li><a class="dropdown-item" href="{{route('register', ['type' => 'freight', 'tier' => 'founder'])}}">Founder</a></li>
+                    <li><a class="dropdown-item" href="{{ route('membership.explorer') }}">Explorer</a></li>
+                    <li><a class="dropdown-item" href="{{ route('membership.elevate') }}">Elevate</a></li>
+                    <li><a class="dropdown-item" href="{{ route('membership.summit') }}">Summit</a></li>
+                    <li><a class="dropdown-item" href="{{ route('membership.founder') }}">Founder</a></li>
                   </ul>
                 </li>
                 <li class="dropdown-submenu">

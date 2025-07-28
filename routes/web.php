@@ -21,6 +21,22 @@ Route::prefix('membership')->group(function () {
     Route::get('/trade-member', function () {
         return view('website.membership.trade');
     })->name('membership.trade-member'); 
+    // Membership Routes
+    Route::get('/explorer', function () {
+        return view('website.membership.explorer');
+    })->name('membership.explorer');
+
+    Route::get('/elevate', function () {
+        return view('website.membership.elevate');
+    })->name('membership.elevate');
+
+    Route::get('/summit', function () {
+        return view('website.membership.summit');
+    })->name('membership.summit');
+
+    Route::get('/founder', function () {
+        return view('website.membership.founder');
+    })->name('membership.founder');
 });
 
 // Events routes
@@ -46,7 +62,7 @@ Route::get('/contact-us', function () {
     return view('website.contact-us');
 })->name('contact-us');
 Route::get('/faq', function () {
-    return view('website.membership.faq');
+    return view('website.faq');
 })->name('faq');
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 
