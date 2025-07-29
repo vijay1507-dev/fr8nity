@@ -328,6 +328,8 @@ Link {
   }
 }
 
+.inner_banner{min-height: 400px;}
+
 .user_dropdown img { width: 37px; height: 37px; border-radius: 50%; object-fit: cover; margin-right: 10px; }
 .header_nav .navbar-nav .dropdown-toggle:after { border: 0; border-right: 2px solid; border-bottom: 2px solid; width: 8px; display: inline-block; height: 8px; border-color: #fff; transform: rotate(45deg); margin-left: 8px; }
 
@@ -352,14 +354,32 @@ footer.footer_main, .newsletter_sec{ background: #1A1A1A; }
   outline: none !important;
   box-shadow: none !important;
 }
-
+.text-primary{color: #E8E865 !important;}
 /* about-us */
 .founders_sec img.img-fluid { border-radius: 12px 12px 0 0; height: 420px; width: 100%; object-fit: cover; object-position: top; }
 .custome_list { padding: 0; list-style: none; }
 .custome_list li { display: flex ; align-items: baseline; }
 .custome_list li:before { content: ''; border-right: 1px solid; border-bottom: 1px solid; width: 8px; height: 8px; min-width: 8px; min-height: 8px; display: inline-block; margin-right: 10px; transform: rotate(-45deg); }
 
-/* ///*/
+/* mamber_page */
+.member_filter ul.nav-tabs { padding: 10px 20px; background: #e88b3b; width: fit-content; border-radius: 60px; border: 0; }
+.member_filter ul.nav-tabs button { border-radius: 60px; padding: 5px 15px; font-size: 16px; font-weight: 500; color: #fff;border: 0;}
+.member_filter .search_btn { color: #000;  border-radius: 60px; background: linear-gradient(90deg, #b58320 0%, #ffff78 52%, #f3ab0b 100%); border: 0;font-weight: 600; font-size: 16px; padding: 8px 20px;}
+.member_filter input, .member_filter select { outline: unset !important; box-shadow: unset !important; }
+.member_filter { border-radius: 60px; }
+.member_filter>.input-group-text:not(.member_filter>.input-group-text:last-child) {border: 0; border-right: 1px solid #0000001a; border-radius: 0; margin-right: 12px !important; }
+
+.filter_list .company_logo { height: 26px; width: 110px; object-fit: contain; text-align: left; object-position: left;    filter: invert(1); }
+.filter_list .service-btn { color: #fff; border-color: #fff; margin-right: 10px; padding: 4px 10px; font-size: 14px; font-weight: 400; cursor: unset; }
+
+.inner_mamber .company_logo { max-width: fit-content; margin-inline: auto; margin-bottom: 20px; background: #fff; width: 120px; height: 120px; object-fit: contain; border-radius: 50%; padding: 15px; }
+.member_sidebar { position: sticky; top: 0; height: fit-content; }
+section.inner_mamber:before { content: ''; background: #00000093; position: absolute; width: 100%; height: 100%; top: 0; left: 0; }
+section.inner_mamber { position: relative; height: 240px; margin-bottom: 170px; }
+.inner_mamber_detail { text-align: center; position: relative; bottom: -160px; }
+.filter_list h4 span { font-size: 16px; font-weight: 300 !important; font-family: "Instrument Sans", sans-serif; }
+.filter_list h4 { text-transform: capitalize; margin-bottom: 5px !important;}
+
 @media (max-width: 576px) {
   .newsletter_sec .newsletter form {
     max-width: 100%;

@@ -71,7 +71,7 @@ Route::get('/faq', function () {
 })->name('faq');
 
 Route::get('/members-directory', [MemberController::class, 'directory'])->name('members.directory');
-Route::get('/members-directory/view-profile', [MemberController::class, 'viewProfile'])->name('members.directory');
+Route::get('/members-directory/view-profile', [MemberController::class, 'viewProfile'])->name('members.directory-view-profile');
 
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 
