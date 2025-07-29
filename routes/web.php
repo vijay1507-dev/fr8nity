@@ -18,9 +18,6 @@ Route::prefix('membership')->group(function () {
     Route::get('/', function () {
         return view('website.membership');
     })->name('membership');
-    Route::get('/trade-member', function () {
-        return view('website.membership.trade');
-    })->name('membership.trade-member'); 
     // Membership Routes
     Route::get('/explorer', function () {
         return view('website.membership.explorer');
@@ -74,6 +71,7 @@ Route::get('/faq', function () {
 })->name('faq');
 
 Route::get('/members-directory', [MemberController::class, 'directory'])->name('members.directory');
+Route::get('/members-directory/view-profile', [MemberController::class, 'viewProfile'])->name('members.directory');
 
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 

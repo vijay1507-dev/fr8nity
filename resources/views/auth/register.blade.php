@@ -3,6 +3,9 @@
 @section('title', 'Register')
 
 @section('content')
+    <script>
+        window.defaults = @json($defaults);
+    </script>
     <body style="overflow: hidden;">
         <div class="wrapper userlogin p-0 bg-black">
             <main class="content">

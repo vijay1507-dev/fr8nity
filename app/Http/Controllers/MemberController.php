@@ -289,4 +289,13 @@ class MemberController extends Controller
 
         return view('website.member-directory', compact('members'));
     }
+    public function viewProfile()
+    {
+        $members = User::where('role', User::MEMBER)
+            ->where('status', 'approved')
+            ->with(['membershipTier', 'region', 'country', 'city'])
+            ->get();
+
+        return view('website.member-directory-view-profile', compact('members'));
+    }
 } 

@@ -342,8 +342,7 @@ $(document).ready(function() {
         placeholder: 'Select City',
         allowClear: true,
         width: '100%'
-    }).on('select2:clearing', function(e) {
-        e.preventDefault();
+    }).on('select2:clear', function(e) {
         $(this).val(null).trigger('change');
     });
 
@@ -384,16 +383,37 @@ $(document).ready(function() {
             countrySelect.append(option);
         });
 
-        // Set old value if exists
-        if (oldCountryId) {
-            countrySelect.val(oldCountryId).trigger('change');
-            // Set country code for old value
-            const selectedOption = countrySelect.find(`option[value="${oldCountryId}"]`);
-            if (selectedOption.length) {
-                $('#country_code').val(selectedOption.data('code'));
-            }
-            // Load cities for the selected country
+        // Set default country if no old value exists
+        if (!oldCountryId) {
+            countrySelect.val(window.defaults.default_country_id);
+            loadCities(window.defaults.default_country_id);
+        } else {
+            countrySelect.val(oldCountryId);
             loadCities(oldCountryId);
+        }
+
+        // Set country code for selected value
+        const selectedOption = countrySelect.find('option:selected');
+        if (selectedOption.length) {
+            $('#country_code').val(selectedOption.data('code'));
+        }
+    });
+
+    // Handle country change
+    $('#country').on('change', function() {
+        let countryId = $(this).val();
+        if (countryId) {
+            // Set country code when country is selected
+            const selectedOption = $(this).find('option:selected');
+            $('#country_code').val(selectedOption.data('code'));
+            // Load cities when country changes
+            loadCities(countryId);
+        } else {
+            // Clear country code when no country is selected
+            $('#country_code').val('');
+            // Reset city dropdown
+            let citySelect = $('#city');
+            citySelect.empty().append('<option value="">Select City</option>').prop('disabled', true);
         }
     });
 
@@ -413,6 +433,12 @@ $(document).ready(function() {
                     citySelect.append(option);
                 });
 
+                // Set default city if country is Singapore
+                if (countryId == window.defaults.default_country_id) {
+                    citySelect.val(window.defaults.default_city_id).trigger('change');
+                    $('#country_code').val(window.defaults.default_country_code);
+                }
+
                 // Set old value if exists
                 if (oldCityId) {
                     citySelect.val(oldCityId).trigger('change');
@@ -420,20 +446,6 @@ $(document).ready(function() {
             });
         }
     }
-
-    // Handle country change
-    $('#country').on('change', function() {
-        let countryId = $(this).val();
-        if (countryId) {
-            // Set country code when country is selected
-            const selectedOption = $(this).find(`option:selected`);
-            $('#country_code').val(selectedOption.data('code'));
-        } else {
-            // Clear country code when no country is selected
-            $('#country_code').val('');
-        }
-        loadCities(countryId);
-    });
 
     // Load regions on page load
     $.get('/get-regions', function(data) {

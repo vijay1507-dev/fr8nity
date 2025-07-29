@@ -14,6 +14,7 @@ use App\Notifications\NewRegistrationNotification;
 use App\Notifications\RegistrationConfirmationNotification;
 use App\Notifications\TwoFactorCodeNotification;
 use Illuminate\Support\Str;
+use App\Models\State;
 class AuthController extends Controller
 {
     // Show login form
@@ -46,8 +47,21 @@ class AuthController extends Controller
         
         $selectedTier = $request->get('tier', 'explorer');
         $memberType = $request->get('type', 'freight');
+
+            // Get Singapore's data from database
+            $defaultCountry = Country::where('code', 'SG')->firstOrFail();
+            $defaultState = State::where('country_id', $defaultCountry->id)->firstOrFail();
+            $defaultCity = City::where('state_id', $defaultState->id)
+                ->where('name', 'Singapore')
+                ->firstOrFail();
+
+            $defaults = [
+                'default_country_id' => $defaultCountry->id,
+                'default_city_id' => $defaultCity->id,
+                'default_country_code' => $defaultCountry->code
+            ];
         
-        return view('auth.register', compact('membershipTiers', 'selectedTier', 'memberType'));
+        return view('auth.register', compact('membershipTiers', 'selectedTier', 'memberType', 'defaults'));
     }
     
     // Handle registration
