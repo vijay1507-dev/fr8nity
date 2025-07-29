@@ -31,9 +31,9 @@
                                 <div class="d-flex align-items-center">
                                     <div class="avatar-wrapper me-3">
                                         @if(auth()->user()->company_logo)
-                                    <img src="{{ Storage::url(auth()->user()->company_logo) }}" alt="Company Logo" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                                    <img src="{{ Storage::url(auth()->user()->company_logo) }}" alt="Company Logo" class="rounded-circle" width="100" height="100" id="CompanyLogoPreview">
                                   @else
-                                    <img src="" alt="Company Logo" class="rounded-circle" width="100" height="100" id="CompanyLogoPreview">
+                                    <img src="{{ asset('images/default_company.png') }}" alt="Company Logo" class="rounded-circle" width="100" height="100" id="CompanyLogoPreview">
                                   @endif
                                     </div>
                                     <div>

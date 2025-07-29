@@ -29,7 +29,7 @@
                                     @if($member->company_logo)
                                 <img src="{{ Storage::url($member->company_logo) }}" alt="Company Logo" class="rounded-circle" width="100" height="100" id="companyLogoPreview">
                               @else
-                                <img src="" alt="Company Logo" class="rounded-circle" width="100" height="100" id="companyLogoPreview">
+                                <img src="{{ asset('images/default_company.png') }}" alt="Company Logo" class="rounded-circle" width="100" height="100" id="companyLogoPreview">
                               @endif
                                 </div>
                                 <div>
