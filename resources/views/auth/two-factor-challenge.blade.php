@@ -42,6 +42,13 @@
                             </button>
                         </div>
                     </form>
+
+                    <form method="POST" action="{{ route('two-factor.resend') }}" class="mt-3">
+                        @csrf
+                        <button type="submit" class="btn btn-secondary">
+                            Resend Code
+                        </button>
+                    </form>
                 </div>
             </div>
         </div>

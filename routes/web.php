@@ -124,6 +124,7 @@ Route::get('/get-regions', [AuthController::class, 'getRegions'])->name('get.reg
 // Two Factor Authentication Routes
 Route::get('/two-factor', [AuthController::class, 'showTwoFactorForm'])->name('two-factor.show');
 Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
+Route::post('/two-factor/resend', [AuthController::class, 'resendTwoFactorCode'])->name('two-factor.resend');
 
 
 

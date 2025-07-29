@@ -204,6 +204,19 @@ class AuthController extends Controller
             ->with('status', 'Two-factor authentication has been disabled.');
     }
 
+    public function resendTwoFactorCode(Request $request)
+    {
+        $user = Auth::user();
+        
+        if (!$user->two_factor_enabled) {
+            return redirect()->intended('dashboard');
+        }
+
+        $user->generateTwoFactorCode();
+
+        return back()->with('message', 'A new authentication code has been sent to your email.');
+    }
+
     // Logout user
     public function logout(Request $request)
     {
