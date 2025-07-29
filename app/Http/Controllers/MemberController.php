@@ -134,10 +134,11 @@ class MemberController extends Controller
             // Create and send notification
             $notification = new \App\Notifications\ProfileApprovalNotification();
             
-            // Update member with generated password
+            // Update member with generated password and set membership expiration
             $member->update([
                 'status' => $request->status,
-                'password' => Hash::make($notification->getPassword())
+                'password' => Hash::make($notification->getPassword()),
+                'membership_expires_at' => now()->addYear()
             ]);
 
             // Send notification with login credentials
@@ -166,6 +167,7 @@ class MemberController extends Controller
 
         $member->update([
             'membership_tier' => $request->membership_tier,
+            'membership_expires_at' => now()->addYear(),
         ]);
 
         if ($request->ajax()) {

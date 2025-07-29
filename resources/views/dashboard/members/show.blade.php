@@ -13,14 +13,27 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <div class="d-flex align-items-center">
                                 <div class="avatar-wrapper me-3">
-                                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center"
-                                        style="width: 60px; height: 60px; font-size: 24px;">
-                                        {{ strtoupper(substr($member->name, 0, 1)) }}
-                                    </div>
+                                    @if($member->profile_photo)
+                                <img src="{{ Storage::url($member->profile_photo) }}" alt="Profile Photo" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                              @else
+                                <img src="{{ asset('images/men-avtar.png') }}" alt="Default Profile" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
+                              @endif
                                 </div>
                                 <div>
                                     <h4 class="mb-1">{{ $member->name }}</h4>
                                     <p class="text-muted mb-0">{{ $member->designation }}</p>
+                                </div>
+                            </div>
+                            <div class="d-flex align-items-center">
+                                <div class="avatar-wrapper me-3">
+                                    @if($member->company_logo)
+                                <img src="{{ Storage::url($member->company_logo) }}" alt="Company Logo" class="rounded-circle" width="100" height="100" id="companyLogoPreview">
+                              @else
+                                <img src="" alt="Company Logo" class="rounded-circle" width="100" height="100" id="companyLogoPreview">
+                              @endif
+                                </div>
+                                <div>
+                                    <h4 class="mb-1">{{ $member->company_name }}</h4>
                                 </div>
                             </div>
                             <div class="d-flex gap-2">
@@ -188,16 +201,24 @@
                         <h5 class="card-title mb-0">Membership Details</h5>
                     </div>
                     <div class="card-body">
-                        <div class="mb-4">
-                            <label class="form-label text-muted mb-1">Current Tier</label>
-                            <div class="d-flex align-items-center">
-                                <h4 class="mb-0 membership-tier-name">
-                                    {{ optional($member->membershipTier)->name ?? 'No Tier' }}</h4>
-                                <button class="btn btn-link ms-2 p-0" data-bs-toggle="modal"
-                                    data-bs-target="#changeTierModal">
-                                    <i class="bi bi-pencil"></i>
-                                </button>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="mb-4">
+                                <label class="form-label text-muted mb-1">Current Tier</label>
+                                <div class="d-flex align-items-center">
+                                    <h4 class="mb-0 membership-tier-name">
+                                        {{ optional($member->membershipTier)->name ?? 'No Tier' }}</h4>
+                                    <button class="btn btn-link ms-2 p-0" data-bs-toggle="modal"
+                                        data-bs-target="#changeTierModal">
+                                        <i class="bi bi-pencil"></i>
+                                    </button>
+                                </div>
                             </div>
+                            @if($member->membership_expires_at)
+                            <div class="mb-4">
+                                <label class="form-label text-muted mb-2">Valid Till</label>
+                                <p class="mb-0">{{ $member->membership_expires_at->format('F j, Y') }}</p>
+                            </div>
+                            @endif
                         </div>
 
                         <div class="mb-4">

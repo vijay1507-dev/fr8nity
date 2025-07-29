@@ -176,14 +176,21 @@
                             <h5 class="card-title mb-0">Membership Details</h5>
                         </div>
                         <div class="card-body">
-                            <div class="mb-4">
-                                <label class="form-label text-muted mb-1">Current Tier</label>
-                                <div class="d-flex align-items-center">
-                                    <h4 class="mb-0 membership-tier-name">
-                                        {{ optional(auth()->user()->membershipTier)->name ?? 'No Tier' }}</h4>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mb-4">
+                                    <label class="form-label text-muted mb-1">Current Tier</label>
+                                    <div class="d-flex align-items-center">
+                                        <h4 class="mb-0 membership-tier-name">
+                                            {{ optional(auth()->user()->membershipTier)->name ?? 'No Tier' }}</h4>
+                                    </div>
                                 </div>
+                                @if(auth()->user()->membership_expires_at)
+                                <div class="mb-4">
+                                    <label class="form-label text-muted mb-2">Valid Till</label>
+                                    <p class="mb-0">{{ auth()->user()->membership_expires_at->format('F j, Y') }}</p>
+                                </div>
+                                @endif
                             </div>
-
                             <div class="mb-4">
                                 <label class="form-label text-muted mb-2">Member Since</label>
                                 <p class="mb-0">{{ auth()->user()->created_at->format('F j, Y') }}</p>
