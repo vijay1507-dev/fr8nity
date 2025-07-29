@@ -72,6 +72,9 @@ Route::get('/contact-us', function () {
 Route::get('/faq', function () {
     return view('website.faq');
 })->name('faq');
+
+Route::get('/members-directory', [MemberController::class, 'directory'])->name('members.directory');
+
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 
 // Guest-only routes (redirect to dashboard if logged in)

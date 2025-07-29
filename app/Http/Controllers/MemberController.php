@@ -276,4 +276,17 @@ class MemberController extends Controller
             ->with('success', 'Member updated successfully!');
         }
     }
+
+    /**
+     * Display the member directory.
+     */
+    public function directory()
+    {
+        $members = User::where('role', User::MEMBER)
+            ->where('status', 'approved')
+            ->with(['membershipTier', 'region', 'country', 'city'])
+            ->get();
+
+        return view('website.member-directory', compact('members'));
+    }
 } 

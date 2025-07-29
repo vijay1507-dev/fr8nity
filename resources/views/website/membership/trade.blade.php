@@ -130,7 +130,7 @@
                 </div>
                 <div class="col-12">
                     <label class="form-label">Let us know how we can support you</label>
-                    <input type="text" class="form-control inputbox" placeholder="Let us know how we can support you">
+                    <input type="text" class="form-control inputbox" placeholder="Where are your shipments to/from? Any additional details you would like us to know?">
                 </div>
                 <div class="col-12">
                     <label class="form-label">Consent</label>
@@ -141,7 +141,7 @@
                 </div>
 
                 <div class="d-flex justify-content-center align-items-center">
-                    <button type="button" class="btn btnbg fw-semibold mt-4">Connect Me With a Forwarder</button>
+                    <button type="button" class="btn btnbg fw-semibold mt-4">Submit</button>
                 </div>
             </div>
         </form>
