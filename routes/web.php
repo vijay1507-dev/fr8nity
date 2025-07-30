@@ -7,6 +7,8 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\TradeMemberController;
+use App\Http\Controllers\ShipmentController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
@@ -37,11 +39,10 @@ Route::prefix('membership')->group(function () {
     Route::get('/join-member', function () {
         return view('website.membership.join-member');
     })->name('membership.join-member');
-    Route::post('/join-member', [MemberController::class, 'joinMember'])->name('join-member.post');
     Route::get('/shipment-enquiry', function () {
         return view('website.membership.shipment-enquiry');
     })->name('membership.shipment-enquiry');
-    Route::post('/shipment-enquiry', [MemberController::class, 'storeShipmentEnquiry'])->name('shipment-enquiry.store');
+    Route::post('/shipment-enquiry', [ShipmentController::class, 'store'])->name('shipment-enquiry.store');
 });
 
 // Events routes
@@ -112,9 +113,19 @@ Route::middleware('auth')->group(function () {
         Route::patch('/{member}/membership-tier', [MemberController::class, 'updateMembershipTier'])->name('members.update-membership-tier');
         Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
         Route::patch('/{member}', [MemberController::class, 'update'])->name('members.update');
+        Route::delete('/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
     });
     Route::get('/{member}/edit-profile', [MemberController::class, 'edit'])->name('editmemberprofile');
     Route::patch('/{member}/update-profile', [MemberController::class, 'update'])->name('members.updateprofile');
+    
+    // Shipment management routes - requires admin access
+    Route::middleware('admin')->prefix('shipments')->group(function () {
+        Route::get('/', [ShipmentController::class, 'index'])->name('shipments.index');
+        Route::get('/{shipment}', [ShipmentController::class, 'show'])->name('shipments.show');
+        Route::get('/{shipment}/edit', [ShipmentController::class, 'edit'])->name('shipments.edit');
+        Route::patch('/{shipment}', [ShipmentController::class, 'update'])->name('shipments.update');
+        Route::delete('/{shipment}', [ShipmentController::class, 'destroy'])->name('shipments.destroy');
+    });
 });
 
 // Public API routes
@@ -126,6 +137,10 @@ Route::get('/get-regions', [AuthController::class, 'getRegions'])->name('get.reg
 Route::get('/two-factor', [AuthController::class, 'showTwoFactorForm'])->name('two-factor.show');
 Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
 Route::post('/two-factor/resend', [AuthController::class, 'resendTwoFactorCode'])->name('two-factor.resend');
+
+// Trade Member Routes
+Route::resource('trade-members', TradeMemberController::class)->only(['store']);
+Route::resource('trade-members', TradeMemberController::class)->except(['store'])->middleware('admin');
 
 
 

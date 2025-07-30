@@ -16,22 +16,29 @@
                     autoPlaceholder: "polite"
                 });
 
+        // Custom validation method for phone number
+        $.validator.addMethod("validPhoneNumber", function(value, element) {
+            if (!value.trim()) return true; // Let required handle empty validation
+            return iti.isValidNumber();
+        }, "Please enter a valid phone number");
+
         // Handle phone validation
         phoneInput.addEventListener('blur', function() {
             if (this.value.trim()) {
-                        if (iti.isValidNumber()) {
-                            const nationalNumber = iti.getNumber().replace('+' + iti.getSelectedCountryData().dialCode, '');
+                if (iti.isValidNumber()) {
+                    // Show only national number in input
+                    const nationalNumber = iti.getNumber().replace('+' + iti.getSelectedCountryData().dialCode, '');
                     this.value = nationalNumber;
                     $(this).removeClass('is-invalid');
                     $(this).siblings('.invalid-feedback').remove();
-                        } else {
+                } else {
                     $(this).addClass('is-invalid');
                     if (!$(this).siblings('.invalid-feedback').length) {
                         $('<div class="invalid-feedback d-block text-danger">Please enter a valid phone number</div>').insertAfter(this);
                     }
-                        }
-                    }
-                });
+                }
+            }
+        });
 
         // Clear phone error on input
         phoneInput.addEventListener('input', function() {
@@ -162,7 +169,8 @@
                     email: true
                 },
                 'whatsapp_phone': {
-                    required: true
+                    required: true,
+                    validPhoneNumber: true
                 },
                 'consent': {
                     required: true
@@ -208,80 +216,47 @@
                     email: 'Please enter a valid email address'
                 },
                 'whatsapp_phone': {
-                    required: 'Please enter your WhatsApp/Phone number'
+                    required: 'Please enter your WhatsApp/Phone number',
+                    validPhoneNumber: 'Please enter a valid phone number'
                 },
                 'consent': {
                     required: 'Please accept the consent'
                 }
             },
-            submitHandler: function(form) {
-                // Disable submit button
-                const submitBtn = $(form).find('button[type="submit"]');
-                submitBtn.prop('disabled', true);
-
-                // Validate phone number
+            invalidHandler: function(event, validator) {
+                // Prevent form submission when there are errors
+                event.preventDefault();
+                
+                // Ensure phone validation message is shown
                 if (phoneInput.value.trim() && !iti.isValidNumber()) {
                     $(phoneInput).addClass('is-invalid');
                     if (!$(phoneInput).siblings('.invalid-feedback').length) {
                         $('<div class="invalid-feedback d-block text-danger">Please enter a valid phone number</div>').insertAfter(phoneInput);
                     }
-                    submitBtn.prop('disabled', false);
-                    return false;
                 }
-
-                // Prepare form data
-                const formData = new FormData(form);
-
-                // Add phone number with country code
+            },
+            submitHandler: function(form) {
+                // Set the full formatted number with country code before submit
                 if (phoneInput.value.trim()) {
-                    formData.set('whatsapp_phone', iti.getNumber());
+                    phoneInput.value = iti.getNumber(); // This will include the country code with +
                 }
 
-                // Submit form via AJAX
-                $.ajax({
-                    url: $(form).attr('action'),
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        // Show success message
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Success!',
-                            text: 'Your trade membership request has been submitted successfully.',
-                            confirmButtonText: 'OK'
-                        }).then((result) => {
-                            // Redirect to home page
-                            window.location.href = '/';
-                        });
-                    },
-                    error: function(xhr) {
-                        // Enable submit button
-                        submitBtn.prop('disabled', false);
-
-                        // Show error message
-                        let errorMessage = 'An error occurred. Please try again.';
-                        if (xhr.responseJSON && xhr.responseJSON.message) {
-                            errorMessage = xhr.responseJSON.message;
-                        }
-
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error!',
-                            text: errorMessage,
-                            confirmButtonText: 'OK'
-                        });
-                    }
-                });
-
-                return false;
+                // Submit the form
+                form.submit();
             }
         });
 
         // Add validation for Select2 fields
         $('select.select2').on('change', function() {
             $(this).valid();
+        });
+
+        // Prevent form submission on enter key
+        $('#joinMemberForm').on('keypress', function(e) {
+            if (e.which === 13) { // Enter key
+                e.preventDefault();
+                return false;
+            }
         });
         });
     });

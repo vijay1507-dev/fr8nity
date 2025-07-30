@@ -32,4 +32,19 @@ class TradeMember extends Model
         'mode_of_shipment' => 'array',
         'looking_for' => 'array',
     ];
+    /**
+     * Relationship: Origin Country
+     */
+    public function originCountry()
+    {
+        return $this->belongsTo(Country::class, 'origin_country');
+    }
+
+    /**
+     * Relationship: Destination Country
+     */
+    public function destinationCountry()
+    {
+        return $this->belongsTo(Country::class, 'destination_country');
+    }
 }

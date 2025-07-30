@@ -160,11 +160,15 @@
             </div>
                </header> -->
 
-
-            <div class="container-fluid bggray mt-5 dashboard_referrals">
-                <div class="d-flex flex-wrap justify-content-between align-items-center mb-4">
-                    <h4 class="mb-2">Referrals Given</h4>
-                    <ul class="d-flex flex-wrap gap-3 list-unstyled mb-0 align-items-center">
+               <h3 class="mb-4">Welcome Back Emma</h3>
+            <div class=" bggray dashboard_referrals">
+                <div class="row mb-4">
+                   <div class="col-12 col-md-6">
+                        <p class="mb-2 fw-bold">Accumulated Points to Date: 13245678</p>
+                        <p class="mb-2 d-block fw-bold">Redeemped Points: 13245678</p>
+                   </div>
+                   <div class="col-12 col-md-6">
+                        <ul class="d-flex flex-wrap gap-2 list-unstyled mb-1 align-items-center justify-content-end">
                         <li class="fs-6 fw-semibold px-2 py-1 rounded">Last 6 Months</li>
                         <li class="fs-6 fw-semibold px-2 py-1 rounded">Last 12 Months</li>
                         <li class="fs-6 fw-semibold px-2 py-1 rounded">Lifetime</li>
@@ -176,188 +180,109 @@
                                         d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
                                 </svg></a>
                         </li>
-                    </ul>
+                        </ul>
+                        <p class="text-end">Membership Period: 29/7/2025 ΤΟ 28/7/2025</p>
+                   </div>
                 </div>
 
                 <div class="row  px-3">
-                    <div class="col-12 col-lg-5 mb-3 mb-lg-0 border rounded bg-white">
-                        <div class="p-3">
-                            <h6 class="text-uppercase mb-3">Member Growth</h6>
+                    <div class="col-12 col-lg-5 mb-3 mb-lg-0">
+                        <div class="p-3 border rounded bg-white">
+                            <h6 class="mb-3">Membership Leadership Board</h6>
                             <div class="chart-container" style="position: relative; height: 200px;">
                                 <canvas id="memberGrowthChart"></canvas>
                             </div>
                         </div>
                     </div>
 
-                    <div class="col-12 col-lg-7">
+                    <div class="col-12 col-lg-7 pe-0">
                         <div class="row g-3  mb-1">
                             <!-- Left Panel -->
-                            <div class="col-12   col-lg-4">
-                                <div class="rounded border text-white h-100  d-flex flex-column bg-white">
-                                    <div class="text-center pt-3">
-                                        <h6 class="card-title text-dark">TYFBFC Received:</h6>
-                                        <div class="my-3">
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-                                                fill="#000" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                                <path fill-rule="evenodd"
-                                                    d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                            </svg>
+                            <div class="col-12 col-md-6">
+                                <div class="rounded border bg-white">
+                                   <div class="row mx-0">
+                                        <div class="col-6 text-center p-2 pt-3 border-end">
+                                            <h6 class="card-title text-dark mb-3">Transaction Value Given</h6>
+                                            <h5 class="card-subtitle mb-3 text-body-secondary">$ 213,454</h5>
                                         </div>
-                                        <h5 class="card-subtitle mb-3 text-body-secondary">S$ 213,454</h5>
+                                        <div class="col-6 text-center p-2 pt-3">
+                                            <h6 class="card-title text-dark mb-3">Enquiries Given (Freight Member)</h6>
+                                            <h5 class="card-subtitle mb-3 text-body-secondary">11</h5>
+                                        </div>
+                                   </div>
+                                    <div class="d-flex mt-auto">
+                                        <a href="#"
+                                            class="w-100 text-center p-2 text-decoration-none btnbg rounded-start border-end">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-12 col-md-6">
+                                <div class="rounded border bg-white">
+                                   <div class="row mx-0">
+                                        <div class="col-6 text-center p-2 pt-3 border-end">
+                                            <h6 class="card-title text-dark mb-3">Transaction Value Received</h6>
+                                            <h5 class="card-subtitle mb-3 text-body-secondary">$ 213,454</h5>
+                                        </div>
+                                        <div class="col-6 text-center p-2 pt-3">
+                                            <h6 class="card-title text-dark mb-3">Enquiries Receive (Freight Member)</h6>
+                                            <h5 class="card-subtitle mb-3 text-body-secondary">11</h5>
+                                        </div>
+                                   </div>
+                                    <div class="d-flex mt-auto">
+                                        <a href="#"
+                                            class="w-100 text-center p-2 text-decoration-none btnbg rounded-start border-end">View</a>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                       
+                    </div>
+                </div>
+
+
+                 <div class="row  px-3 mt-4">
+                    <div class="col-12 col-lg-5 mb-3 mb-lg-0">
+                        <div class="p-3 border rounded bg-white">
+                            <h6 class="mb-3">Trade surplus/deficit</h6>
+                            <div class="chart-container" style="position: relative; height: 200px;">
+                                <canvas id="memberGrowthChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-lg-7 pe-0">
+                        <div class="row g-3  mb-1">
+                            <!-- Left Panel -->
+                            <div class="col-12 col-md-6">
+                                <div class="rounded border bg-white">                                  
+                                    <div class="col-12 text-center p-2 pt-3">
+                                        <h6 class="card-title text-dark mb-3">Members referred to FR8NITY</h6>
+                                        <h5 class="card-subtitle mb-3 text-body-secondary">256</h5>
                                     </div>
                                     <div class="d-flex mt-auto">
                                         <a href="#"
-                                            class="w-50 text-center p-2 text-decoration-none btnbg rounded-start border-end">Submit</a>
+                                            class="w-100 text-center p-2 text-decoration-none btnbg rounded-start border-end">View</a>
+                                    </div>
+                                </div>
+                            </div>
+                             <div class="col-12 col-md-6">
+                                <div class="rounded border bg-white">
+                                        <div class="col-12 text-center p-2 pt-3 border-end">
+                                            <h6 class="card-title text-dark mb-3">Events attended till date</h6>
+                                            <h5 class="card-subtitle mb-3 text-body-secondary">14</h5>
+                                        </div>
+                                    <div class="d-flex mt-auto">
                                         <a href="#"
-                                            class="w-50 text-center p-2 text-decoration-none  btnbg border-start">Review</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Right Panel -->
-                            <div class="col-12 h-100 col-lg-8">
-                                <div class="row g-3">
-                                    <!-- Referrals Received -->
-                                    <div class="col-12  col-lg-4">
-                                        <div class="rounded border  h-100 d-flex flex-column bg-white">
-                                            <div class="text-center pt-3">
-                                                <h6 class="card-title">Referrals Received:</h6>
-                                                <div class="my-3">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-                                                        fill="#000" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                                        <path fill-rule="evenodd"
-                                                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                                    </svg>
-                                                </div>
-                                                <h5 class="card-subtitle mb-3 text-body-secondary">11</h5>
-                                            </div>
-                                            <a href="#"
-                                                class="w-100 mt-auto text-center p-2 text-decoration-none btnbg rounded"
-                                                style="border-radius: 20px;">TRACK Online</a>
-                                        </div>
-                                    </div>
-
-                                    <!-- Referrals Given -->
-                                    <div class="col-12  col-lg-4">
-                                        <div class="rounded border h-100 d-flex flex-column bg-white">
-                                            <div class="text-center pt-3">
-                                                <h6 class="card-title text-dark">Referrals Given:</h6>
-                                                <div class="my-3">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-                                                        fill="#000" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                                        <path fill-rule="evenodd"
-                                                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                                    </svg>
-                                                </div>
-                                                <h5 class="card-subtitle mb-3 text-body-secondary">28</h5>
-                                            </div>
-                                            <div class="d-flex mt-auto">
-                                                <a href="#"
-                                                    class="w-50 text-center p-2 text-decoration-none btnbg border-end rounded-start">Submit</a>
-                                                <a href="#"
-                                                    class="w-50 text-center p-2 text-decoration-none btnbg rounded-end border-start">Review</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- TYFBFC Given -->
-                                    <div class="col-12  col-lg-4">
-                                        <div class="rounded border h-100 d-flex flex-column bg-white">
-                                            <div class="text-center pt-3">
-                                                <h6 class="card-title text-dark">TYFBFC Given:</h6>
-                                                <div class="my-3">
-                                                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
-                                                        fill="#000" class="bi bi-person-circle" viewBox="0 0 16 16">
-                                                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0" />
-                                                        <path fill-rule="evenodd"
-                                                            d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1" />
-                                                    </svg>
-                                                </div>
-                                                <h5 class="card-subtitle mb-3 text-body-secondary">S$ 277</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Lower Section -->
-                        <div class="row g-3  pt-2 ">
-                            <!-- Left Column Links -->
-                            <div class="col-12 col-lg-4">
-                                <div class="rounded h-100 d-flex flex-column gap-3 ">
-                                    <a href="#"
-                                        class="border rounded text-center p-2 fs-6 text-decoration-none text-dark bg-white">Personal
-                                        Meeting Activity</a>
-                                    <a href="#"
-                                        class="border rounded text-center p-2 fs-6 text-decoration-none text-dark bg-white">Referrals
-                                        Track Sheet Report</a>
-                                    <a href="#"
-                                        class="border rounded text-center p-2 fs-6 text-decoration-none text-dark bg-white">My
-                                        Personal Summary</a>
-                                </div>
-                            </div>
-
-                            <!-- Right Cards -->
-                            <div class="col-12 h-100 col-lg-8">
-                                <div class="row g-3">
-                                    <!-- Visitor -->
-                                    <div class="col-12  col-lg-4">
-                                        <div class="rounded border h-100 d-flex flex-column bg-white">
-                                            <div class="text-center pt-3">
-                                                <h6 class="card-title text-dark ">Visitor:</h6>
-                                                <img src="./images/user22.png" alt="User"
-                                                    class="rounded-circle cardimg my-3">
-                                                <h5 class="card-subtitle mb-3 text-body-secondary">0</h5>
-                                            </div>
-                                            <a href="#"
-                                                class="w-100 mt-auto text-center p-2 text-decoration-none btnbg rounded-bottom">Visitor
-                                                Portal</a>
-                                        </div>
-                                    </div>
-
-                                    <!-- CEUs -->
-                                    <div class="col-12 col-lg-4">
-                                        <div class="rounded border h-100 d-flex flex-column bg-white">
-                                            <div class="text-center pt-3">
-                                                <h6 class="card-title text-dark">CEUs:</h6>
-                                                <img src="./images/user22.png" alt="User"
-                                                    class="rounded-circle cardimg my-3">
-                                                <h5 class="card-subtitle mb-3 text-body-secondary">64</h5>
-                                            </div>
-                                            <div class="d-flex mt-auto">
-                                                <a href="#"
-                                                    class="w-50 text-center p-2 text-decoration-none btnbg border-end rounded-start">Submit</a>
-                                                <a href="#"
-                                                    class="w-50 text-center p-2 text-decoration-none btnbg rounded-end border-start">Review</a>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <!-- One to Ones -->
-                                    <div class="col-12  col-lg-4">
-                                        <div class="rounded border h-100 d-flex flex-column bg-white">
-                                            <div class="text-center pt-3">
-                                                <h6 class="card-title text-dark">One to Ones:</h6>
-                                                <img src="./images/user22.png" alt="User"
-                                                    class="rounded-circle cardimg my-3">
-                                                <h5 class="card-subtitle mb-3 text-body-secondary">S$ 277</h5>
-                                            </div>
-                                            <div class="d-flex mt-auto">
-                                                <a href="#"
-                                                    class="w-50 text-center p-2 text-decoration-none btnbg border-end rounded-start">Submit</a>
-                                                <a href="#"
-                                                    class="w-50 text-center p-2 text-decoration-none btnbg rounded-end border-start">Review</a>
-                                            </div>
-                                        </div>
+                                            class="w-100 text-center p-2 text-decoration-none btnbg rounded-start border-end">View</a>
                                     </div>
                                 </div>
                             </div>
 
                         </div>
+
+                       
                     </div>
                 </div>
             </div>

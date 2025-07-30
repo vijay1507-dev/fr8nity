@@ -14,8 +14,12 @@
            </div>
 
        </div>
-
-       <form method="POST" action="{{ route('join-member.post') }}" id="joinMemberForm">
+        @if(session('success'))
+            <div class="alert alert-success text-center">
+                {{ session('success') }}
+            </div>
+        @endif
+       <form method="POST" action="{{ route('trade-members.store') }}" id="joinMemberForm">
         @csrf
            <div class="form-section row g-3">
                <div class="col-md-6">

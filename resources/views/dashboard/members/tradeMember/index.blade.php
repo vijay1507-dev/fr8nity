@@ -1,11 +1,10 @@
 @extends('layouts.dashboard')
-@section('title', 'Freight Members')
+@section('title', 'Trade Members')
 @section('content')
 <div class="container-fluid">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
-            <h4 class="card-title mb-0">Freight Members</h4>
-            <a href="{{ route('members.add') }}" class="btn btn-primary">Add Member</a>
+            <h4 class="card-title mb-0">Trade Members</h4>
         </div>
         <div class="card-body">
             <table class="table table-bordered data-table">
@@ -13,11 +12,10 @@
                     <tr>
                         <th>No</th>
                         <th>Name</th>
+                        <th>Designation</th>
                         <th>Email</th>
                         <th>Company Name</th>
-                        <th>Company Telephone</th>
-                        <th>Current Tier</th>
-                        <th>Status</th>
+                        <th>Product/Industry Category</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -36,26 +34,19 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
-            ajax: "{{ route('members.index') }}",
+            ajax: "{{ route('trade-members.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'name', name: 'name'},
+                {data: 'designation', name: 'designation'},
                 {data: 'email', name: 'email'},
                 {data: 'company_name', name: 'company_name'},
-                {data: 'company_telephone', name: 'company_telephone'},
-                {data: 'current_tier', name: 'current_tier'},
-                {
-                    data: 'status', 
-                    name: 'status',
-                    render: function (data, type, row) {
-                        return data.charAt(0).toUpperCase() + data.slice(1);
-                    }
-                },
+                {data: 'product_industry_category', name: 'product_industry_category'},
                 {
                     data: 'action', 
                     name: 'action', 
                     orderable: false, 
-                    searchable: false
+                    searchable: false,
                 },
             ]
         });

@@ -30,7 +30,12 @@ class MemberController extends Controller
                 ->addColumn('action', function($row) {
                     $viewBtn = '<a href="' . route('members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
                     $editBtn = '<a href="' . route('members.edit', $row) . '" class="btn btn-sm ms-2 btn-outline-success">Edit</a>';
-                    return $viewBtn . ' ' . $editBtn;
+                    $deleteBtn = '<form action="' . route('members.destroy', $row) . '" method="POST" style="display:inline-block; margin-left:5px;">
+                                    ' . csrf_field() . '
+                                    ' . method_field('DELETE') . '
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Are you sure you want to delete this member?\')">Delete</button>
+                                  </form>';
+                    return $viewBtn . ' ' . $editBtn . ' ' . $deleteBtn;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -282,6 +287,21 @@ class MemberController extends Controller
     }
 
     /**
+     * Soft delete the specified member.
+     */
+    public function destroy(User $member)
+    {
+        if ($member->role !== User::MEMBER) {
+            abort(404);
+        }
+
+        $member->delete();
+
+        return redirect()->route('members.index')
+            ->with('success', 'Member deleted successfully.');
+    }
+
+    /**
      * Display the member directory.
      */
     public function directory()
@@ -302,83 +322,5 @@ class MemberController extends Controller
 
         return view('website.member-directory-view-profile', compact('members'));
     }
-    // join member
-    public function joinMember(Request $request)
-    {
-        $validated = $request->validate([
-            'company_name' => 'nullable|string|max:255',
-            'product_industry_category' => 'nullable|string|max:255',
-            'shipping_frequency' => 'nullable|array',
-            'mode_of_shipment' => 'nullable|array',
-            'origin_country' => 'nullable|integer',
-            'destination_country' => 'nullable|integer',
-            'estimated_shipment_volume' => 'nullable|string|max:255',
-            'looking_for' => 'nullable|array',
-            'name' => 'nullable|string|max:255',
-            'designation' => 'nullable|string|max:255',
-            'email' => 'nullable|email|max:255',
-            'whatsapp_phone' => 'nullable|string|max:20',
-            'additional_details' => 'nullable|string',
-            'consent' => ['required', 'accepted'],
-        ]);
-
-        // Create Trade Member
-        $tradeMember = TradeMember::create([
-            'company_name' => $validated['company_name'] ?? null,
-            'product_industry_category' => $validated['product_industry_category'] ?? null,
-            'shipping_frequency' => $validated['shipping_frequency'] ?? [],
-            'mode_of_shipment' => $validated['mode_of_shipment'] ?? [],
-            'origin_country' => $validated['origin_country'] ?? null,
-            'destination_country' => $validated['destination_country'] ?? null,
-            'estimated_shipment_volume' => $validated['estimated_shipment_volume'] ?? null,
-            'looking_for' => $validated['looking_for'] ?? [],
-            'name' => $validated['name'] ?? null,
-            'designation' => $validated['designation'] ?? null,
-            'email' => $validated['email'] ?? null,
-            'whatsapp_phone' => $validated['whatsapp_phone'] ?? null,
-            'additional_details' => $validated['additional_details'] ?? null,
-            'consent' => 1,
-        ]);
-
-        return response()->json([
-            'message' => 'Trade Member created successfully',
-            'data' => $tradeMember
-        ], 201);
-    }    
-
-    /**
-     * Store a new shipment enquiry.
-     */
-    public function storeShipmentEnquiry(Request $request)
-    {
-        $validated = $request->validate([
-            'shipment_type' => 'required|array|min:1',
-            'mode_of_transport' => 'required|string',
-            'goods_description' => 'required|string|min:3',
-            'estimated_volume' => 'required|string',
-            'cargo_ready_date' => 'required|date',
-            'documents' => 'nullable|file|max:10240', // 10MB max
-            'pickup_country_id' => 'required|exists:countries,id',
-            'pickup_city_id' => 'required|exists:cities,id',
-            'destination_country_id' => 'required|exists:countries,id',
-            'destination_city_id' => 'required|exists:cities,id',
-            'special_notes' => 'nullable|string',
-            'delivery_remark' => 'nullable|string',
-            'consent' => 'required|accepted'
-        ]);
-
-        // Handle file upload if present
-        if ($request->hasFile('documents')) {
-            $path = $request->file('documents')->store('shipment-documents', 'public');
-            $validated['documents'] = $path;
-        }
-
-        // Create shipment
-        $shipment = Shipment::create($validated);
-
-        return response()->json([
-            'message' => 'Shipment enquiry submitted successfully',
-            'data' => $shipment
-        ], 201);
-    }
+    
 } 
