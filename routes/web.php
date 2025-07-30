@@ -2,33 +2,130 @@
 
 use Illuminate\Support\Facades\Route;
 
-use App\Http\Controllers\AuthController;
+use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\MemberController;
 
-// Redirect root to login page
+// Main website route - accessible to all
 Route::get('/', function () {
-    return view('index');
-    // return redirect()->route('login');
+    return view('website.index');
 });
 
-Route::get('/login', function () {
-    return redirect()->route('login');
+// Membership routes
+Route::prefix('membership')->group(function () {
+    Route::get('/', function () {
+        return view('website.membership');
+    })->name('membership');
+    // Membership Routes
+    Route::get('/explorer', function () {
+        return view('website.membership.explorer');
+    })->name('membership.explorer');
+
+    Route::get('/elevate', function () {
+        return view('website.membership.elevate');
+    })->name('membership.elevate');
+
+    Route::get('/summit', function () {
+        return view('website.membership.summit');
+    })->name('membership.summit');
+
+    Route::get('/founder', function () {
+        return view('website.membership.founder');
+    })->name('membership.founder');
+    Route::get('/join-member', function () {
+        return view('website.membership.join-member');
+    })->name('membership.join-member');
+    
+    Route::get('/shipment-enquiry', function () {
+        return view('website.membership.shipment-enquiry');
+    })->name('membership.shipment-enquiry');
+    
 });
 
-// Login/Logout routes
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+// Events routes
+Route::prefix('events')->group(function () {
+    Route::get('/', function () {
+        return view('website.events');
+    })->name('events');
+    Route::get('/calendar', function () {
+        return view('website.events.calendar');
+    })->name('events.calendar');
+    Route::get('/conference', function () {
+        return view('website.events.conference');
+    })->name('events.conference');
+});
+
+Route::get('/about-us', function () {
+    return view('website.about-us');
+})->name('about-us');
+Route::get('/spotlight', function () {
+    return view('website.spotlight');
+})->name('spotlight');
+Route::get('/contact-us', function () {
+    return view('website.contact-us');
+})->name('contact-us');
+Route::get('/faq', function () {
+    return view('website.faq');
+})->name('faq');
+
+Route::get('/members-directory', [MemberController::class, 'directory'])->name('members.directory');
+Route::get('/members-directory/view-profile', [MemberController::class, 'viewProfile'])->name('members.directory-view-profile');
+
+Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
+
+// Guest-only routes (redirect to dashboard if logged in)
+Route::middleware('guest')->group(function () {
+    Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+    Route::get('/admin-login', [AuthController::class, 'showAdminLoginForm'])->name('admin-login');
+
+    // Password Reset routes
+    Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->name('password.request');
+    Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->name('password.email');
+    Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->name('password.reset');
+    Route::post('/reset-password', [NewPasswordController::class, 'store'])->name('password.update');
+});
+
+// Authentication routes
 Route::post('/login', [AuthController::class, 'login']);
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-// Password Reset routes
-
-Route::get('/forgot-password', [PasswordResetLinkController::class, 'create'])->middleware('guest')->name('password.request');
-Route::post('/forgot-password', [PasswordResetLinkController::class, 'store'])->middleware('guest')->name('password.email');
-
-Route::get('/reset-password/{token}', [NewPasswordController::class, 'create'])->middleware('guest')->name('password.reset');
-Route::post('/reset-password', [NewPasswordController::class, 'store'])->middleware('guest')->name('password.update');
-
+// Protected routes (require login)
 Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [App\Http\Controllers\DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
+    Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
+    Route::post('/update-profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/security-settings', [AuthController::class, 'showSecuritySettings'])->name('security.settings');
+    Route::post('/two-factor/enable', [AuthController::class, 'enableTwoFactor'])->name('two-factor.enable');
+    Route::delete('/two-factor/disable', [AuthController::class, 'disableTwoFactor'])->name('two-factor.disable');
+    
+    // Member management routes - requires admin access
+    Route::middleware('admin')->prefix('members')->group(function () {
+        Route::get('/', [MemberController::class, 'index'])->name('members.index');
+        Route::get('/add', [MemberController::class, 'create'])->name('members.add');
+        Route::post('/store', [MemberController::class, 'store'])->name('members.store');
+        Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
+        Route::patch('/{member}/status', [MemberController::class, 'updateStatus'])->name('members.update-status');
+        Route::patch('/{member}/membership-tier', [MemberController::class, 'updateMembershipTier'])->name('members.update-membership-tier');
+        Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
+        Route::patch('/{member}', [MemberController::class, 'update'])->name('members.update');
+    });
+    Route::get('/{member}/edit-profile', [MemberController::class, 'edit'])->name('editmemberprofile');
+    Route::patch('/{member}/update-profile', [MemberController::class, 'update'])->name('members.updateprofile');
 });
+
+// Public API routes
+Route::get('/get-countries', [AuthController::class, 'getCountries'])->name('get.countries');
+Route::get('/get-cities/{country_id}', [AuthController::class, 'getCities'])->name('get.cities');
+Route::get('/get-regions', [AuthController::class, 'getRegions'])->name('get.regions');
+
+// Two Factor Authentication Routes
+Route::get('/two-factor', [AuthController::class, 'showTwoFactorForm'])->name('two-factor.show');
+Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
+Route::post('/two-factor/resend', [AuthController::class, 'resendTwoFactorCode'])->name('two-factor.resend');
+
+
+

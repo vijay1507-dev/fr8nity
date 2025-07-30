@@ -1,12 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Reset Password</title>
-  <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
-  <link rel="stylesheet" href="{{ asset('css/style.css') }}">
-</head>
+@extends('layouts.auth')
+
+@section('title', 'Forgot-password')
+
+@section('content')
 <body>
   <section class="bg-black p-0">
       <div class="container_ w-100">
@@ -25,7 +21,7 @@
                         <div class="col-12">
                           <div class="mb-4">
                             <div class="text-center mb-4">
-                              <a href="#">
+                              <a href="/">
                                 <img src="{{asset('images/logo.svg')}}" alt="Logo" width="auto" height="78">
                               </a>
                             </div>
@@ -55,19 +51,19 @@
                         @csrf
                         <div class="row gy-3 overflow-hidden">
                           <div class="col-12">
-                            <div class="form-floating mb-3">
-                              <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
-                                placeholder="email" required autofocus>
-                              <label for="email" class="form-label">Email</label>
-                            </div>
+                            <div class="">
+                            <input type="email" class="form-control" id="email" name="email" value="{{ old('email') }}"
+                              placeholder="Email Address" required autofocus>
+                          
+                          </div>
                           </div>
                           <div class="col-12">
                             <div class="d-grid">
-                              <button class="btn btn-primary btn-lg" type="submit">Send Reset Link</button>
+                              <button class="btn btn-primary btn-md" type="submit">Send Reset Link</button>
                             </div>
                           </div>
                           <div class="col-12 text-center">
-                            <a href="{{ route('login') }}" class="text-primary text-decoration-none">
+                            <a href="{{ route('login') }}" class="text-white text-decoration-underline">
                               <i class="bi bi-arrow-left"></i> Back to Login
                             </a>
                           </div>
@@ -83,4 +79,4 @@
       </div>
     </section>
 </body>
-</html>
+@endsection
