@@ -79,6 +79,21 @@
         </div>
 
         <div class="row mx-auto align-items-stretch">
+              <div class="col-12 col-lg-6 mb-3">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="p-3 h-100 radies_20 blacklight">
+                        <img src="{{ asset('images/dawn.webp') }}" alt="Dawn Tan" class="img-fluid mb-3" />
+                        <div class="px-4 d-flex flex-column">
+                            <h3 class="h4 textcolor">
+                                Dawn – The Trailblazer
+                            </h3>
+                            <p class="mb-0">With 30+ years of industry expertise, Dawn is a seasoned freight forwarder whose career was built container by container. Her depth of experience, operational precision, and unwavering grit ensure Fr8nity remains grounded in what works.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
             <div class="col-12 col-lg-6 mb-3">
                 <div class="gradient_rounded radies_20 m-2 h-100">
                     <div class="p-3 h-100 radies_20 blacklight">
@@ -94,20 +109,7 @@
                 </div>
             </div>
 
-            <div class="col-12 col-lg-6 mb-3">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <div class="p-3 h-100 radies_20 blacklight">
-                        <img src="{{ asset('images/dawn.webp') }}" alt="Dawn Tan" class="img-fluid mb-3" />
-                        <div class="px-4 d-flex flex-column">
-                            <h3 class="h4 textcolor">
-                                Dawn – The Trailblazer
-                            </h3>
-                            <p class="mb-0">With 30+ years of industry expertise, Dawn is a seasoned freight forwarder whose career was built container by container. Her depth of experience, operational precision, and unwavering grit ensure Fr8nity remains grounded in what works.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
+          
         </div>
         
     </div>
@@ -157,7 +159,7 @@
 </section>
 
 
-<section class="ourteam_sec">
+<!-- <section class="ourteam_sec">
     <div class="container py-5 pt-3 px-2">
         <div class="text-center">
             <h2 class="text-center fw-bold fs-2">Our Team</h2>
@@ -242,7 +244,7 @@
           
         </div>
     </div>
-</section> 
+</section>  -->
 
 
 @endsection

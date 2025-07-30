@@ -8,6 +8,6 @@
     @include('website.sections.about')
     @include('website.sections.benefits')
     @include('website.sections.events')
-    @include('website.sections.founders')
+    <!-- @include('website.sections.founders') -->
     @include('website.sections.coverage')
 @endsection

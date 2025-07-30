@@ -37,7 +37,7 @@ Route::prefix('membership')->group(function () {
     Route::get('/join-member', function () {
         return view('website.membership.join-member');
     })->name('membership.join-member');
-    
+    Route::post('/join-member', [MemberController::class, 'joinMember'])->name('join-member.post');
     Route::get('/shipment-enquiry', function () {
         return view('website.membership.shipment-enquiry');
     })->name('membership.shipment-enquiry');
@@ -126,6 +126,9 @@ Route::get('/get-regions', [AuthController::class, 'getRegions'])->name('get.reg
 Route::get('/two-factor', [AuthController::class, 'showTwoFactorForm'])->name('two-factor.show');
 Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
 Route::post('/two-factor/resend', [AuthController::class, 'resendTwoFactorCode'])->name('two-factor.resend');
+
+// Shipment Enquiry Routes
+Route::post('/shipment-enquiry', [MemberController::class, 'storeShipmentEnquiry'])->name('shipment-enquiry.store');
 
 
 

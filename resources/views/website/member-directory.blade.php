@@ -66,10 +66,7 @@
          </div>
         </div>
         <div class="d-flex align-items-center mb-2">
-          <span class="badge badge-custom bg-secondary me-2">Explorer</span>
-          <span class="badge badge-custom bg-primary me-2">Elevate</span>
-          <span class="badge badge-custom bg-danger me-2">Summit</span>
-          <span class="badge badge-custom bg-info me-2">Founder</span>
+          <span class="badge badge-custom explorer_bg me-2">Explorer</span>
            <a href="{{route('members.directory-view-profile')}}" class="btn ms-auto btn btnbg fe-semibold">Get Contacts</a>
         </div>
         <div class="d-flex align-items-center flex-wrap mb-2">
@@ -94,10 +91,8 @@
          </div>
         </div>
         <div class="d-flex align-items-center mb-2">
-            <span class="badge badge-custom bg-secondary me-2">Explorer</span>
-          <span class="badge badge-custom bg-primary me-2">Elevate</span>
-          <span class="badge badge-custom bg-danger me-2">Summit</span>
-          <span class="badge badge-custom bg-info me-2">Founder</span>
+                <span class="badge badge-custom elevate_bg me-2">Elevate</span>
+        
            <a href="{{route('members.directory-view-profile')}}" class="btn ms-auto btn btnbg fe-semibold">Get Contacts</a>
         </div>
         <div class="d-flex align-items-center flex-wrap mb-2">
@@ -122,10 +117,8 @@
          </div>
         </div>
         <div class="d-flex align-items-center mb-2">
-           <span class="badge badge-custom bg-secondary me-2">Explorer</span>
-          <span class="badge badge-custom bg-primary me-2">Elevate</span>
-          <span class="badge badge-custom bg-danger me-2">Summit</span>
-          <span class="badge badge-custom bg-info me-2">Founder</span>
+        
+          <span class="badge badge-custom founder_bg me-2">Founder</span>
            <a href="{{route('members.directory-view-profile')}}" class="btn ms-auto btn btnbg fe-semibold">Get Contacts</a>
         </div>
         <div class="d-flex align-items-center flex-wrap mb-2">
@@ -150,10 +143,7 @@
          </div>
         </div>
         <div class="d-flex align-items-center mb-2">
-            <span class="badge badge-custom bg-secondary me-2">Explorer</span>
-          <span class="badge badge-custom bg-primary me-2">Elevate</span>
-          <span class="badge badge-custom bg-danger me-2">Summit</span>
-          <span class="badge badge-custom bg-info me-2">Founder</span>
+               <span class="badge badge-custom summit_bg me-2">Summit</span>
           <a href="{{route('members.directory-view-profile')}}" class="btn ms-auto btn btnbg fe-semibold">Get Contacts</a>
         </div>
         <div class="d-flex align-items-center flex-wrap mb-2">
