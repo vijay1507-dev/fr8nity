@@ -41,7 +41,7 @@ Route::prefix('membership')->group(function () {
     Route::get('/shipment-enquiry', function () {
         return view('website.membership.shipment-enquiry');
     })->name('membership.shipment-enquiry');
-    
+    Route::post('/shipment-enquiry', [MemberController::class, 'storeShipmentEnquiry'])->name('shipment-enquiry.store');
 });
 
 // Events routes
@@ -127,8 +127,7 @@ Route::get('/two-factor', [AuthController::class, 'showTwoFactorForm'])->name('t
 Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
 Route::post('/two-factor/resend', [AuthController::class, 'resendTwoFactorCode'])->name('two-factor.resend');
 
-// Shipment Enquiry Routes
-Route::post('/shipment-enquiry', [MemberController::class, 'storeShipmentEnquiry'])->name('shipment-enquiry.store');
+
 
 
 
