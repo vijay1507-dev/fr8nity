@@ -77,7 +77,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="country_id" class="form-label">Country*</label>
                         <select class="form-select @error('country_id') is-invalid @enderror" 
-                                id="country" name="country_id" data-old="{{ old('country_id') }}">
+                                id="country" name="country_id" data-old="{{ old('country_id', get_default_locations()['country']?->id ?? '') }}">
                             <option value="">Select Country</option>
                         </select>
                         @error('country_id')
@@ -88,7 +88,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="city_id" class="form-label">City*</label>
                         <select class="form-select @error('city_id') is-invalid @enderror" 
-                                id="city" name="city_id" data-old="{{ old('city_id') }}">
+                                id="city" name="city_id" data-old="{{ old('city_id', get_default_locations()['city']?->id ?? '') }}">
                             <option value="">Select City</option>
                         </select>
                         @error('city_id')

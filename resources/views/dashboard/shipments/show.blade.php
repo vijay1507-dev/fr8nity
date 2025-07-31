@@ -59,7 +59,7 @@
                             <td>{{ $shipment->pickupCity->name }}, {{ $shipment->pickupCountry->name }}</td>
                         </tr>
                         <tr>
-                            <td><strong>Destination:</strong></td>
+                            <td><strong>Destination Location:</strong></td>
                             <td>{{ $shipment->destinationCity->name }}, {{ $shipment->destinationCountry->name }}</td>
                         </tr>
                     </table>
@@ -107,11 +107,7 @@
                     <table class="table table-borderless">
                         <tr>
                             <td><strong>Created At:</strong></td>
-                            <td>{{ $shipment->created_at->format('F j, Y \a\t g:i A') }}</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Last Updated:</strong></td>
-                            <td>{{ $shipment->updated_at->format('F j, Y \a\t g:i A') }}</td>
+                            <td>{{ $shipment->created_at->format('F j, Y') }}</td>
                         </tr>
                     </table>
                 </div>

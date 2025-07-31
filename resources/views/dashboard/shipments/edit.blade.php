@@ -94,8 +94,15 @@
                         </div>
 
                         <div class="mb-3">
-                            <label for="cargo_ready_date" class="form-label required">Cargo Ready Date <span class="text-danger">*</span></label>
-                            <input type="date" class="form-control @error('cargo_ready_date') is-invalid @enderror" name="cargo_ready_date" value="{{ old('cargo_ready_date', $shipment->cargo_ready_date ? $shipment->cargo_ready_date->format('Y-m-d') : '') }}" >
+                            <label for="cargo_ready_date" class="form-label required">
+                                Cargo Ready Date <span class="text-danger">*</span>
+                            </label>
+                            <input type="text" 
+                                   id="cargo_ready_date"
+                                   class="form-control @error('cargo_ready_date') is-invalid @enderror"
+                                   name="cargo_ready_date"
+                                   value="{{ old('cargo_ready_date', $shipment->cargo_ready_date ? $shipment->cargo_ready_date->format('Y-m-d') : '') }}"
+                                   placeholder="Select Date">
                             @error('cargo_ready_date')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -107,10 +114,13 @@
                         
                         <div class="mb-3">
                             <label for="pickup_country_id" class="form-label required">Pickup Country <span class="text-danger">*</span></label>
-                            <select class="form-select @error('pickup_country_id') is-invalid @enderror" name="pickup_country_id" id="pickup_country_id" >
+                            <select class="form-select @error('pickup_country_id') is-invalid @enderror"  
+                                    name="pickup_country_id" id="pickup_country_id" required>
                                 <option value="">Select Country</option>
                                 @foreach($countries as $country)
-                                    <option value="{{ $country->id }}" {{ old('pickup_country_id', $shipment->pickup_country_id) == $country->id ? 'selected' : '' }}>
+                                    <option value="{{ $country->id }}" 
+                                            data-flag="{{ strtolower($country->code) }}"
+                                            {{ old('pickup_country_id', $shipment->pickup_country_id) == $country->id ? 'selected' : '' }}>
                                         {{ $country->name }}
                                     </option>
                                 @endforeach
@@ -119,7 +129,6 @@
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-
                         <div class="mb-3">
                             <label for="pickup_city_id" class="form-label required">Pickup City <span class="text-danger">*</span></label>
                             <select class="form-select @error('pickup_city_id') is-invalid @enderror" name="pickup_city_id" id="pickup_city_id" >
@@ -139,10 +148,13 @@
 
                         <div class="mb-3">
                             <label for="destination_country_id" class="form-label required">Destination Country <span class="text-danger">*</span></label>
-                            <select class="form-select @error('destination_country_id') is-invalid @enderror" name="destination_country_id" id="destination_country_id" >
+                            <select class="form-select @error('destination_country_id') is-invalid @enderror"  
+                                    name="destination_country_id" id="destination_country_id" required>
                                 <option value="">Select Country</option>
                                 @foreach($countries as $country)
-                                    <option value="{{ $country->id }}" {{ old('destination_country_id', $shipment->destination_country_id) == $country->id ? 'selected' : '' }}>
+                                    <option value="{{ $country->id }}" 
+                                            data-flag="{{ strtolower($country->code) }}"
+                                            {{ old('destination_country_id', $shipment->destination_country_id) == $country->id ? 'selected' : '' }}>
                                         {{ $country->name }}
                                     </option>
                                 @endforeach
@@ -205,28 +217,18 @@
                             @enderror
                         </div>
 
-                        <div class="mb-3">
-                            <div class="form-check @error('consent') is-invalid @enderror">
-                                <input class="form-check-input" type="checkbox" name="consent" value="1" id="consent"  {{ old('consent', $shipment->consent) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="consent">
-                                    I agree to the terms and conditions <span class="text-danger">*</span>
-                                </label>
-                            </div>
-                            @error('consent')
-                                <div class="invalid-feedback d-block">{{ $message }}</div>
-                            @enderror
-                        </div>
+                        
                     </div>
                 </div>
 
                 <div class="row mt-4">
-                    <div class="col-12">
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i> Update Shipment Enquiry
-                        </button>
+                    <div class="col-12 text-center">
                         <a href="{{ route('shipments.show', $shipment) }}" class="btn btn-secondary">
                             <i class="fas fa-times"></i> Cancel
                         </a>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-save"></i> Update Shipment Enquiry
+                        </button>
                     </div>
                 </div>
             </form>
@@ -248,200 +250,161 @@ $(document).ready(function() {
         return element.files[0].size <= param;
     }, "File size must be less than 10MB.");
 
-    // Custom validation method to prevent same pickup and destination
-    $.validator.addMethod("differentLocation", function(value, element) {
-        const pickupCountry = $('#pickup_country_id').val();
-        const pickupCity = $('#pickup_city_id').val();
-        const destCountry = $('#destination_country_id').val();
-        const destCity = $('#destination_city_id').val();
-        
-        // Only validate if all fields have values
-        if (pickupCountry && pickupCity && destCountry && destCity) {
-            return !(pickupCountry === destCountry && pickupCity === destCity);
-        }
-        return true;
-    }, "Destination cannot be the same as pickup location.");
-
     // Form validation
     $("#editShipmentForm").validate({
         ignore: [],
         errorElement: 'div',
         errorClass: 'invalid-feedback',
         errorPlacement: function(error, element) {
-            if (element.attr("type") == "checkbox" && element.attr("name") !== "consent") {
+            if (element.attr("type") == "checkbox") {
                 error.insertAfter(element.closest('.checkbox-group'));
-            } else if (element.attr("name") == "consent") {
-                error.insertAfter(element.closest('.form-check'));
             } else {
                 error.insertAfter(element);
             }
         },
-        highlight: function(element, errorClass, validClass) {
+        highlight: function(element) {
             $(element).addClass('is-invalid').removeClass('is-valid');
             if ($(element).hasClass('select2-hidden-accessible')) {
                 $(element).next('.select2-container').find('.select2-selection').addClass('is-invalid');
             }
         },
-        unhighlight: function(element, errorClass, validClass) {
+        unhighlight: function(element) {
             $(element).removeClass('is-invalid');
             if ($(element).hasClass('select2-hidden-accessible')) {
                 $(element).next('.select2-container').find('.select2-selection').removeClass('is-invalid');
             }
         },
         rules: {
-            'shipment_type[]': {
-                checkboxRequired: true
-            },
-            'mode_of_transport': {
-                required: true
-            },
-            'goods_description': {
-                required: true,
-                minlength: 10,
-                maxlength: 1000
-            },
-            'estimated_volume': {
-                required: true,
-                maxlength: 255
-            },
-            'cargo_ready_date': {
-                required: true,
-                date: true
-            },
-            'pickup_country_id': {
-                required: true
-            },
-            'pickup_city_id': {
-                required: true
-            },
-            'destination_country_id': {
-                required: true
-            },
-            'destination_city_id': {
-                required: true,
-                differentLocation: true
-            },
-            'documents': {
-                filesize: 10485760 // 10MB in bytes
-            },
-            'special_notes': {
-                maxlength: 1000
-            },
-            'delivery_remark': {
-                maxlength: 1000
-            },
-            'consent': {
-                required: true
-            }
+            'shipment_type[]': { checkboxRequired: true },
+            'mode_of_transport': { required: true },
+            'goods_description': { required: true, minlength: 10, maxlength: 1000 },
+            'estimated_volume': { required: true, maxlength: 255 },
+            'cargo_ready_date': { required: true, date: true },
+            'pickup_country_id': { required: true },
+            'pickup_city_id': { required: true },
+            'destination_country_id': { required: true },
+            'destination_city_id': { required: true, differentLocation: true },
+            'documents': { filesize: 10485760 },
+            'special_notes': { maxlength: 1000 },
+            'delivery_remark': { maxlength: 1000 },
         },
         messages: {
-            'shipment_type[]': {
-                checkboxRequired: "Please select at least one shipment type"
-            },
-            'mode_of_transport': {
-                required: "Mode of transport is required"
-            },
-            'goods_description': {
-                required: "Goods description is required",
-                minlength: "Description must be at least 10 characters long",
-                maxlength: "Description cannot exceed 1000 characters"
-            },
-            'estimated_volume': {
-                required: "Estimated volume is required",
-                maxlength: "Volume cannot exceed 255 characters"
-            },
-            'cargo_ready_date': {
-                required: "Cargo ready date is required",
-                date: "Please enter a valid date"
-            },
-            'pickup_country_id': {
-                required: "Pickup country is required"
-            },
-            'pickup_city_id': {
-                required: "Pickup city is required"
-            },
-            'destination_country_id': {
-                required: "Destination country is required"
-            },
-            'destination_city_id': {
-                required: "Destination city is required",
-                differentLocation: "Destination cannot be the same as pickup location"
-            },
-            'documents': {
-                filesize: "File size must be less than 10MB"
-            },
-            'special_notes': {
-                maxlength: "Special notes cannot exceed 1000 characters"
-            },
-            'delivery_remark': {
-                maxlength: "Delivery remarks cannot exceed 1000 characters"
-            },
-            'consent': {
-                required: "You must agree to the terms and conditions"
-            }
+            'shipment_type[]': { checkboxRequired: "Please select at least one shipment type" },
+            'mode_of_transport': { required: "Mode of transport is required" },
+            'goods_description': { required: "Goods description is required", minlength: "Description must be at least 10 characters long", maxlength: "Description cannot exceed 1000 characters" },
+            'estimated_volume': { required: "Estimated volume is required", maxlength: "Volume cannot exceed 255 characters" },
+            'cargo_ready_date': { required: "Cargo ready date is required", date: "Please enter a valid date" },
+            'pickup_country_id': { required: "Pickup country is required" },
+            'pickup_city_id': { required: "Pickup city is required" },
+            'destination_country_id': { required: "Destination country is required" },
+            'destination_city_id': { required: "Destination city is required", differentLocation: "Destination cannot be the same as pickup location" },
+            'documents': { filesize: "File size must be less than 10MB" },
+            'special_notes': { maxlength: "Special notes cannot exceed 1000 characters" },
+            'delivery_remark': { maxlength: "Delivery remarks cannot exceed 1000 characters" },
         },
         submitHandler: function(form) {
-            // Show loading state
             const submitBtn = $(form).find('button[type="submit"]');
             const originalText = submitBtn.html();
             submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
-            
-            // Reset loading state after timeout (fallback)
             setTimeout(() => {
                 submitBtn.prop('disabled', false).html(originalText);
             }, 10000);
-            
             form.submit();
         }
     });
+    // Initialize Flatpickr for Cargo Ready Date
+    flatpickr("#cargo_ready_date", {
+        dateFormat: "Y-m-d",
+        defaultDate: "{{ old('cargo_ready_date', $shipment->cargo_ready_date ? $shipment->cargo_ready_date->format('Y-m-d') : '') }}",
+    });
+    // Function to format country option with flag
+    function formatCountry(option) {
+        if (!option.id) return option.text;
+        var flagCode = $(option.element).data('flag');
+        if (!flagCode) return option.text;
+        return $('<span><img src="https://flagcdn.com/w20/' + flagCode + '.png" style="width:20px; height:15px; margin-right:5px;"> ' + option.text + '</span>');
+    }
 
-    // Handle pickup country change
-    $('#pickup_country_id').change(function() {
-        var countryId = $(this).val();
-        if (countryId) {
-            $.get('/get-cities/' + countryId, function(data) {
-                $('#pickup_city_id').empty();
-                $('#pickup_city_id').append('<option value="">Select City</option>');
-                $.each(data, function(key, value) {
-                    $('#pickup_city_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-                });
-                
-                // Revalidate destination city if it has a value
-                $('#destination_city_id').valid();
-            }).fail(function() {
-                console.error('Failed to load pickup cities');
-            });
-        } else {
-            $('#pickup_city_id').empty();
-            $('#pickup_city_id').append('<option value="">Select City</option>');
-        }
+    // Initialize Select2 for country dropdowns with flags
+    $('#pickup_country_id, #destination_country_id').select2({
+        templateResult: formatCountry,
+        templateSelection: formatCountry,
+        width: '100%',
+        placeholder: "Select Country",
+        allowClear: true
     });
 
-    // Handle destination country change
-    $('#destination_country_id').change(function() {
-        var countryId = $(this).val();
+    // Initialize Select2 for cities
+    $('#pickup_city_id, #destination_city_id').select2({
+        width: '100%',
+        placeholder: "Select City",
+        allowClear: true
+    });
+
+    // Load pickup cities dynamically & preselect
+    function loadCities(countryId, cityDropdown, selectedCity) {
         if (countryId) {
-            $.get('/get-cities/' + countryId, function(data) {
-                $('#destination_city_id').empty();
-                $('#destination_city_id').append('<option value="">Select City</option>');
-                $.each(data, function(key, value) {
-                    $('#destination_city_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+            $.get('/get-cities/' + countryId, function (data) {
+                cityDropdown.empty().append('<option value="">Select City</option>');
+                $.each(data, function (_, city) {
+                    cityDropdown.append('<option value="' + city.id + '">' + city.name + '</option>');
                 });
-            }).fail(function() {
-                console.error('Failed to load destination cities');
+                if (selectedCity) {
+                    cityDropdown.val(selectedCity).trigger('change');
+                }
             });
         } else {
-            $('#destination_city_id').empty();
-            $('#destination_city_id').append('<option value="">Select City</option>');
+            cityDropdown.empty().append('<option value="">Select City</option>');
         }
+    }
+
+    // On change events
+    $('#pickup_country_id').on('change', function () {
+        loadCities($(this).val(), $('#pickup_city_id'), null);
     });
+
+    $('#destination_country_id').on('change', function () {
+        loadCities($(this).val(), $('#destination_city_id'), null);
+    });
+
+    // Preload cities from DB when editing
+    loadCities("{{ $shipment->pickup_country_id }}", $('#pickup_city_id'), "{{ $shipment->pickup_city_id }}");
+    loadCities("{{ $shipment->destination_country_id }}", $('#destination_city_id'), "{{ $shipment->destination_city_id }}");
+    // // Load cities for pickup country and preselect
+    // $('#pickup_country_id').change(function() {
+    //     var countryId = $(this).val();
+    //     if (countryId) {
+    //         $.get('/get-cities/' + countryId, function(data) {
+    //             $('#pickup_city_id').empty().append('<option value="">Select City</option>');
+    //             $.each(data, function(_, value) {
+    //                 $('#pickup_city_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+    //             });
+    //             $('#pickup_city_id').val("{{ $shipment->pickup_city_id }}");
+    //             $('#pickup_city_id').valid();
+    //         });
+    //     }
+    // }).trigger('change');
+
+    // // Load cities for destination country and preselect
+    // $('#destination_country_id').change(function() {
+    //     var countryId = $(this).val();
+    //     if (countryId) {
+    //         $.get('/get-cities/' + countryId, function(data) {
+    //             $('#destination_city_id').empty().append('<option value="">Select City</option>');
+    //             $.each(data, function(_, value) {
+    //                 $('#destination_city_id').append('<option value="' + value.id + '">' + value.name + '</option>');
+    //             });
+    //             $('#destination_city_id').val("{{ $shipment->destination_city_id }}");
+    //             $('#destination_city_id').valid();
+    //         });
+    //     }
+    // }).trigger('change');
 
     // Date validation - cargo ready date should not be in the past
     $('#cargo_ready_date').change(function() {
         const selectedDate = new Date($(this).val());
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        
         if (selectedDate < today) {
             $(this).addClass('is-invalid');
             if ($(this).next('.invalid-feedback').length === 0) {
@@ -453,7 +416,7 @@ $(document).ready(function() {
         }
     });
 
-    // Remove server-side errors on input change
+    // Remove server-side errors on change
     $('.form-control, .form-select').on('input change', function() {
         if ($(this).hasClass('is-invalid') && $(this).val()) {
             $(this).removeClass('is-invalid');
@@ -471,3 +434,4 @@ $(document).ready(function() {
 });
 </script>
 @endsection
+

@@ -145,17 +145,7 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
-
-                    {{-- <div class="mb-3 col-12 col-md-6">
-                        <label for="region_id" class="form-label">Region*</label>
-                        <select class="form-select @error('region_id') is-invalid @enderror" 
-                                id="region" name="region_id" data-old="{{ old('region_id', $member->region_id) }}">
-                            <option value="">Select Region</option>
-                        </select>
-                        @error('region_id')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
-                    </div> --}}
+                   
                     <div class="mb-3 col-12 col-md-6">
                         <label for="region_id" class="form-label">Region*</label>
                         <select class="form-select @error('region_id') is-invalid @enderror" 

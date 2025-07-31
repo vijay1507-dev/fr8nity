@@ -138,7 +138,6 @@ class ShipmentController extends Controller
             'destination_city_id' => 'required|exists:cities,id',
             'special_notes' => 'nullable|string',
             'delivery_remark' => 'nullable|string',
-            'consent' => 'required|accepted'
         ]);
 
         // Handle file upload if present
