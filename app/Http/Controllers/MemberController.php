@@ -27,6 +27,9 @@ class MemberController extends Controller
                 ->addColumn('current_tier', function($row) {
                     return $row->membershipTier->name;
                 })
+                ->addColumn('created_at', function($row) {
+                    return $row->created_at->format('d-m-Y');
+                })
                 ->addColumn('action', function($row) {
                     $viewBtn = '<a href="' . route('members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
                     $editBtn = '<a href="' . route('members.edit', $row) . '" class="btn btn-sm btn-outline-success">Edit</a>';

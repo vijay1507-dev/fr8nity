@@ -17,6 +17,7 @@
                         <th>Company Name</th>
                         <th>Company Telephone</th>
                         <th>Current Tier</th>
+                        <th>Created At</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -44,6 +45,7 @@
                 {data: 'company_name', name: 'company_name'},
                 {data: 'company_telephone', name: 'company_telephone'},
                 {data: 'current_tier', name: 'current_tier'},
+                {data: 'created_at', name: 'created_at'},
                 {
                     data: 'status', 
                     name: 'status',

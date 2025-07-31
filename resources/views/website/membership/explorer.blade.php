@@ -18,14 +18,14 @@
           </div>
         </div>
 
-        <div class="col-12 col-md-6 mb-md-3 right_image">
+        <div class="col-12 col-md-6 mb-md-3 right_image text-end">
           <img src="https://fr8nity.sistagging.com/images/Explorer.png" alt="" class="img-fluid rounded-4  object-fit-cover"
             style="height: 100%; max-height: 450px; object-position: center;" />
         </div>
       </div>
     </div>
   </section>
-  <section class=" blackdark">
+  <section class="blackdark">
     <div class="container py-5 px-2">
       <div class="text-center">
         <h2 class="text-center fw-bold fs-2">Your Membership at a Glance</h2>
@@ -102,7 +102,7 @@
       </div>
     </div>
   </section>
-  <section class="  blacklight">
+  <section class="freightmember_sec blacklight">
     <div class="container py-5 px-2">
       <div class="text-center">
         <h2 class="text-center fw-bold fs-2">Explorer Benefits</h2>

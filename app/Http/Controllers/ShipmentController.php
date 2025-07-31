@@ -37,6 +37,9 @@ class ShipmentController extends Controller
                 ->editColumn('cargo_ready_date', function ($row) {
                     return \Carbon\Carbon::parse($row->cargo_ready_date)->format('F j, Y');
                 })
+                ->addColumn('created_at', function($row) {
+                    return $row->created_at->format('d-m-Y');
+                })
                 ->addColumn('action', function($row) {
                     $viewBtn = '<a href="' . route('shipments.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
                     $editBtn = '<a href="' . route('shipments.edit', $row) . '" class="btn btn-sm btn-outline-success">Edit</a>';

@@ -6,14 +6,17 @@
                     utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
                     separateDialCode: true,
                     initialCountry: "auto",
+                    preferredCountries: ['sg'],
+                    nationalMode: false,
+                    formatOnDisplay: true,  
                     geoIpLookup: function(callback) {
                         fetch("https://ipapi.co/json")
                             .then(res => res.json())
                             .then(data => callback(data.country_code))
                             .catch(() => callback("US"));
                     },
-                    formatOnDisplay: true,
-                    autoPlaceholder: "polite"
+                    // formatOnDisplay: true,
+                    // autoPlaceholder: "polite"
                 });
 
         // Custom validation method for phone number
@@ -236,12 +239,29 @@
                 }
             },
             submitHandler: function(form) {
-                // Set the full formatted number with country code before submit
                 if (phoneInput.value.trim()) {
-                    phoneInput.value = iti.getNumber(); // This will include the country code with +
+                    // Get full number with country code
+                    const internationalNumber = iti.getNumber();
+            
+                    // Create hidden input if not exists
+                    let hiddenPhoneInput = $('#hidden_whatsapp_phone');
+                    if (hiddenPhoneInput.length === 0) {
+                        hiddenPhoneInput = $('<input>', {
+                            type: 'hidden',
+                            id: 'hidden_whatsapp_phone',
+                            name: 'whatsapp_phone'
+                        });
+                        $(form).append(hiddenPhoneInput);
+                    }
+            
+                    // Set value to hidden input
+                    hiddenPhoneInput.val(internationalNumber);
+            
+                    // Remove name attribute from visible input to prevent duplicate submission
+                    $(phoneInput).removeAttr('name');
                 }
-
-                // Submit the form
+            
+                // Let the validator handle the submit without calling form.submit() directly
                 form.submit();
             }
         });
@@ -250,7 +270,17 @@
         $('select.select2').on('change', function() {
             $(this).valid();
         });
+        // Trigger validation on country change
+        $('#origin_country, #destination_country').on('change', function () {
+            $(this).valid(); // Trigger validation check
 
+            if ($(this).val()) {
+                // Remove error styles for Select2
+                $(this).removeClass('is-invalid');
+                $(this).next('.select2-container').find('.select2-selection').removeClass('is-invalid');
+                $(this).next('.select2-container').next('.invalid-feedback').remove();
+            }
+        });
         // Prevent form submission on enter key
         $('#joinMemberForm').on('keypress', function(e) {
             if (e.which === 13) { // Enter key

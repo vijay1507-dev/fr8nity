@@ -16,6 +16,7 @@
                         <th>Pickup Location</th>
                         <th>Destination</th>
                         <th>Cargo Ready Date</th>
+                        <th>Created At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -42,6 +43,7 @@
                 {data: 'pickup_location', name: 'pickup_location'},
                 {data: 'destination_location', name: 'destination_location'},
                 {data: 'cargo_ready_date', name: 'cargo_ready_date'},
+                {data: 'created_at', name: 'created_at'},
                 {
                     data: 'action', 
                     name: 'action', 

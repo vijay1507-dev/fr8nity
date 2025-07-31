@@ -16,6 +16,7 @@
                         <th>Email</th>
                         <th>Company Name</th>
                         <th>Product/Industry Category</th>
+                        <th>Created At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -42,11 +43,13 @@
                 {data: 'email', name: 'email'},
                 {data: 'company_name', name: 'company_name'},
                 {data: 'product_industry_category', name: 'product_industry_category'},
+                {data: 'created_at', name: 'created_at'},
                 {
                     data: 'action', 
                     name: 'action', 
                     orderable: false, 
                     searchable: false,
+                    width: '168px',
                 },
             ]
         });
