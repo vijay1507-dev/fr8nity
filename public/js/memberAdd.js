@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { name: 'incorporation_date', label: 'Incorporation Date' },
             { name: 'tax_id', label: 'Tax ID' },
             { name: 'website_linkedin', label: 'Website / LinkedIn' },
+            { name: 'company_description', label: 'About Company' },
             { name: 'membership_tier', label: 'Membership Tier' }
         ];
 

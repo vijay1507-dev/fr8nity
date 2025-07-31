@@ -33,6 +33,7 @@ class User extends Authenticatable
         'whatsapp_phone',
         'company_name',
         'company_logo',
+        'company_description',
         'company_telephone',
         'company_address',
         'country_id',

@@ -166,3 +166,108 @@ p.mb-0 {
         padding: 1rem;
     }
 }
+
+/* Company Description Styling */
+.company-description {
+    line-height: 1.6;
+    color: #344767;
+    font-weight: 400;
+}
+
+.company-description p {
+    margin-bottom: 0.75rem;
+}
+
+.company-description p:last-child {
+    margin-bottom: 0;
+}
+
+.company-description ul,
+.company-description ol {
+    margin-bottom: 0.75rem;
+    padding-left: 1.5rem;
+}
+
+.company-description li {
+    margin-bottom: 0.25rem;
+}
+
+.company-description strong,
+.company-description b {
+    font-weight: 600;
+}
+
+.company-description em,
+.company-description i {
+    font-style: italic;
+}
+
+.company-description a {
+    color: #435ebe;
+    text-decoration: underline;
+}
+
+.company-description a:hover {
+    color: #344767;
+}
+
+/* CKEditor Styling */
+.ck-editor__editable {
+    min-height: 200px !important;
+    max-height: 400px !important;
+    border: 1px solid #dee2e6 !important;
+    border-radius: 0.375rem !important;
+}
+
+.ck-editor__editable:focus {
+    border-color: #435ebe !important;
+    box-shadow: 0 0 0 0.2rem rgba(67, 94, 190, 0.25) !important;
+}
+
+.ck.ck-editor__main > .ck-editor__editable {
+    background-color: #fff !important;
+}
+
+.ck.ck-toolbar {
+    border: 1px solid #dee2e6 !important;
+    border-bottom: none !important;
+    border-radius: 0.375rem 0.375rem 0 0 !important;
+    background-color: #f8f9fa !important;
+}
+
+.ck.ck-toolbar .ck-toolbar__items {
+    flex-wrap: wrap !important;
+}
+
+.ck.ck-button {
+    color: #344767 !important;
+    font-weight: 500 !important;
+}
+
+.ck.ck-button:hover {
+    background-color: #e9ecef !important;
+}
+
+.ck.ck-button.ck-on {
+    background-color: #435ebe !important;
+    color: #fff !important;
+}
+
+.ck.ck-dropdown__panel {
+    border: 1px solid #dee2e6 !important;
+    border-radius: 0.375rem !important;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15) !important;
+}
+
+.ck.ck-dropdown__panel .ck-button {
+    color: #344767 !important;
+}
+
+.ck.ck-dropdown__panel .ck-button:hover {
+    background-color: #f8f9fa !important;
+}
+
+.ck.ck-dropdown__panel .ck-button.ck-on {
+    background-color: #435ebe !important;
+    color: #fff !important;
+}

@@ -94,7 +94,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected routes (require login)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
@@ -116,7 +116,7 @@ Route::middleware('auth')->group(function () {
         Route::delete('/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
     });
     Route::get('/{member}/edit-profile', [MemberController::class, 'edit'])->name('editmemberprofile');
-    Route::patch('/{member}/update-profile', [MemberController::class, 'update'])->name('members.updateprofile');
+    Route::patch('/{member}/update-profile', [MemberController::class, 'update'])->name('members.updateprofile')->withoutMiddleware('kyc.complete');
     
     // Shipment management routes - requires admin access
     Route::middleware('admin')->prefix('shipments')->group(function () {

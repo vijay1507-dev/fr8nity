@@ -165,8 +165,17 @@ class AuthController extends Controller
                 return redirect()->route('two-factor.show');
             }
 
-            // If 2FA is not enabled, log in directly
+            // If 2FA is not enabled, check for KYC completion
             $request->session()->regenerate();
+
+            // For members, check if profile photo and company logo are uploaded
+            if ($user->role === User::MEMBER && (!$user->profile_photo || !$user->company_logo)) {
+                return redirect()->route('editmemberprofile', $user->id)->with('warning', [
+                    'title' => 'Complete Your KYC',
+                    'message' => 'Please complete your KYC by uploading your profile photo, company logo, and about company description. You won\'t be able to access other features until you complete this step.'
+                ]);
+            }
+
             return redirect()->intended('dashboard');
         }
 

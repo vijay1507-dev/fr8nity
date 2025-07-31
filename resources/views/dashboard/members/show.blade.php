@@ -213,19 +213,29 @@
                                     </button>
                                 </div>
                             </div>
-                            @if($member->membership_expires_at)
+                            <div class="mb-4">
+                                <label class="form-label text-muted mb-2">CREDIT Protection</label>
+                                @if($member->membership_tier == 1)
+                                <p class="mb-0">USD $5,000/year</p>
+                                @elseif($member->membership_tier == 2)
+                                <p class="mb-0">USD $8,000/year</p>
+                                @elseif($member->membership_tier == 3)
+                                <p class="mb-0">USD $12,000/year</p>
+                                @endif
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                        <div class="mb-4">
+                            <label class="form-label text-muted mb-2">Member Since</label>
+                            <p class="mb-0">{{ $member->created_at->format('F j, Y') }}</p>
+                        </div>
+                        @if($member->membership_expires_at)
                             <div class="mb-4">
                                 <label class="form-label text-muted mb-2">Valid Till</label>
                                 <p class="mb-0">{{ $member->membership_expires_at->format('F j, Y') }}</p>
                             </div>
                             @endif
                         </div>
-
-                        <div class="mb-4">
-                            <label class="form-label text-muted mb-2">Member Since</label>
-                            <p class="mb-0">{{ $member->created_at->format('F j, Y') }}</p>
-                        </div>
-
                         @if ($member->membershipTier)
                             <div>
                                 <label class="form-label text-muted mb-2">Tier Benefits</label>
@@ -239,6 +249,17 @@
                                 </ul>
                             </div>
                         @endif
+
+                        <div class="mt-4">
+                            <label class="form-label text-muted mb-2">About Company</label>
+                            @if($member->company_description)
+                                <div class="company-description">
+                                    {!! $member->company_description !!}
+                                </div>
+                            @else
+                                <p class="text-muted mb-0">Nothing about company</p>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>

@@ -81,6 +81,7 @@ class MemberController extends Controller
             'designation' => ['required', 'string', 'max:255'],
             'whatsapp_phone' => ['required'],
             'company_name' => ['required', 'string', 'max:255'],
+            'company_description' => ['nullable', 'string', 'max:2000'],
             'company_telephone' => ['required'],
             'company_address' => ['required', 'string'],
             'country_id' => ['required', 'exists:countries,id'],
@@ -101,6 +102,7 @@ class MemberController extends Controller
             'designation' => $request->designation,
             'whatsapp_phone' => $request->whatsapp_phone,
             'company_name' => $request->company_name,
+            'company_description' => $request->company_description,
             'company_telephone' => $request->company_telephone,
             'company_address' => $request->company_address,
             'country_id' => $request->country_id,
@@ -214,74 +216,121 @@ class MemberController extends Controller
             abort(404);
         }
 
-        $rules = [
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $member->id],
-            'designation' => ['required', 'string', 'max:255'],
-            'whatsapp_phone' => ['required'],
-            'company_name' => ['required', 'string', 'max:255'],
-            'company_logo' => ['nullable', 'image', 'max:2048'],
-            'company_telephone' => ['required'],
-            'company_address' => ['required', 'string'],
-            'country_id' => ['required', 'exists:countries,id'],
-            'city_id' => ['required', 'exists:cities,id'],
-            'region_id' => ['required', 'exists:regions,id'],
-            'referred_by' => ['nullable', 'string', 'max:255'],
-            'specializations' => ['required', 'array'],
-            'incorporation_date' => ['required', 'date'],
-            'tax_id' => ['required', 'string', 'max:255'],
-            'website_linkedin' => ['required', 'string', 'max:255'],
-            'is_network_member' => ['required', 'in:yes,no'],
-            'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
-            'membership_tier' => ['required'],
-            'profile_photo' => ['nullable', 'image', 'max:2048'],
-        ];
+        // Different validation rules based on user role
+        if (Auth::user()->role == User::MEMBER) {
+            $rules = [
+                'company_logo' => ['nullable', 'image', 'max:2048'],
+                'company_description' => ['nullable', 'string', 'max:2000'],
+                'profile_photo' => ['nullable', 'image', 'max:2048'],
+            ];
 
-        // Add password validation rules if password is being updated
-        if ($request->filled('password')) {
-            $rules['password'] = ['required', 'confirmed', Password::defaults()];
-        }
+            // Add password validation rules if password is being updated
+            if ($request->filled('password')) {
+                $rules['current_password'] = ['required', function ($attribute, $value, $fail) {
+                    if (!Hash::check($value, Auth::user()->password)) {
+                        $fail('The current password is incorrect.');
+                    }
+                }];
+                $rules['password'] = ['required', 'confirmed', Password::defaults()];
+            }
 
-        $request->validate($rules);
+            $request->validate($rules);
 
-        if ($request->hasFile('profile_photo')) {
-            $path = $request->file('profile_photo')->store('profile-photos', 'public');
-        }
-                if ($request->hasFile('company_logo')) {
-            $companyLogoPath = $request->file('company_logo')->store('company-logos', 'public');
-        }
+            $updateData = [
+                'company_description' => $request->company_description,
+            ];
 
-        $updateData = [
-            'name' => $request->name,
-            'email' => $request->email,
-            'designation' => $request->designation,
-            'whatsapp_phone' => $request->whatsapp_phone,
-            'company_logo' => $companyLogoPath ?? null,
-            'company_name' => $request->company_name,
-            'company_telephone' => $request->company_telephone,
-            'company_address' => $request->company_address,
-            'country_id' => $request->country_id,
-            'city_id' => $request->city_id,
-            'region_id' => $request->region_id,
-            'referred_by' => $request->referred_by,
-            'specializations' => json_encode($request->specializations),
-            'incorporation_date' => $request->incorporation_date,
-            'tax_id' => $request->tax_id,
-            'website_linkedin' => $request->website_linkedin,
-            'is_network_member' => $request->is_network_member,
-            'network_name' => $request->network_name,
-            'membership_tier' => $request->membership_tier,
-            'profile_photo' => $path ?? null,
-        ];
+            if ($request->hasFile('profile_photo')) {
+                $path = $request->file('profile_photo')->store('profile-photos', 'public');
+                $updateData['profile_photo'] = $path;
+            }
 
-        // Add password to update data if it's being changed
-        if ($request->filled('password')) {
-            $updateData['password'] = Hash::make($request->password);
+            if ($request->hasFile('company_logo')) {
+                $companyLogoPath = $request->file('company_logo')->store('company-logos', 'public');
+                $updateData['company_logo'] = $companyLogoPath;
+            }
+
+            // Add password to update data if it's being changed
+            if ($request->filled('password')) {
+                $updateData['password'] = Hash::make($request->password);
+            }
+
+        } else {
+            // Admin validation rules - all fields required
+            $rules = [
+                'name' => ['required', 'string', 'max:255'],
+                'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $member->id],
+                'designation' => ['required', 'string', 'max:255'],
+                'whatsapp_phone' => ['required'],
+                'company_name' => ['required', 'string', 'max:255'],
+                'company_logo' => ['nullable', 'image', 'max:2048'],
+                'company_description' => ['nullable', 'string', 'max:2000'],
+                'company_telephone' => ['required'],
+                'company_address' => ['required', 'string'],
+                'country_id' => ['required', 'exists:countries,id'],
+                'city_id' => ['required', 'exists:cities,id'],
+                'region_id' => ['required', 'exists:regions,id'],
+                'referred_by' => ['nullable', 'string', 'max:255'],
+                'specializations' => ['required', 'array'],
+                'incorporation_date' => ['required', 'date'],
+                'tax_id' => ['required', 'string', 'max:255'],
+                'website_linkedin' => ['required', 'string', 'max:255'],
+                'is_network_member' => ['required', 'in:yes,no'],
+                'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
+                'membership_tier' => ['required'],
+                'profile_photo' => ['nullable', 'image', 'max:2048'],
+            ];
+
+            if ($request->filled('password')) {
+                $rules['password'] = ['required', 'confirmed', Password::defaults()];
+            }
+
+            $request->validate($rules);
+
+            if ($request->hasFile('profile_photo')) {
+                $path = $request->file('profile_photo')->store('profile-photos', 'public');
+            }
+            if ($request->hasFile('company_logo')) {
+                $companyLogoPath = $request->file('company_logo')->store('company-logos', 'public');
+            }
+
+            $updateData = [
+                'name' => $request->name,
+                'email' => $request->email,
+                'designation' => $request->designation,
+                'whatsapp_phone' => $request->whatsapp_phone,
+                'company_name' => $request->company_name,
+                'company_description' => $request->company_description,
+                'company_telephone' => $request->company_telephone,
+                'company_address' => $request->company_address,
+                'country_id' => $request->country_id,
+                'city_id' => $request->city_id,
+                'region_id' => $request->region_id,
+                'referred_by' => $request->referred_by,
+                'specializations' => json_encode($request->specializations),
+                'incorporation_date' => $request->incorporation_date,
+                'tax_id' => $request->tax_id,
+                'website_linkedin' => $request->website_linkedin,
+                'is_network_member' => $request->is_network_member,
+                'network_name' => $request->network_name,
+                'membership_tier' => $request->membership_tier,
+            ];
+
+            if (isset($path)) {
+                $updateData['profile_photo'] = $path;
+            }
+            if (isset($companyLogoPath)) {
+                $updateData['company_logo'] = $companyLogoPath;
+            }
+
+            if ($request->filled('password')) {
+                $updateData['password'] = Hash::make($request->password);
+            }
         }
 
         $member->update($updateData);
 
-        if(Auth::user()->role == \App\Models\User::MEMBER){
+        if(Auth::user()->role == User::MEMBER){
             return redirect()->route('profile')->with('success', 'Profile updated successfully!');
         }else{
             return redirect()->route('members.show', $member)
