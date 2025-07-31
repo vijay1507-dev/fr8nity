@@ -283,7 +283,7 @@
                                                         {{ old('membership_tier', '1') == $tier->id ? 'checked' : '' }}>
                                                     <label class="h-100" for="Benefit{{ $tier->id }}">
                                                         <div class="bg-dark p-3 rounded h-100">
-                                                            <h4 class="text-white pb-2">{{ $tier->name }}</h4>
+                                                            <h4 class="text-white pb-2">{{ $tier->name }} Benefits</h4>
                                                             <ul class="list-group">
                                                                 @foreach($tier->benefits as $benefit)
                                                                     <li class="text-white mb-2">{{ $benefit->title }}</li>
