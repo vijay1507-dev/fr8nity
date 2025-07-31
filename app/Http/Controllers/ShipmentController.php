@@ -34,10 +34,13 @@ class ShipmentController extends Controller
                     }
                     return is_array($types) ? implode(', ', $types) : $types;
                 })
+                ->editColumn('cargo_ready_date', function ($row) {
+                    return \Carbon\Carbon::parse($row->cargo_ready_date)->format('F j, Y');
+                })
                 ->addColumn('action', function($row) {
                     $viewBtn = '<a href="' . route('shipments.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
-                    $editBtn = '<a href="' . route('shipments.edit', $row) . '" class="btn btn-sm ms-2 btn-outline-success">Edit</a>';
-                    $deleteBtn = '<form action="' . route('shipments.destroy', $row) . '" method="POST" style="display:inline-block; margin-left:5px;">
+                    $editBtn = '<a href="' . route('shipments.edit', $row) . '" class="btn btn-sm btn-outline-success">Edit</a>';
+                    $deleteBtn = '<form action="' . route('shipments.destroy', $row) . '" method="POST" style="display:inline-block;">
                                     ' . csrf_field() . '
                                     ' . method_field('DELETE') . '
                                     <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Are you sure you want to delete this shipment enquiry?\')">Delete</button>

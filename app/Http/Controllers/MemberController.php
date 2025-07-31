@@ -29,8 +29,8 @@ class MemberController extends Controller
                 })
                 ->addColumn('action', function($row) {
                     $viewBtn = '<a href="' . route('members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
-                    $editBtn = '<a href="' . route('members.edit', $row) . '" class="btn btn-sm ms-2 btn-outline-success">Edit</a>';
-                    $deleteBtn = '<form action="' . route('members.destroy', $row) . '" method="POST" style="display:inline-block; margin-left:5px;">
+                    $editBtn = '<a href="' . route('members.edit', $row) . '" class="btn btn-sm btn-outline-success">Edit</a>';
+                    $deleteBtn = '<form action="' . route('members.destroy', $row) . '" method="POST" style="display:inline-block;">
                                     ' . csrf_field() . '
                                     ' . method_field('DELETE') . '
                                     <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Are you sure you want to delete this member?\')">Delete</button>

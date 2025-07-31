@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="card-body">
-            <form action="{{ route('shipments.update', $shipment) }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('shipments.update', $shipment) }}" method="POST" enctype="multipart/form-data" id="editShipmentForm">
                 @csrf
                 @method('PATCH')
                 
@@ -26,75 +26,78 @@
                         <h5 class="mb-3">Shipment Information</h5>
                         
                         <div class="mb-3">
-                            <label for="shipment_type" class="form-label">Shipment Types *</label>
+                            <label for="shipment_type" class="form-label required">Shipment Types <span class="text-danger">*</span></label>
                             @php
                                 $types = $shipment->shipment_type;
                                 if (is_string($types)) {
                                     $types = json_decode($types, true);
                                 }
                                 $types = is_array($types) ? $types : [];
+                                $oldTypes = old('shipment_type', $types);
                             @endphp
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="shipment_type[]" value="FCL" id="fcl" 
-                                    {{ in_array('FCL', $types) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="fcl">FCL (Full Container Load)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="shipment_type[]" value="LCL" id="lcl"
-                                    {{ in_array('LCL', $types) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="lcl">LCL (Less Container Load)</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="shipment_type[]" value="Air Freight" id="air"
-                                    {{ in_array('Air Freight', $types) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="air">Air Freight</label>
-                            </div>
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="shipment_type[]" value="Road Transport" id="road"
-                                    {{ in_array('Road Transport', $types) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="road">Road Transport</label>
+                            <div class="checkbox-group bg-light p-2 rounded @error('shipment_type') is-invalid @enderror">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="shipment_type[]" value="FCL" id="fcl" 
+                                        {{ in_array('FCL', $oldTypes) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="fcl">FCL (Full Container Load)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="shipment_type[]" value="LCL" id="lcl"
+                                        {{ in_array('LCL', $oldTypes) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="lcl">LCL (Less Container Load)</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="shipment_type[]" value="Air Freight" id="air"
+                                        {{ in_array('Air Freight', $oldTypes) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="air">Air Freight</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="shipment_type[]" value="Road Transport" id="road"
+                                        {{ in_array('Road Transport', $oldTypes) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="road">Road Transport</label>
+                                </div>
                             </div>
                             @error('shipment_type')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="mode_of_transport" class="form-label">Mode of Transport *</label>
-                            <select class="form-select" name="mode_of_transport" required>
+                            <label for="mode_of_transport" class="form-label required">Mode of Transport <span class="text-danger">*</span></label>
+                            <select class="form-select @error('mode_of_transport') is-invalid @enderror" name="mode_of_transport" >
                                 <option value="">Select Mode of Transport</option>
-                                <option value="Sea Freight" {{ $shipment->mode_of_transport == 'Sea Freight' ? 'selected' : '' }}>Sea Freight</option>
-                                <option value="Air Freight" {{ $shipment->mode_of_transport == 'Air Freight' ? 'selected' : '' }}>Air Freight</option>
-                                <option value="Road Transport" {{ $shipment->mode_of_transport == 'Road Transport' ? 'selected' : '' }}>Road Transport</option>
-                                <option value="Rail Transport" {{ $shipment->mode_of_transport == 'Rail Transport' ? 'selected' : '' }}>Rail Transport</option>
-                                <option value="Multimodal" {{ $shipment->mode_of_transport == 'Multimodal' ? 'selected' : '' }}>Multimodal</option>
+                                <option value="Sea Freight" {{ old('mode_of_transport', $shipment->mode_of_transport) == 'Sea Freight' ? 'selected' : '' }}>Sea Freight</option>
+                                <option value="Air Freight" {{ old('mode_of_transport', $shipment->mode_of_transport) == 'Air Freight' ? 'selected' : '' }}>Air Freight</option>
+                                <option value="Road Transport" {{ old('mode_of_transport', $shipment->mode_of_transport) == 'Road Transport' ? 'selected' : '' }}>Road Transport</option>
+                                <option value="Rail Transport" {{ old('mode_of_transport', $shipment->mode_of_transport) == 'Rail Transport' ? 'selected' : '' }}>Rail Transport</option>
+                                <option value="Multimodal" {{ old('mode_of_transport', $shipment->mode_of_transport) == 'Multimodal' ? 'selected' : '' }}>Multimodal</option>
                             </select>
                             @error('mode_of_transport')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="goods_description" class="form-label">Goods Description *</label>
-                            <textarea class="form-control" name="goods_description" rows="3" required>{{ old('goods_description', $shipment->goods_description) }}</textarea>
+                            <label for="goods_description" class="form-label required">Goods Description <span class="text-danger">*</span></label>
+                            <textarea class="form-control @error('goods_description') is-invalid @enderror" name="goods_description" rows="3" >{{ old('goods_description', $shipment->goods_description) }}</textarea>
                             @error('goods_description')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="estimated_volume" class="form-label">Estimated Volume *</label>
-                            <input type="text" class="form-control" name="estimated_volume" value="{{ old('estimated_volume', $shipment->estimated_volume) }}" required>
+                            <label for="estimated_volume" class="form-label required">Estimated Volume <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('estimated_volume') is-invalid @enderror" name="estimated_volume" value="{{ old('estimated_volume', $shipment->estimated_volume) }}" >
                             @error('estimated_volume')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="cargo_ready_date" class="form-label">Cargo Ready Date *</label>
-                            <input type="date" class="form-control" name="cargo_ready_date" value="{{ old('cargo_ready_date', $shipment->cargo_ready_date->format('Y-m-d')) }}" required>
+                            <label for="cargo_ready_date" class="form-label required">Cargo Ready Date <span class="text-danger">*</span></label>
+                            <input type="date" class="form-control @error('cargo_ready_date') is-invalid @enderror" name="cargo_ready_date" value="{{ old('cargo_ready_date', $shipment->cargo_ready_date ? $shipment->cargo_ready_date->format('Y-m-d') : '') }}" >
                             @error('cargo_ready_date')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -103,8 +106,8 @@
                         <h5 class="mb-3">Location Details</h5>
                         
                         <div class="mb-3">
-                            <label for="pickup_country_id" class="form-label">Pickup Country *</label>
-                            <select class="form-select" name="pickup_country_id" id="pickup_country_id" required>
+                            <label for="pickup_country_id" class="form-label required">Pickup Country <span class="text-danger">*</span></label>
+                            <select class="form-select @error('pickup_country_id') is-invalid @enderror" name="pickup_country_id" id="pickup_country_id" >
                                 <option value="">Select Country</option>
                                 @foreach($countries as $country)
                                     <option value="{{ $country->id }}" {{ old('pickup_country_id', $shipment->pickup_country_id) == $country->id ? 'selected' : '' }}>
@@ -113,13 +116,13 @@
                                 @endforeach
                             </select>
                             @error('pickup_country_id')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="pickup_city_id" class="form-label">Pickup City *</label>
-                            <select class="form-select" name="pickup_city_id" id="pickup_city_id" required>
+                            <label for="pickup_city_id" class="form-label required">Pickup City <span class="text-danger">*</span></label>
+                            <select class="form-select @error('pickup_city_id') is-invalid @enderror" name="pickup_city_id" id="pickup_city_id" >
                                 <option value="">Select City</option>
                                 @foreach($cities as $city)
                                     @if($city->country_id == $shipment->pickup_country_id)
@@ -130,13 +133,13 @@
                                 @endforeach
                             </select>
                             @error('pickup_city_id')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="destination_country_id" class="form-label">Destination Country *</label>
-                            <select class="form-select" name="destination_country_id" id="destination_country_id" required>
+                            <label for="destination_country_id" class="form-label required">Destination Country <span class="text-danger">*</span></label>
+                            <select class="form-select @error('destination_country_id') is-invalid @enderror" name="destination_country_id" id="destination_country_id" >
                                 <option value="">Select Country</option>
                                 @foreach($countries as $country)
                                     <option value="{{ $country->id }}" {{ old('destination_country_id', $shipment->destination_country_id) == $country->id ? 'selected' : '' }}>
@@ -145,13 +148,13 @@
                                 @endforeach
                             </select>
                             @error('destination_country_id')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <label for="destination_city_id" class="form-label">Destination City *</label>
-                            <select class="form-select" name="destination_city_id" id="destination_city_id" required>
+                            <label for="destination_city_id" class="form-label required">Destination City <span class="text-danger">*</span></label>
+                            <select class="form-select @error('destination_city_id') is-invalid @enderror" name="destination_city_id" id="destination_city_id" >
                                 <option value="">Select City</option>
                                 @foreach($cities as $city)
                                     @if($city->country_id == $shipment->destination_country_id)
@@ -162,13 +165,13 @@
                                 @endforeach
                             </select>
                             @error('destination_city_id')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="documents" class="form-label">Documents</label>
-                            <input type="file" class="form-control" name="documents" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
+                            <input type="file" class="form-control @error('documents') is-invalid @enderror" name="documents" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png">
                             <small class="form-text text-muted">Max file size: 10MB. Supported formats: PDF, DOC, DOCX, JPG, PNG</small>
                             @if($shipment->documents)
                                 <div class="mt-2">
@@ -176,7 +179,7 @@
                                 </div>
                             @endif
                             @error('documents')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -188,29 +191,29 @@
                         
                         <div class="mb-3">
                             <label for="special_notes" class="form-label">Special Notes</label>
-                            <textarea class="form-control" name="special_notes" rows="3">{{ old('special_notes', $shipment->special_notes) }}</textarea>
+                            <textarea class="form-control @error('special_notes') is-invalid @enderror" name="special_notes" rows="3">{{ old('special_notes', $shipment->special_notes) }}</textarea>
                             @error('special_notes')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
                             <label for="delivery_remark" class="form-label">Delivery Remarks</label>
-                            <textarea class="form-control" name="delivery_remark" rows="3">{{ old('delivery_remark', $shipment->delivery_remark) }}</textarea>
+                            <textarea class="form-control @error('delivery_remark') is-invalid @enderror" name="delivery_remark" rows="3">{{ old('delivery_remark', $shipment->delivery_remark) }}</textarea>
                             @error('delivery_remark')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
 
                         <div class="mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="consent" value="1" id="consent" required {{ $shipment->consent ? 'checked' : '' }}>
+                            <div class="form-check @error('consent') is-invalid @enderror">
+                                <input class="form-check-input" type="checkbox" name="consent" value="1" id="consent"  {{ old('consent', $shipment->consent) ? 'checked' : '' }}>
                                 <label class="form-check-label" for="consent">
-                                    I agree to the terms and conditions *
+                                    I agree to the terms and conditions <span class="text-danger">*</span>
                                 </label>
                             </div>
                             @error('consent')
-                                <div class="text-danger">{{ $message }}</div>
+                                <div class="invalid-feedback d-block">{{ $message }}</div>
                             @enderror
                         </div>
                     </div>
@@ -230,10 +233,168 @@
         </div>
     </div>
 </div>
-
-@push('scripts')
+@endsection
+@section('scripts')
 <script>
 $(document).ready(function() {
+    // Custom validation method for checkboxes
+    $.validator.addMethod("checkboxRequired", function(value, element) {
+        return $('input[name="' + element.name + '"]:checked').length > 0;
+    }, "Please select at least one option.");
+
+    // Custom validation method for file size
+    $.validator.addMethod("filesize", function(value, element, param) {
+        if (element.files.length === 0) return true;
+        return element.files[0].size <= param;
+    }, "File size must be less than 10MB.");
+
+    // Custom validation method to prevent same pickup and destination
+    $.validator.addMethod("differentLocation", function(value, element) {
+        const pickupCountry = $('#pickup_country_id').val();
+        const pickupCity = $('#pickup_city_id').val();
+        const destCountry = $('#destination_country_id').val();
+        const destCity = $('#destination_city_id').val();
+        
+        // Only validate if all fields have values
+        if (pickupCountry && pickupCity && destCountry && destCity) {
+            return !(pickupCountry === destCountry && pickupCity === destCity);
+        }
+        return true;
+    }, "Destination cannot be the same as pickup location.");
+
+    // Form validation
+    $("#editShipmentForm").validate({
+        ignore: [],
+        errorElement: 'div',
+        errorClass: 'invalid-feedback',
+        errorPlacement: function(error, element) {
+            if (element.attr("type") == "checkbox" && element.attr("name") !== "consent") {
+                error.insertAfter(element.closest('.checkbox-group'));
+            } else if (element.attr("name") == "consent") {
+                error.insertAfter(element.closest('.form-check'));
+            } else {
+                error.insertAfter(element);
+            }
+        },
+        highlight: function(element, errorClass, validClass) {
+            $(element).addClass('is-invalid').removeClass('is-valid');
+            if ($(element).hasClass('select2-hidden-accessible')) {
+                $(element).next('.select2-container').find('.select2-selection').addClass('is-invalid');
+            }
+        },
+        unhighlight: function(element, errorClass, validClass) {
+            $(element).removeClass('is-invalid');
+            if ($(element).hasClass('select2-hidden-accessible')) {
+                $(element).next('.select2-container').find('.select2-selection').removeClass('is-invalid');
+            }
+        },
+        rules: {
+            'shipment_type[]': {
+                checkboxRequired: true
+            },
+            'mode_of_transport': {
+                required: true
+            },
+            'goods_description': {
+                required: true,
+                minlength: 10,
+                maxlength: 1000
+            },
+            'estimated_volume': {
+                required: true,
+                maxlength: 255
+            },
+            'cargo_ready_date': {
+                required: true,
+                date: true
+            },
+            'pickup_country_id': {
+                required: true
+            },
+            'pickup_city_id': {
+                required: true
+            },
+            'destination_country_id': {
+                required: true
+            },
+            'destination_city_id': {
+                required: true,
+                differentLocation: true
+            },
+            'documents': {
+                filesize: 10485760 // 10MB in bytes
+            },
+            'special_notes': {
+                maxlength: 1000
+            },
+            'delivery_remark': {
+                maxlength: 1000
+            },
+            'consent': {
+                required: true
+            }
+        },
+        messages: {
+            'shipment_type[]': {
+                checkboxRequired: "Please select at least one shipment type"
+            },
+            'mode_of_transport': {
+                required: "Mode of transport is required"
+            },
+            'goods_description': {
+                required: "Goods description is required",
+                minlength: "Description must be at least 10 characters long",
+                maxlength: "Description cannot exceed 1000 characters"
+            },
+            'estimated_volume': {
+                required: "Estimated volume is required",
+                maxlength: "Volume cannot exceed 255 characters"
+            },
+            'cargo_ready_date': {
+                required: "Cargo ready date is required",
+                date: "Please enter a valid date"
+            },
+            'pickup_country_id': {
+                required: "Pickup country is required"
+            },
+            'pickup_city_id': {
+                required: "Pickup city is required"
+            },
+            'destination_country_id': {
+                required: "Destination country is required"
+            },
+            'destination_city_id': {
+                required: "Destination city is required",
+                differentLocation: "Destination cannot be the same as pickup location"
+            },
+            'documents': {
+                filesize: "File size must be less than 10MB"
+            },
+            'special_notes': {
+                maxlength: "Special notes cannot exceed 1000 characters"
+            },
+            'delivery_remark': {
+                maxlength: "Delivery remarks cannot exceed 1000 characters"
+            },
+            'consent': {
+                required: "You must agree to the terms and conditions"
+            }
+        },
+        submitHandler: function(form) {
+            // Show loading state
+            const submitBtn = $(form).find('button[type="submit"]');
+            const originalText = submitBtn.html();
+            submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
+            
+            // Reset loading state after timeout (fallback)
+            setTimeout(() => {
+                submitBtn.prop('disabled', false).html(originalText);
+            }, 10000);
+            
+            form.submit();
+        }
+    });
+
     // Handle pickup country change
     $('#pickup_country_id').change(function() {
         var countryId = $(this).val();
@@ -244,6 +405,11 @@ $(document).ready(function() {
                 $.each(data, function(key, value) {
                     $('#pickup_city_id').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
+                
+                // Revalidate destination city if it has a value
+                $('#destination_city_id').valid();
+            }).fail(function() {
+                console.error('Failed to load pickup cities');
             });
         } else {
             $('#pickup_city_id').empty();
@@ -261,13 +427,47 @@ $(document).ready(function() {
                 $.each(data, function(key, value) {
                     $('#destination_city_id').append('<option value="' + value.id + '">' + value.name + '</option>');
                 });
+            }).fail(function() {
+                console.error('Failed to load destination cities');
             });
         } else {
             $('#destination_city_id').empty();
             $('#destination_city_id').append('<option value="">Select City</option>');
         }
     });
+
+    // Date validation - cargo ready date should not be in the past
+    $('#cargo_ready_date').change(function() {
+        const selectedDate = new Date($(this).val());
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        
+        if (selectedDate < today) {
+            $(this).addClass('is-invalid');
+            if ($(this).next('.invalid-feedback').length === 0) {
+                $(this).after('<div class="invalid-feedback">Cargo ready date cannot be in the past</div>');
+            }
+        } else {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').remove();
+        }
+    });
+
+    // Remove server-side errors on input change
+    $('.form-control, .form-select').on('input change', function() {
+        if ($(this).hasClass('is-invalid') && $(this).val()) {
+            $(this).removeClass('is-invalid');
+            $(this).next('.invalid-feedback').hide();
+        }
+    });
+
+    // Remove checkbox group errors when any checkbox is checked
+    $('input[name="shipment_type[]"]').on('change', function() {
+        if ($('input[name="shipment_type[]"]:checked').length > 0) {
+            $('.checkbox-group').removeClass('is-invalid');
+            $('.checkbox-group').next('.invalid-feedback').hide();
+        }
+    });
 });
 </script>
-@endpush
-@endsection 
+@endsection

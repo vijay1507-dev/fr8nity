@@ -21,7 +21,7 @@ class TradeMemberController extends Controller
                 ->addColumn('action', function($row) {
                     $viewBtn = '<a href="' . route('trade-members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
                     $editBtn = '<a href="' . route('trade-members.edit', $row) . '" class="btn btn-sm ms-2 btn-outline-success">Edit</a>';
-                    $deleteBtn = '<form action="' . route('trade-members.destroy', $row) . '" method="POST" style="display:inline-block; margin-left:5px;">
+                    $deleteBtn = '<form action="' . route('trade-members.destroy', $row) . '" method="POST" style="display:inline-block; margin-left:8px;">
                                     ' . csrf_field() . '
                                     ' . method_field('DELETE') . '
                                     <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Are you sure?\')">Delete</button>

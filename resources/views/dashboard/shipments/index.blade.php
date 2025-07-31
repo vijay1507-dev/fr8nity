@@ -38,10 +38,10 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'shipment_types', name: 'shipment_types'},
-            {data: 'mode_of_transport', name: 'mode_of_transport'},
-            {data: 'pickup_location', name: 'pickup_location'},
-            {data: 'destination_location', name: 'destination_location'},
-            {data: 'cargo_ready_date', name: 'cargo_ready_date'},
+                {data: 'mode_of_transport', name: 'mode_of_transport'},
+                {data: 'pickup_location', name: 'pickup_location'},
+                {data: 'destination_location', name: 'destination_location'},
+                {data: 'cargo_ready_date', name: 'cargo_ready_date'},
                 {
                     data: 'action', 
                     name: 'action', 
