@@ -10,6 +10,7 @@
   <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css" rel="stylesheet">
   @yield('styles')
 </head>
 <body>
@@ -74,7 +75,26 @@
   </script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
   <!-- Page-specific scripts -->
   @yield('scripts')
+  
+  @if(session('warning'))
+  <script>
+    Swal.fire({
+      title: "{{ session('warning')['title'] }}",
+      text: "{{ session('warning')['message'] }}",
+      icon: "warning",
+      showCancelButton: false,
+      confirmButtonColor: "#ffc107",
+      confirmButtonText: "Complete KYC Now"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // The URL is already correct as we're on the edit profile page
+        document.getElementById('profile_photo').focus();
+      }
+    });
+  </script>
+  @endif
 </body>
 </html>

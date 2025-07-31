@@ -7,19 +7,6 @@
             <h4 class="card-title">Edit Member</h4>
         </div>
         <div class="card-body">
-            @if(session('warning'))
-            <div class="alert alert-warning mb-4">
-                <div class="d-flex">
-                    <div class="me-3">
-                        <i class="bi bi-exclamation-triangle-fill fs-3"></i>
-                    </div>
-                    <div>
-                        <h4 class="alert-heading">{{ session('warning')['title'] }}</h4>
-                        <p class="mb-0">{{ session('warning')['message'] }}</p>
-                    </div>
-                </div>
-            </div>
-            @endif
 
             @if(auth()->user()->role == \App\Models\User::MEMBER)
             <form action="{{ route('members.updateprofile', $member) }}" method="POST" enctype="multipart/form-data">
