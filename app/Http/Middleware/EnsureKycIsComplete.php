@@ -29,8 +29,7 @@ class EnsureKycIsComplete
 
             // Redirect to edit profile with warning for all other routes
             return redirect()->route('editmemberprofile', $user->id)->with('warning', [
-                'title' => 'Complete Your KYC',
-                'message' => 'Please complete your KYC by uploading your profile photo, company logo, and about company description. You are not able to access other features until you complete this step.'
+                'message' => 'Please complete your profile by uploading your profile photo, company logo, and about company description. You are not able to access other features until you complete this step.'
             ]);
         }
 

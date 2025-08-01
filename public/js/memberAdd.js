@@ -110,6 +110,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Ensure password fields are not disabled for member role
+    $('#current_password, #password, #password_confirmation').prop('disabled', false);
+
     // Initialize Flatpickr for date input
     flatpickr("#incorporation_date", {
         dateFormat: "Y-m-d",
@@ -199,6 +202,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 // Set old value if exists
                 if (oldCityId) {
                     citySelect.val(oldCityId).trigger('change');
+                }
+                // Force disable for member role
+                if (auth_user_role == 2) {
+                    citySelect.prop('disabled', true);
+                    citySelect.next('.select2-container').addClass('select2-container--disabled');
                 }
             });
         }

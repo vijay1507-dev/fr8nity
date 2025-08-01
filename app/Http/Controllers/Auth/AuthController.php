@@ -171,8 +171,7 @@ class AuthController extends Controller
             // For members, check if profile photo and company logo are uploaded
             if ($user->role === User::MEMBER && (!$user->profile_photo || !$user->company_logo)) {
                 return redirect()->route('editmemberprofile', $user->id)->with('warning', [
-                    'title' => 'Complete Your KYC',
-                    'message' => 'Please complete your KYC by uploading your profile photo, company logo, and about company description. You are not able to access other features until you complete this step.'
+                    'message' => 'Please complete your profile by uploading your profile photo, company logo, and about company description. You are not able to access other features until you complete this step.'
                 ]);
             }
 

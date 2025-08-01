@@ -4,7 +4,7 @@
 <div class="container-fluid">
     <div class="card">
         <div class="card-header">
-            <h4 class="card-title">Edit Member</h4>
+            <h4 class="card-title">@if(auth()->user()->role == \App\Models\User::MEMBER) Edit Profile @else Edit Member @endif</h4>
         </div>
         <div class="card-body">
 
@@ -214,7 +214,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="referred_by" class="form-label">Referred by</label>
                         <input type="text" class="form-control @error('referred_by') is-invalid @enderror" 
-                               id="referred_by" name="referred_by" value="{{ old('referred_by', $member->referred_by) }}">
+                               id="referred_by" name="referred_by" value="{{ old('referred_by', $member->referred_by) }}" {{ auth()->user()->role == \App\Models\User::MEMBER ? 'readonly' : '' }}>
                         @error('referred_by')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
@@ -335,9 +335,6 @@
                                 <input type="password" class="form-control @error('current_password') is-invalid @enderror" 
                                        id="current_password" name="current_password" 
                                        autocomplete="new-password" 
-                                       autofill="off"
-                                       readonly
-                                       onfocus="this.removeAttribute('readonly');"
                                        value="">
                                 @error('current_password')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -350,9 +347,6 @@
                                 <input type="password" class="form-control @error('password') is-invalid @enderror" 
                                        id="password" name="password" 
                                        autocomplete="new-password" 
-                                       autofill="off"
-                                       readonly
-                                       onfocus="this.removeAttribute('readonly');"
                                        value="">
                                 <div class="form-text">Leave blank to keep current password</div>
                                 @error('password')
@@ -365,9 +359,6 @@
                                 <input type="password" class="form-control" 
                                        id="password_confirmation" name="password_confirmation" 
                                        autocomplete="new-password" 
-                                       autofill="off"
-                                       readonly
-                                       onfocus="this.removeAttribute('readonly');"
                                        value="">
                             </div>
                         </div>
@@ -396,41 +387,47 @@
 <!-- CKEditor -->
 <script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    ClassicEditor
-        .create(document.querySelector('#company_description'), {
-            toolbar: {
-                items: [
-                    'undo', 'redo',
-                    '|', 'heading',
-                    '|', 'bold', 'italic',
-                    '|', 'link',
-                    '|', 'bulletedList', 'numberedList',
-                    '|', 'outdent', 'indent',
-                    '|', 'removeFormat'
-                ]
-            },
-            heading: {
-                options: [
-                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
-                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
-                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
-                    { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
-                ]
-            },
-            removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload'],
-            placeholder: 'Write about your company, services, experience, and what makes your company unique...'
-        })
-        .then(editor => {
-            // Auto-save content to textarea
-            editor.model.document.on('change:data', () => {
-                const data = editor.getData();
-                document.querySelector('#company_description').value = data;
+    // Pass auth user role to JavaScript
+    const auth_user_role = "{{ auth()->user()->role }}";
+    // Store the initial city name for member role
+    @if(auth()->user()->role == \App\Models\User::MEMBER && $member->city)
+        $('#city').data('old-name', "{{ $member->city->name }}");
+    @endif
+    document.addEventListener('DOMContentLoaded', function() {
+        ClassicEditor
+            .create(document.querySelector('#company_description'), {
+                toolbar: {
+                    items: [
+                        'undo', 'redo',
+                        '|', 'heading',
+                        '|', 'bold', 'italic',
+                        '|', 'link',
+                        '|', 'bulletedList', 'numberedList',
+                        '|', 'outdent', 'indent',
+                        '|', 'removeFormat'
+                    ]
+                },
+                heading: {
+                    options: [
+                        { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                        { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                        { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                        { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+                    ]
+                },
+                removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload'],
+                placeholder: 'Write about your company, services, experience, and what makes your company unique...'
+            })
+            .then(editor => {
+                // Auto-save content to textarea
+                editor.model.document.on('change:data', () => {
+                    const data = editor.getData();
+                    document.querySelector('#company_description').value = data;
+                });
+            })
+            .catch(error => {
+                console.error(error);
             });
-        })
-        .catch(error => {
-            console.error(error);
-        });
-});
+    });
 </script>
 @endsection 

@@ -82,12 +82,12 @@
   @if(session('warning'))
   <script>
     Swal.fire({
-      title: "{{ session('warning')['title'] }}",
+      title: "",
       text: "{{ session('warning')['message'] }}",
       icon: "warning",
       showCancelButton: false,
       confirmButtonColor: "#ffc107",
-      confirmButtonText: "Complete KYC Now"
+      confirmButtonText: "Complete Profile Now"
     }).then((result) => {
       if (result.isConfirmed) {
         // The URL is already correct as we're on the edit profile page
