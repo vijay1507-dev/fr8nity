@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\TradeMember;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\TradeMembershipNotification;
 use Yajra\DataTables\Facades\DataTables;
 
 class TradeMemberController extends Controller
@@ -78,7 +81,15 @@ class TradeMemberController extends Controller
             'consent' => true
         ]);
 
-        return redirect()->back()->with('success', 'Your request has been submitted successfully.');
+        // Send notification to the applicant
+        Notification::route('mail', $tradeMember->email)
+            ->notify(new TradeMembershipNotification($tradeMember));
+
+        // Send notification to all admins
+        $admins = User::where('role',User::SUPER_ADMIN)->get();
+        Notification::send($admins, new TradeMembershipNotification($tradeMember, true));
+
+        return redirect()->route('thank-you')->with('message', 'Your trade membership request has been submitted successfully. Our team will review your application and contact you soon.');
     }
 
     /**

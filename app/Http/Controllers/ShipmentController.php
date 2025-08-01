@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Shipment;
 use App\Models\Country;
 use App\Models\City;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
+use Illuminate\Support\Facades\Notification;
+use App\Notifications\ShipmentEnquiryNotification;
 
 class ShipmentController extends Controller
 {
@@ -82,6 +85,10 @@ class ShipmentController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
+            'name' => 'required|string|min:2|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required',
+            'company_name' => 'required|string|min:2|max:255',
             'shipment_type' => 'required|array|min:1',
             'mode_of_transport' => 'required|string',
             'goods_description' => 'required|string|min:3',
@@ -106,8 +113,15 @@ class ShipmentController extends Controller
         // Create shipment
         $shipment = Shipment::create($validated);
 
-        return redirect()->back()
-            ->with('success', 'Shipment enquiry has been submitted successfully!');
+        // Send notification to the enquirer
+        Notification::route('mail', $shipment->email)
+            ->notify(new ShipmentEnquiryNotification($shipment));
+
+        // Send notification to all admins
+        $admins = User::where('role',User::SUPER_ADMIN)->get();
+        Notification::send($admins, new ShipmentEnquiryNotification($shipment, true));
+
+        return redirect()->route('thank-you')->with('message', 'Your shipment enquiry has been submitted successfully. Our team will review your request and provide quotations shortly.');
     }
 
     /**
@@ -126,6 +140,10 @@ class ShipmentController extends Controller
     public function update(Request $request, Shipment $shipment)
     {
         $validated = $request->validate([
+            'name' => 'required|string|min:2|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required',
+            'company_name' => 'required|string|min:2|max:255',
             'shipment_type' => 'required|array|min:1',
             'mode_of_transport' => 'required|string',
             'goods_description' => 'required|string|min:3',
@@ -139,7 +157,6 @@ class ShipmentController extends Controller
             'special_notes' => 'nullable|string',
             'delivery_remark' => 'nullable|string',
         ]);
-
         // Handle file upload if present
         if ($request->hasFile('documents')) {
             $path = $request->file('documents')->store('shipment-documents', 'public');

@@ -43,6 +43,9 @@ Route::prefix('membership')->group(function () {
         return view('website.membership.shipment-enquiry');
     })->name('membership.shipment-enquiry');
     Route::post('/shipment-enquiry', [ShipmentController::class, 'store'])->name('shipment-enquiry.store');
+    Route::get('/thank-you', function () {
+        return view('website.thank-you');
+    })->name('thank-you');
 });
 
 // Events routes

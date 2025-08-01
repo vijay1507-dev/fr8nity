@@ -14,6 +14,46 @@
         @csrf
            <div class="form-section row g-3">
               <div class="col-md-6">
+                   <label class="form-label">Name*</label>
+                   <input type="text" class="form-control inputbox @error('name') is-invalid @enderror" 
+                          name="name" placeholder="Enter your name" value="{{ old('name') }}">
+                   @error('name')
+                       <div class="invalid-feedback d-block text-danger">
+                           {{ $message }}
+                       </div>
+                   @enderror
+               </div>
+               <div class="col-md-6">
+                   <label class="form-label">Email ID*</label>
+                   <input type="email" class="form-control inputbox @error('email') is-invalid @enderror" 
+                          name="email" placeholder="Enter your email" value="{{ old('email') }}">
+                   @error('email')
+                       <div class="invalid-feedback d-block text-danger">
+                           {{ $message }}
+                       </div>
+                   @enderror
+               </div>
+               <div class="col-md-6">
+                   <label class="form-label">Phone Number*</label>
+                   <input type="tel" class="form-control inputbox @error('phone') is-invalid @enderror" 
+                          id="phone" name="phone" value="{{ old('phone') }}">
+                   @error('phone')
+                       <div class="invalid-feedback d-block text-danger">
+                           {{ $message }}
+                       </div>
+                   @enderror
+               </div>
+               <div class="col-md-6">
+                   <label class="form-label">Company Name*</label>
+                   <input type="text" class="form-control inputbox @error('company_name') is-invalid @enderror" 
+                          name="company_name" placeholder="Enter your company name" value="{{ old('company_name') }}">
+                   @error('company_name')
+                       <div class="invalid-feedback d-block text-danger">
+                           {{ $message }}
+                       </div>
+                   @enderror
+               </div>
+               <div class="col-md-6">
                    <label class="form-label">Shipment Type (Choose one or more)</label>
                    <div class="checkbox-group d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap">
                        <div class="form-check">

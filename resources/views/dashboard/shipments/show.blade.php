@@ -63,7 +63,29 @@
                             <td>{{ $shipment->destinationCity->name }}, {{ $shipment->destinationCountry->name }}</td>
                         </tr>
                     </table>
+                    <div class="col-md-6">
+                        <h5 class="mb-3">Contact Information</h5>
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>Sender Name:</strong></td>
+                                <td>{{ $shipment->name }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Email:</strong></td>
+                                <td>{{ $shipment->email }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Phone:</strong></td>
+                                <td>{{ $shipment->phone }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Company Name:</strong></td>
+                                <td>{{ $shipment->company_name }}</td>
+                            </tr>
+                        </table>
+                    </div>
                 </div>
+                
             </div>
 
             @if($shipment->special_notes)

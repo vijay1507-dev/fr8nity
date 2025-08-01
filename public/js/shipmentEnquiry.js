@@ -1,5 +1,62 @@
 
 $(document).ready(function() {
+    // Initialize intl-tel-input
+    var phoneInput = document.querySelector("#phone");
+    var iti = window.intlTelInput(phoneInput, {
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+        separateDialCode: true,
+        initialCountry: "auto",
+        geoIpLookup: function(callback) {
+            fetch("https://ipapi.co/json")
+                .then(res => res.json())
+                .then(data => callback(data.country_code))
+                .catch(() => callback("US"));
+        },
+        formatOnDisplay: true,
+        autoPlaceholder: "polite"
+    });
+
+    // Handle validation
+    phoneInput.addEventListener('blur', function() {
+        if (phoneInput.value.trim()) {
+            if (iti.isValidNumber()) {
+                // Get the full international number with + prefix
+                const fullNumber = iti.getNumber();
+                // Display only national number in the visible field
+                phoneInput.value = iti.getNumber(intlTelInputUtils.numberFormat.NATIONAL).replace(/[^\d]/g, '');
+                
+                // On form submit, update the phone field with full number
+                const form = phoneInput.closest('form');
+                form.addEventListener('submit', function(e) {
+                    // Update the phone input with full international number before submit
+                    phoneInput.value = fullNumber;
+                });
+                $(phoneInput).removeClass('is-invalid').addClass('is-valid');
+            } else {
+                $(phoneInput).removeClass('is-valid').addClass('is-invalid');
+                showError($(phoneInput), 'Please enter a valid phone number');
+            }
+        }
+    });
+
+    // Clear error on input
+    phoneInput.addEventListener('input', function() {
+        $(phoneInput).removeClass('is-invalid is-valid');
+        removeError($(phoneInput));
+    });
+
+
+    // Helper functions for error handling
+    function showError($element, message) {
+        removeError($element);
+        $element.addClass('is-invalid');
+        $('<div class="invalid-feedback d-block text-danger">' + message + '</div>').insertAfter($element);
+    }
+
+    function removeError($element) {
+        $element.removeClass('is-invalid');
+        $element.next('.invalid-feedback').remove();
+    }
     // Initialize Flatpickr
     flatpickr("#cargo_ready_date", {
         dateFormat: "Y-m-d",
@@ -110,8 +167,18 @@ $(document).ready(function() {
         });
     });
 
+    // Store the form reference
+    const form = $("#shipmentEnquiryForm");
+    
+    // Before form submit, update phone number to full international format
+    form.on('submit', function(e) {
+        if (iti.isValidNumber()) {
+            phoneInput.value = iti.getNumber(); // This will include the + and country code
+        }
+    });
+
     // Form validation
-    $("form").validate({
+    form.validate({
         ignore: [],
         errorElement: 'div',
         errorClass: 'invalid-feedback d-block text-danger',
@@ -131,6 +198,21 @@ $(document).ready(function() {
             }
         },
         rules: {
+            'name': {
+                required: true,
+                minlength: 2,
+                maxlength: 255
+            },
+            'email': {
+                required: true,
+                email: true,
+                maxlength: 255
+            },
+            'company_name': {
+                required: true,
+                minlength: 2,
+                maxlength: 255
+            },
             'shipment_type[]': {
                 required: true,
                 minlength: 1
@@ -165,6 +247,22 @@ $(document).ready(function() {
             }
         },
         messages: {
+            'name': {
+                required: 'Please enter your name',
+                minlength: 'Name must be at least 2 characters long',
+                maxlength: 'Name cannot exceed 255 characters'
+            },
+            'email': {
+                required: 'Please enter your email address',
+                email: 'Please enter a valid email address',
+                maxlength: 'Email cannot exceed 255 characters'
+            },
+                   
+            'company_name': {
+                required: 'Please enter your company name',
+                minlength: 'Company name must be at least 2 characters long',
+                maxlength: 'Company name cannot exceed 255 characters'
+            },
             'shipment_type[]': {
                 required: 'Please select at least one shipment type',
                 minlength: 'Please select at least one shipment type'

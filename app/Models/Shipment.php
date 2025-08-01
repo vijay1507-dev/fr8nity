@@ -10,6 +10,10 @@ class Shipment extends Model
     use HasFactory;
 
     protected $fillable = [
+        'name',
+        'email',
+        'phone',
+        'company_name',
         'shipment_type',
         'mode_of_transport',
         'goods_description',

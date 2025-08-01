@@ -23,6 +23,46 @@
                 
                 <div class="row">
                     <div class="col-md-6">
+                        <h5 class="mb-3">Contact Information</h5>
+                        
+                        <div class="mb-3">
+                            <label for="name" class="form-label required">Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('name') is-invalid @enderror" 
+                                   name="name" value="{{ old('name', $shipment->name) }}" required>
+                            @error('name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email" class="form-label required">Email ID <span class="text-danger">*</span></label>
+                            <input type="email" class="form-control @error('email') is-invalid @enderror" 
+                                   name="email" value="{{ old('email', $shipment->email) }}" required>
+                            @error('email')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="phone" class="form-label required">Phone Number <span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control iti__tel-input @error('phone') is-invalid @enderror" 
+                                   id="phone" name="phone" value="{{ old('phone', $shipment->phone) }}" required>
+                            @error('phone')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="company_name" class="form-label required">Company Name <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control @error('company_name') is-invalid @enderror" 
+                                   name="company_name" value="{{ old('company_name', $shipment->company_name) }}" required>
+                            @error('company_name')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
                         <h5 class="mb-3">Shipment Information</h5>
                         
                         <div class="mb-3">
@@ -239,6 +279,53 @@
 @section('scripts')
 <script>
 $(document).ready(function() {
+    // Initialize international telephone input
+    const phoneInput = document.querySelector("#phone");
+    const iti = window.intlTelInput(phoneInput, {
+        utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/utils.js",
+        separateDialCode: true,
+        initialCountry: "auto",
+        geoIpLookup: function(callback) {
+            fetch("https://ipapi.co/json")
+                .then(res => res.json())
+                .then(data => callback(data.country_code))
+                .catch(() => callback("US"));
+        },
+        formatOnDisplay: true,
+        autoPlaceholder: "polite"
+    });
+
+    // Handle validation
+    phoneInput.addEventListener('blur', function() {
+        if (phoneInput.value.trim()) {
+            if (iti.isValidNumber()) {
+                // Show only national number in input
+                phoneInput.value = iti.getNumber(intlTelInputUtils.numberFormat.NATIONAL).replace(/[^\d]/g, '');
+                $(phoneInput).removeClass('is-invalid').addClass('is-valid');
+            } else {
+                $(phoneInput).removeClass('is-valid').addClass('is-invalid');
+                showError($(phoneInput), 'Please enter a valid phone number');
+            }
+        }
+    });
+
+    // Clear error on input
+    phoneInput.addEventListener('input', function() {
+        $(phoneInput).removeClass('is-invalid is-valid');
+        removeError($(phoneInput));
+    });
+
+    // Helper functions for error handling
+    function showError($element, message) {
+        removeError($element);
+        $element.addClass('is-invalid');
+        $('<div class="invalid-feedback d-block text-danger">' + message + '</div>').insertAfter($element);
+    }
+
+    function removeError($element) {
+        $element.removeClass('is-invalid');
+        $element.next('.invalid-feedback').remove();
+    }
     // Custom validation method for checkboxes
     $.validator.addMethod("checkboxRequired", function(value, element) {
         return $('input[name="' + element.name + '"]:checked').length > 0;
@@ -250,14 +337,26 @@ $(document).ready(function() {
         return element.files[0].size <= param;
     }, "File size must be less than 10MB.");
 
+    // Handle form submission
+    $("#editShipmentForm").on('submit', function(e) {
+        e.preventDefault();
+        if (iti.isValidNumber()) {
+            phoneInput.value = iti.getNumber(); // Set the full international number
+        }
+        this.submit();
+    });
+
     // Form validation
-    $("#editShipmentForm").validate({
+    const validator = $("#editShipmentForm").validate({
         ignore: [],
         errorElement: 'div',
         errorClass: 'invalid-feedback',
         errorPlacement: function(error, element) {
             if (element.attr("type") == "checkbox") {
                 error.insertAfter(element.closest('.checkbox-group'));
+            } else if (element.attr("type") == "tel") {
+                // For phone input, place error after the parent div to appear below flag
+                error.insertAfter(element.closest('.iti'));
             } else {
                 error.insertAfter(element);
             }
@@ -275,6 +374,10 @@ $(document).ready(function() {
             }
         },
         rules: {
+            'name': { required: true, minlength: 2, maxlength: 255 },
+            'email': { required: true, email: true, maxlength: 255 },
+            'phone': { required: true, phoneValid: true },
+            'company_name': { required: true, minlength: 2, maxlength: 255 },
             'shipment_type[]': { checkboxRequired: true },
             'mode_of_transport': { required: true },
             'goods_description': { required: true, minlength: 10, maxlength: 1000 },
@@ -289,6 +392,26 @@ $(document).ready(function() {
             'delivery_remark': { maxlength: 1000 },
         },
         messages: {
+            'name': { 
+                required: "Name is required",
+                minlength: "Name must be at least 2 characters long",
+                maxlength: "Name cannot exceed 255 characters"
+            },
+            'email': { 
+                required: "Email is required",
+                email: "Please enter a valid email address",
+                maxlength: "Email cannot exceed 255 characters"
+            },
+            'phone': { 
+                required: "Phone number is required",
+                minlength: "Phone number must be at least 10 digits",
+                maxlength: "Phone number cannot exceed 20 digits"
+            },
+            'company_name': { 
+                required: "Company name is required",
+                minlength: "Company name must be at least 2 characters long",
+                maxlength: "Company name cannot exceed 255 characters"
+            },
             'shipment_type[]': { checkboxRequired: "Please select at least one shipment type" },
             'mode_of_transport': { required: "Mode of transport is required" },
             'goods_description': { required: "Goods description is required", minlength: "Description must be at least 10 characters long", maxlength: "Description cannot exceed 1000 characters" },
@@ -306,10 +429,7 @@ $(document).ready(function() {
             const submitBtn = $(form).find('button[type="submit"]');
             const originalText = submitBtn.html();
             submitBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i> Updating...');
-            setTimeout(() => {
-                submitBtn.prop('disabled', false).html(originalText);
-            }, 10000);
-            form.submit();
+            return true;
         }
     });
     // Initialize Flatpickr for Cargo Ready Date
@@ -370,35 +490,6 @@ $(document).ready(function() {
     // Preload cities from DB when editing
     loadCities("{{ $shipment->pickup_country_id }}", $('#pickup_city_id'), "{{ $shipment->pickup_city_id }}");
     loadCities("{{ $shipment->destination_country_id }}", $('#destination_city_id'), "{{ $shipment->destination_city_id }}");
-    // // Load cities for pickup country and preselect
-    // $('#pickup_country_id').change(function() {
-    //     var countryId = $(this).val();
-    //     if (countryId) {
-    //         $.get('/get-cities/' + countryId, function(data) {
-    //             $('#pickup_city_id').empty().append('<option value="">Select City</option>');
-    //             $.each(data, function(_, value) {
-    //                 $('#pickup_city_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-    //             });
-    //             $('#pickup_city_id').val("{{ $shipment->pickup_city_id }}");
-    //             $('#pickup_city_id').valid();
-    //         });
-    //     }
-    // }).trigger('change');
-
-    // // Load cities for destination country and preselect
-    // $('#destination_country_id').change(function() {
-    //     var countryId = $(this).val();
-    //     if (countryId) {
-    //         $.get('/get-cities/' + countryId, function(data) {
-    //             $('#destination_city_id').empty().append('<option value="">Select City</option>');
-    //             $.each(data, function(_, value) {
-    //                 $('#destination_city_id').append('<option value="' + value.id + '">' + value.name + '</option>');
-    //             });
-    //             $('#destination_city_id').val("{{ $shipment->destination_city_id }}");
-    //             $('#destination_city_id').valid();
-    //         });
-    //     }
-    // }).trigger('change');
 
     // Date validation - cargo ready date should not be in the past
     $('#cargo_ready_date').change(function() {

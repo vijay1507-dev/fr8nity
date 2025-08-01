@@ -12,13 +12,7 @@
            <p>As a Trade Member, your business will be registered in our exclusive database — complimentary and commitment-free. When vetted buyer enquiries arise, you may be among the first we recommend. This isn’t just a listing — it’s a gateway to better business. Join FR8NITY and be part of a network where every connection counts.</p>
            </div>
            </div>
-
        </div>
-        @if(session('success'))
-            <div class="alert alert-success text-center">
-                {{ session('success') }}
-            </div>
-        @endif
        <form method="POST" action="{{ route('trade-members.store') }}" id="joinMemberForm">
         @csrf
            <div class="form-section row g-3">

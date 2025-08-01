@@ -11,6 +11,9 @@
                 <thead>
                     <tr>
                         <th>ID</th>
+                        <th>Sender</th>
+                        <th>Company Name</th>
+                        <th>Email</th>
                         <th>Shipment Types</th>
                         <th>Mode of Transport</th>
                         <th>Pickup Location</th>
@@ -38,6 +41,9 @@
             ajax: "{{ route('shipments.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
+                {data: 'name', name: 'name'},
+                {data: 'company_name', name: 'company_name'},
+                {data: 'email', name: 'email'},
                 {data: 'shipment_types', name: 'shipment_types'},
                 {data: 'mode_of_transport', name: 'mode_of_transport'},
                 {data: 'pickup_location', name: 'pickup_location'},
