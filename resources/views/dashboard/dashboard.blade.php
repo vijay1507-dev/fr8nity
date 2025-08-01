@@ -160,137 +160,174 @@
             </div>
                </header> -->
 
-               <h3 class="mb-4">Welcome Back Emma</h3>
-            <div class=" bggray dashboard_referrals">
-                <div class="row mb-4">
-                   <div class="col-12 col-md-6">
-                        <p class="mb-2 fw-bold">Accumulated Points to Date: 13245678</p>
-                        <p class="mb-2 d-block fw-bold">Redeemped Points: 13245678</p>
-                   </div>
-                   <div class="col-12 col-md-6">
-                        <ul class="d-flex flex-wrap gap-2 list-unstyled mb-1 align-items-center justify-content-end">
-                        <li class="fs-6 fw-semibold px-2 py-1 rounded">Last 6 Months</li>
-                        <li class="fs-6 fw-semibold px-2 py-1 rounded">Last 12 Months</li>
-                        <li class="fs-6 fw-semibold px-2 py-1 rounded">Lifetime</li>
-                        <li class="">
-                            <a href="#" class="text-red"><svg xmlns="http://www.w3.org/2000/svg" width="20"
-                                    height="20" fill="currentColor" class="bi bi-exclamation-circle-fill"
-                                    viewBox="0 0 16 16">
-                                    <path
-                                        d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M8 4a.905.905 0 0 0-.9.995l.35 3.507a.552.552 0 0 0 1.1 0l.35-3.507A.905.905 0 0 0 8 4m.002 6a1 1 0 1 0 0 2 1 1 0 0 0 0-2" />
-                                </svg></a>
-                        </li>
-                        </ul>
-                        <p class="text-end">Membership Period: 29/7/2025 ΤΟ 28/7/2025</p>
-                   </div>
-                </div>
+           
 
-                <div class="row  px-3">
-                    <div class="col-12 col-lg-5 mb-3 mb-lg-0">
-                        <div class="p-3 border rounded bg-white">
-                            <h6 class="mb-3">Membership Leadership Board</h6>
-                            <div class="chart-container" style="position: relative; height: 200px;">
-                                <canvas id="memberGrowthChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+    <div>
+      <h5>Welcome Back Emma</h5>
+    </div>
 
-                    <div class="col-12 col-lg-7 pe-0">
-                        <div class="row g-3  mb-1">
-                            <!-- Left Panel -->
-                            <div class="col-12 col-md-6">
-                                <div class="rounded border bg-white">
-                                   <div class="row mx-0">
-                                        <div class="col-6 text-center p-2 pt-3 border-end">
-                                            <h6 class="card-title text-dark mb-3">Transaction Value Given</h6>
-                                            <h5 class="card-subtitle mb-3 text-body-secondary">$ 213,454</h5>
-                                        </div>
-                                        <div class="col-6 text-center p-2 pt-3">
-                                            <h6 class="card-title text-dark mb-3">Enquiries Given (Freight Member)</h6>
-                                            <h5 class="card-subtitle mb-3 text-body-secondary">11</h5>
-                                        </div>
-                                   </div>
-                                    <div class="d-flex mt-auto">
-                                        <a href="#"
-                                            class="w-100 text-center p-2 text-decoration-none btnbg rounded-start border-end">View</a>
-                                    </div>
-                                </div>
-                            </div>
-                             <div class="col-12 col-md-6">
-                                <div class="rounded border bg-white">
-                                   <div class="row mx-0">
-                                        <div class="col-6 text-center p-2 pt-3 border-end">
-                                            <h6 class="card-title text-dark mb-3">Transaction Value Received</h6>
-                                            <h5 class="card-subtitle mb-3 text-body-secondary">$ 213,454</h5>
-                                        </div>
-                                        <div class="col-6 text-center p-2 pt-3">
-                                            <h6 class="card-title text-dark mb-3">Enquiries Receive (Freight Member)</h6>
-                                            <h5 class="card-subtitle mb-3 text-body-secondary">11</h5>
-                                        </div>
-                                   </div>
-                                    <div class="d-flex mt-auto">
-                                        <a href="#"
-                                            class="w-100 text-center p-2 text-decoration-none btnbg rounded-start border-end">View</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                       
-                    </div>
-                </div>
+    <div class="d-flex justify-content-between flex-column flex-md-row">
+      <div>
+        <p class="mb-0">ACCUMULATED POINTS TO DATE: 1234567890</p>
+        <p class="mb-0">REDEEMPED POINTS: 1234567890</p>
+      </div>
+     <div>
+      @php
+      $expiresAt = Auth::user()->membership_expires_at;
+  @endphp
+  
+  @if($expiresAt)
+        <p class="mb-3 text-end">
+            MEMBERSHIP PERIOD: {{ $expiresAt->copy()->subYear()->format('j/n/Y') }} TO {{ $expiresAt->format('j/n/Y') }}
+        </p>
+        @else
+            <p class="mb-3 text-end">MEMBERSHIP PERIOD: N/A</p>
+        @endif
+        <div class=" d-flex justify-content-between align-items-center">
+        <button type="button" class="monthbtn p-1 px-2 ms-2">Last 6 months</button>
+        <button type="button" class="monthbtn p-1 px-2 ms-2 active">Last 1 year</button>
+        <button type="button" class="monthbtn p-1 px-2 ms-2">Lifetime</button>
+        <button type="button" class="tooltip-btn p-1 px-3 ms-2 " data-bs-toggle="tooltip" data-bs-placement="top"
+          data-bs-title="Tooltip on top">
+          !
+        </button>
+      </div>
+     </div>
+    </div>
 
 
-                 <div class="row  px-3 mt-4">
-                    <div class="col-12 col-lg-5 mb-3 mb-lg-0">
-                        <div class="p-3 border rounded bg-white">
-                            <h6 class="mb-3">Trade surplus/deficit</h6>
-                            <div class="chart-container" style="position: relative; height: 200px;">
-                                <canvas id="memberGrowthChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="col-12 col-lg-7 pe-0">
-                        <div class="row g-3  mb-1">
-                            <!-- Left Panel -->
-                            <div class="col-12 col-md-6">
-                                <div class="rounded border bg-white">                                  
-                                    <div class="col-12 text-center p-2 pt-3">
-                                        <h6 class="card-title text-dark mb-3">Members referred to FR8NITY</h6>
-                                        <h5 class="card-subtitle mb-3 text-body-secondary">256</h5>
-                                    </div>
-                                    <div class="d-flex mt-auto">
-                                        <a href="#"
-                                            class="w-100 text-center p-2 text-decoration-none btnbg rounded-start border-end">View</a>
-                                    </div>
-                                </div>
-                            </div>
-                             <div class="col-12 col-md-6">
-                                <div class="rounded border bg-white">
-                                        <div class="col-12 text-center p-2 pt-3 border-end">
-                                            <h6 class="card-title text-dark mb-3">Events attended till date</h6>
-                                            <h5 class="card-subtitle mb-3 text-body-secondary">14</h5>
-                                        </div>
-                                    <div class="d-flex mt-auto">
-                                        <a href="#"
-                                            class="w-100 text-center p-2 text-decoration-none btnbg rounded-start border-end">View</a>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                       
-                    </div>
-                </div>
+    <div class="container ">
+      <div class="row mt-3 ">
+        <div class="col-12 col-md-6 col-lg-4 mb-3 ">
+          <div class="row h-100 border rounded_10 mx-0">
+            <div class="col-6 bg-white  py-4 px-3  border-radius-left ">
+              <h6 class="text-center">Transaction Value Give</h6>
+              <h3 class="mb-0 text-center">$11,233</h3>
             </div>
+            <div class="col-6  bg-white py-4 px-2 card-border  border-radius-right ">
+              <h6 class="text-center">Enquiries Given (Freight Member)</h6>
+              <h3 class="mb-0 text-center">11</h3>
+            </div>
+            <button class="w-100 cardbtn fw-semibold">View</button>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 mb-3">
+          <div class="row h-100 border rounded_10 mx-0">
+            <div class="col-6 bg-white border-radius-left py-4 px-3  ">
+
+              <h6 class="text-center">Transaction Value Received</h6>
+              <h3 class="mb-0 text-center">$11,233</h3>
+            </div>
+            <div class="col-6  bg-white py-4 px-2 border-radius-right   card-border">
+              <h6 class="text-center">Enquiries Receive (Freight Member)</h6>
+              <h3 class="mb-0 text-center">11</h3>
+            </div>
+            <button class="w-100 cardbtn fw-semibold">View</button>
+          </div>
+        </div>
+
+        <div class="col-12 col-md-6 col-lg-4 mb-3 px-0">
+          <div class="row h-100 mx-0">
+            <div class="col-6">
+              <div class="h-100 border rounded_10">
+                <div class="bg-white py-4 px-2 border-radius-right border-radius-left ">
+                  <h6 class="text-center">Members referred to </h6>
+                  <h3 class="mb-0 text-center">11</h3>
+                </div>
+                <button class="w-100 cardbtn fw-semibold">View</button>
+              </div>
+            </div>
+            <div class="col-6 ">
+              <div class="h-100 border rounded_10">
+                <div class="bg-white py-4 px-2 border-radius-right border-radius-left">
+                  <h6 class="text-center">Events attended till date</h6>
+                  <h3 class="mb-0 text-center">11</h3>
+                </div>
+                <button class="w-100 cardbtn fw-semibold">View</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+
+      <div class="container ">
+        <div class="row d-flex ">
+          <div class="col-12 col-lg-6 ">
+            <div class="bg-white p-3 rounded_10 shadow-sm">
+              <h6>Membership Leadership Board</h6>
+              <canvas id="membershipChart1"></canvas>
+            </div>
+          </div>
+          <div class="col-12 col-lg-6 ">
+
+            <div class="bg-white p-3 rounded_10 shadow-sm">
+              <h6>Trade surplus/deficit </h6>
+              <canvas id="membershipChart2"></canvas>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
         @endif
     </main>
 @endsection
 
 @section('scripts')
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script src="./js/admin.js"></script>
+  <script>
+    // Initialize all tooltips
+    const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
+    const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+
+
+    const chartConfig = {
+      type: 'line',
+      data: {
+        labels: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+        datasets: [{
+          data: [2, 3, 15, 25, 28, 28],
+          backgroundColor: 'rgba(255, 99, 132, 0.2)',
+          borderColor: 'rgba(255, 99, 132, 1)',
+          borderWidth: 2,
+          fill: true,
+          tension: 0.4,
+          pointBackgroundColor: 'rgba(255, 99, 132, 1)',
+          pointRadius: 4
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          y: {
+            beginAtZero: true,
+            max: 30,
+            ticks: {
+              stepSize: 5
+            }
+          }
+        }
+      }
+    };
+
+    // Initialize both charts
+    new Chart(document.getElementById('membershipChart1'), chartConfig);
+    new Chart(document.getElementById('membershipChart2'), chartConfig);
+
+  </script>
+
+
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function() {

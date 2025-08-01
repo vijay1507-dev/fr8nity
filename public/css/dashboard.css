@@ -277,6 +277,59 @@ table.listing_time td label { min-width: 48%; }
     }
   }
 
+
+.main-content {
+  height: 100% !important;
+  margin-top: 80px;
+  margin-left: 250px;
+  padding: 20px;
+  background-color: #f2f4f9;
+  transition: margin-left 0.3s ease;
+}
+
+.monthbtn { font-size: 15px; border: none; border-radius: 10px; background-color: #fff; color: #000; border: 1px solid #ddd; transition: all 0.2s ease; }
+.monthbtn.active { background: #e7b21d; border-color: #e7b21d; color: #fff; }
+.rounded_10{border-radius: 10px; overflow: hidden !important;}
+.cardbtn {
+  background-color: #e7b21d;
+  border: none;
+  border-bottom-left-radius: 10px;
+    color: white;
+  border-bottom-right-radius: 10px;
+  height: 40px;
+}
+
+
+.card-border {
+  border-left: 1px solid #f2f4f9;
+}
+
+.border-radius-right {
+  border-top-right-radius: 10px;
+}
+
+.border-radius-left {
+  border-top-left-radius: 10px;
+}
+
+.tooltip-btn {
+  background-color: #e7b21d;
+  font-weight: 800;
+  border-radius: 20px;
+  color: white;
+  border: 0; 
+}
+
+#sidebar.shrink~.main-content {
+  margin-left: 70px;
+}
+
+canvas {
+  width: 100% !important;
+  height: 300px !important;
+}
+
+
 /* website */
 header ul.navbar-nav a.nav-link { font-size: 16px; }
 .top-bar ul.nav li a { width: 24px; display: flex ; align-items: center; justify-content: center; height: 24px; background: #ffffff30; border-radius: 50%; padding: 7px; }
