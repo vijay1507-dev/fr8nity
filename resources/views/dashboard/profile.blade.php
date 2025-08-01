@@ -196,6 +196,10 @@
                                 </div>
                                 
                             </div>
+                            <div class="mb-4">
+                                <label class="form-label text-muted mb-2">Reward Points</label>
+                                <h4 class="mb-0 text-primary">0 pts</h4>
+                            </div>
                             <div class="d-flex justify-content-between align-items-center">
                             <div class="mb-4">
                                 <label class="form-label text-muted mb-2">Member Since</label>

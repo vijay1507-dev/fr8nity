@@ -207,10 +207,6 @@
                                 <div class="d-flex align-items-center">
                                     <h4 class="mb-0 membership-tier-name">
                                         {{ optional($member->membershipTier)->name ?? 'No Tier' }}</h4>
-                                    <button class="btn btn-link ms-2 p-0" data-bs-toggle="modal"
-                                        data-bs-target="#changeTierModal">
-                                        <i class="bi bi-pencil"></i>
-                                    </button>
                                 </div>
                             </div>
                             <div class="mb-4">
@@ -223,6 +219,10 @@
                                 <p class="mb-0">USD $12,000/year</p>
                                 @endif
                             </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="form-label text-muted mb-2">Reward Points</label>
+                            <h4 class="mb-0 text-primary">0 pts</h4>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
                         <div class="mb-4">
@@ -272,91 +272,4 @@
         </div>
     </div>
 
-    <!-- Change Tier Modal -->
-    <div class="modal fade" id="changeTierModal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Change Membership Tier</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <form id="updateTierForm" action="{{ route('members.update-membership-tier', $member) }}"
-                    method="POST">
-                    @csrf
-                    @method('PATCH')
-                    <div class="modal-body">
-                        <div class="mb-3">
-                            <label class="form-label">Select New Tier</label>
-                            <select class="form-select" name="membership_tier" required>
-                                <option value="">Select a tier</option>
-                                @foreach ($membershipTiers as $tier)
-                                    <option value="{{ $tier->id }}"
-                                        {{ $member->membership_tier == $tier->id ? 'selected' : '' }}>
-                                        {{ $tier->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-primary">Update Tier</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
-
-@endsection
-
-@section('scripts')
-    <script>
-        $(document).ready(function() {
-            // Handle membership tier update form submission
-            $('#updateTierForm').on('submit', function(e) {
-                e.preventDefault();
-                const form = $(this);
-                const modal = $('#changeTierModal');
-                const submitBtn = form.find('button[type="submit"]');
-                const originalBtnText = submitBtn.html();
-                $.ajax({
-                    url: form.attr('action'),
-                    method: form.attr('method'),
-                    data: form.serialize(),
-                    success: function(response) {
-                        toastr.success('Membership tier updated successfully');
-                        const selectedTierOption = form.find('select option:selected');
-                        const selectedTierName = selectedTierOption.text();
-                        const selectedTierId = selectedTierOption.val();
-                        $('.membership-tier-name').text(selectedTierName);
-                        form.find('select option').each(function() {
-                            $(this).prop('selected', $(this).val() === selectedTierId);
-                        });
-
-                        // Update benefits list
-                        const benefitsContainer = $('.card-body ul.list-unstyled');
-                        benefitsContainer.empty();
-                        
-                        response.benefits.forEach(function(benefit) {
-                            benefitsContainer.append(`
-                                <li class="mb-2 d-flex align-items-center">
-                                    <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                    ${benefit.title}
-                                </li>
-                            `);
-                        });
-
-                        submitBtn.html(originalBtnText);
-                        submitBtn.prop('disabled', false);
-                        modal.modal('hide');
-                    },
-                    error: function(xhr) {
-                        toastr.error('An error occurred while updating the membership tier');
-                        submitBtn.html(originalBtnText);
-                        submitBtn.prop('disabled', false);
-                    }
-                });
-            });
-        });
-    </script>
 @endsection
