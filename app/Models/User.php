@@ -167,4 +167,33 @@ class User extends Authenticatable
     {
         return $this->belongsTo(MembershipTier::class,'membership_tier');
     }
+
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class, 'referrer_id');
+    }
+
+    public function referredBy()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
+    }
+
+    public function generateReferralCode()
+    {
+        if (!$this->referral_code) {
+            do {
+                $code = strtoupper(Str::random(8));
+            } while (static::where('referral_code', $code)->exists());
+            
+            $this->referral_code = $code;
+            $this->save();
+        }
+
+        return $this->referral_code;
+    }
+
+    public function getReferralLink()
+    {
+        return url('/register?ref=' . $this->generateReferralCode());
+    }
 }

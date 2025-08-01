@@ -175,15 +175,26 @@
                                                         </div>
                                                     @enderror
                                                 </div>
+                                                @if(isset($referrer))
+                                                <div class="mb-3 col-12">
+                                                    <div class="alert alert-info">
+                                                        You were referred by {{ $referrer->name }} from {{ $referrer->company_name }}
+                                                    </div>
+                                                    <input type="hidden" name="referral_code" value="{{ $referralCode }}">
+                                                </div>
+                                                @else
                                                 <div class="mb-3 col-12 col-md-6">
-                                                    <label class="form-label text-white">Referred by</label>
-                                                    <input type="text" name="referred_by" class="form-control @error('referred_by') is-invalid @enderror" placeholder="Referred by" value="{{ old('referred_by') }}">
-                                                    @error('referred_by')
+                                                    <label class="form-label text-white">Referral Code</label>
+                                                    <input type="text" name="referral_code" class="form-control @error('referral_code') is-invalid @enderror" 
+                                                           placeholder="Enter referral code if you have one" 
+                                                           value="{{ old('referral_code', $referralCode) }}">
+                                                    @error('referral_code')
                                                         <div class="invalid-feedback d-block text-danger">
                                                             {{ $message }}
                                                         </div>
                                                     @enderror
                                                 </div>
+                                                @endif
                                                 <div class="mb-3 col-12">
                                                     <label class="form-label text-white">Specializations*</label>
                                                     <div class="d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap @error('specializations') is-invalid @enderror">

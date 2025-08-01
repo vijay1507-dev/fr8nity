@@ -10,11 +10,14 @@ use App\Models\City;
 use App\Models\Region;
 use App\Models\User;
 use App\Models\MembershipTier;
+use App\Models\Referral;
 use App\Notifications\NewRegistrationNotification;
 use App\Notifications\RegistrationConfirmationNotification;
 use App\Notifications\TwoFactorCodeNotification;
 use Illuminate\Support\Str;
 use App\Models\State;
+use App\Rules\ValidReferralCode;
+
 class AuthController extends Controller
 {
     // Show login form
@@ -47,21 +50,27 @@ class AuthController extends Controller
         
         $selectedTier = $request->get('tier', 'explorer');
         $memberType = $request->get('type', 'freight');
+        $referralCode = $request->get('ref');
 
-            // Get Singapore's data from database
-            $defaultCountry = Country::where('code', 'SG')->firstOrFail();
-            $defaultState = State::where('country_id', $defaultCountry->id)->firstOrFail();
-            $defaultCity = City::where('state_id', $defaultState->id)
-                ->where('name', 'Singapore')
-                ->firstOrFail();
+        // Get Singapore's data from database
+        $defaultCountry = Country::where('code', 'SG')->firstOrFail();
+        $defaultState = State::where('country_id', $defaultCountry->id)->firstOrFail();
+        $defaultCity = City::where('state_id', $defaultState->id)
+            ->where('name', 'Singapore')
+            ->firstOrFail();
 
-            $defaults = [
-                'default_country_id' => $defaultCountry->id,
-                'default_city_id' => $defaultCity->id,
-                'default_country_code' => $defaultCountry->code
-            ];
+        $defaults = [
+            'default_country_id' => $defaultCountry->id,
+            'default_city_id' => $defaultCity->id,
+            'default_country_code' => $defaultCountry->code
+        ];
+
+        $referrer = null;
+        if ($referralCode) {
+            $referrer = User::where('referral_code', $referralCode)->first();
+        }
         
-        return view('auth.register', compact('membershipTiers', 'selectedTier', 'memberType', 'defaults'));
+        return view('auth.register', compact('membershipTiers', 'selectedTier', 'memberType', 'defaults', 'referralCode', 'referrer'));
     }
     
     // Handle registration
@@ -78,7 +87,7 @@ class AuthController extends Controller
             'country_id' => ['required', 'exists:countries,id'],
             'city_id' => ['required', 'exists:cities,id'],
             'region_id' => ['required', 'exists:regions,id'],
-            'referred_by' => ['nullable', 'string', 'max:255'],
+            'referral_code' => ['nullable', 'string', new ValidReferralCode],
             'specializations' => ['required', 'array'],
             'incorporation_date' => ['required', 'date'],
             'tax_id' => ['required', 'string', 'max:255'],
@@ -88,6 +97,12 @@ class AuthController extends Controller
             'membership_tier' => ['required'],
             'consent' => ['required', 'accepted'],
         ]);
+
+        // Check if there's a valid referral code
+        $referrer = null;
+        if ($request->referral_code) {
+            $referrer = User::where('referral_code', $request->referral_code)->first();
+        }
 
         $user = User::create([
             'name' => $request->name,
@@ -100,7 +115,7 @@ class AuthController extends Controller
             'country_id' => $request->country_id,
             'city_id' => $request->city_id,
             'region_id' => $request->region_id,
-            'referred_by' => $request->referred_by,
+            'referred_by' => $referrer ? $referrer->id : null,
             'specializations' => json_encode($request->specializations),
             'incorporation_date' => $request->incorporation_date,
             'tax_id' => $request->tax_id,
@@ -111,6 +126,16 @@ class AuthController extends Controller
             'role' => User::MEMBER,
             'status' => 'pending',
         ]);
+
+        // Create referral record if there's a referrer
+        if ($referrer) {
+            Referral::create([
+                'referrer_id' => $referrer->id,
+                'referred_id' => $user->id,
+                'referral_code' => $request->referral_code,
+                'registered_at' => now(),
+            ]);
+        }
 
         $superAdmin = User::where('role', User::SUPER_ADMIN)->first();
         // Send notification to admin

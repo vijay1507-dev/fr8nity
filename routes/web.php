@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\TradeMemberController;
 use App\Http\Controllers\ShipmentController;
 
@@ -145,7 +146,16 @@ Route::post('/two-factor/resend', [AuthController::class, 'resendTwoFactorCode']
 Route::resource('trade-members', TradeMemberController::class)->only(['store']);
 Route::resource('trade-members', TradeMemberController::class)->except(['store'])->middleware('admin');
 
-
+// Referral Routes
+Route::middleware(['auth', 'kyc.complete'])->group(function () {
+    Route::get('/referrals', [ReferralController::class, 'index'])->name('referrals.index');
+    Route::get('/referrals/generate-link', [ReferralController::class, 'generateLink'])->name('referrals.generate-link');
+    
+    // Admin only routes
+    Route::middleware('admin')->group(function () {
+        Route::get('/admin/referrals', [ReferralController::class, 'adminIndex'])->name('admin.referrals.index');
+    });
+});
 
 
 
