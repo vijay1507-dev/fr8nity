@@ -184,7 +184,7 @@
                                     @if ($member->referred_by)
                                         <div class="info-item full-width">
                                             <span class="info-label">Referred By</span>
-                                            <span class="info-value">{{ $member->referredBy->name }}</span>
+                                            <span class="info-value">{{ $member->referredBy->name ?? '' }}</span>
                                         </div>
                                     @endif
                                 </div>

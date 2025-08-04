@@ -292,4 +292,239 @@ Positioned just below the exclusive Founder tier, Summit members enjoy maximum p
     </div>
   </section>
 
+
+
+
+
+
+
+
+
+  <section class="  blackdark pb-5">
+    <div class="container pt-5 px-2">
+      <div class="row d-flex">
+        <div class="col-12 col-lg-6 d-flex flex-column h-100">
+          <div class="flex-grow-1">
+            <h2 class="fw-bold fs-2">How to Earn RisePoints</h2>
+            <p>Your actions within the FR8NITY network don’t just build relationships — they also earn you points.</p>
+            <div class="row mx-auto">
+              <div class="p-0 radies_20 tableborder">
+                <div class="table-responsive blacklight radius_20">
+                  <table class="table mb-0 bg-transparent">
+                    <tbody>
+                      <tr class="bg-transparent">
+                        <td class="bg-transparent text-white p-2">Annual Membership Renewal</td>
+                        <td class="bg-transparent text-white p-2">8000 points</td>
+                      </tr>
+                      <tr class="bg-transparent">
+                        <td class="bg-transparent text-white p-2">Annual Membership Renewal (30 days before expiry)</td>
+                        <td class="bg-transparent text-white p-2">8000 x2.5 points</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-12 col-lg-6 d-flex flex-column h-100">
+          <div class="flex-grow-1">
+            <div class="text-center">
+              <h3 class="fw-bold fs-3">Referral of Members</h3>
+            </div>
+            <div class="row mx-auto">
+              <div class="p-0 radies_20 tableborder mt-2">
+                <div class="table-responsive p-0 m-0 blacklight radius_20">
+                  <table class="table table-borderless mb-0 bg-transparent w-100">
+                    <thead class="blackdark">
+                      <th class="bg-transparent text-white">Referral of Members</th>
+                      <th class="bg-transparent text-white">Pts</th>
+                    </thead>
+                    <tbody>
+                      <tr class="bg-transparent px-2">
+                        <td class="bg-transparent text-white">Referred members join as member</td>
+                        <td class="bg-transparent text-white">3000</td>
+                      </tr>
+                      <tr class="bg-transparent px-2">
+                        <td class="bg-transparent text-white p-2">Referred members Conference</td>
+                        <td class="bg-transparent text-white">1000</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container pt-5 px-2">
+      <div class="text-center">
+        <h3 class="text-center fw-bold fs-3 mb-4">Business Collaboration (As a Giver)</h3>
+      </div>
+      <div class="row mx-auto">
+        <div class="p-0 radies_20 tableborder">
+          <div class="table-responsive p-0 m-0 blacklight  ">
+            <table class="table table-borderless mb-0 bg-transparent w-100">
+              <thead class="blackdark">
+                <th class="bg-transparent text-white"></th>
+                <th class="bg-transparent text-white">Pts</th>
+                <th class="bg-transparent text-white">Summit</th>
+              </thead>
+              <tbody>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white">Monthly Transaction Value >USD50 & <=USD1000</td>
+                  <td class="bg-transparent text-white">500</td>
+                  <td class="bg-transparent text-white">x2</td>
+
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Monthly Transaction Value >USD1000 & <=USD5000</td>
+                  <td class="bg-transparent text-white">700</td>
+                  <td class="bg-transparent text-white">x2</td>
+
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Monthly Transaction Value >USD5000 & <=USD25000</td>
+                  <td class="bg-transparent text-white">1000</td>
+                  <td class="bg-transparent text-white">x2</td>
+
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Monthly Transaction Value >USD25000 & <=USD100K</td>
+                  <td class="bg-transparent text-white">1500</td>
+                  <td class="bg-transparent text-white">x2.5</td>
+
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Monthly Transaction Value  Above USD100K</td>
+                  <td class="bg-transparent text-white">2000</td>
+                  <td class="bg-transparent text-white">x3</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="container pt-5 px-2">
+      <div class="text-center">
+        <h3 class="text-center fw-bold fs-3 mb-4">Engagement & Participation Online/Conference attendance</h3>
+      </div>
+      <div class="row mx-auto">
+        <div class="p-0 radies_20 tableborder">
+          <div class="table-responsive p-0 m-0 blacklight  ">
+            <table class="table table-borderless mb-0 bg-transparent w-100">
+              <thead class="blackdark">
+                <th class="bg-transparent text-white"></th>
+                <th class="bg-transparent text-white">Pts</th>
+              </thead>
+              <tbody>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white">Annual conference attendance</td>
+                  <td class="bg-transparent text-white">5000</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Early Signed up for Annual Event</td>
+                  <td class="bg-transparent text-white">2000</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Online event participation</td>
+                  <td class="bg-transparent text-white">250 per event</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Host Online event </td>
+                  <td class="bg-transparent text-white">500 per event</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Contribute article, case study, or insight via email
+                  </td>
+                  <td class="bg-transparent text-white">200</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Welcome a new member (host/intro post)</td>
+                  <td class="bg-transparent text-white">200</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Like and share Fr8nity post on social media</td>
+                  <td class="bg-transparent text-white">200</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container pt-5 px-2">
+      <div class="text-center">
+        <h3 class="text-center fw-bold fs-3 mb-4">Can you exchange your points with?</h3>
+      </div>
+      <div class="row mx-auto">
+        <div class="p-0 radies_20 tableborder">
+          <div class="table-responsive p-0 m-0 blacklight ">
+            <table class="table table-borderless mb-0 bg-transparent w-100">
+              <thead class="blackdark">
+                <th class="bg-transparent text-white">Items</th>
+                <th class="bg-transparent text-white">Points Required</th>
+              </thead>
+              <tbody>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white"> 5% off membership renewal</td>
+                  <td class="bg-transparent text-white">135000</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">10% off membership renewal</td>
+                  <td class="bg-transparent text-white">175000</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">15% off membership renewal</td>
+                  <td class="bg-transparent text-white">220000</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">8% off annual conference fee</td>
+                  <td class="bg-transparent text-white">170000</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">Free online course webinar</td>
+                  <td class="bg-transparent text-white">100000</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">1 free conference meeting pass</td>
+                  <td class="bg-transparent text-white">375000</td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">FR8NITY merchandise</td>
+                  <td class="bg-transparent text-white"></td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">- Logo collar pin</td>
+                  <td class="bg-transparent text-white"></td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">- Fr8nity formal Polo -T</td>
+                  <td class="bg-transparent text-white"></td>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">- Fr8nity Namecard Holder</td>
+                  <td class="bg-transparent text-white"></td>
+                </tr>
+                </tr>
+                <tr class="bg-transparent px-2">
+                  <td class="bg-transparent text-white p-2">- Fr8nity Flag + Tier Flag</td>
+                  <td class="bg-transparent text-white"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+    </div>
+    </div>
+  </section>
+
+
+  
 @endsection 

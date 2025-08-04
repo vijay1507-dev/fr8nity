@@ -637,3 +637,29 @@ section.ourteam_sec img { height: 290px; object-fit: cover;border-radius: 12px 1
 .iti__selected-dial-code{
   color: #000 !important;
 }
+
+
+
+
+    .tableborder {
+      border: 1px solid #343434 !important;
+      overflow: hidden;
+    }
+
+    table tr th {
+      padding: 15px !important;
+      background-color: aliceblue;
+      border: 0 !important;
+    }
+
+    .table tr:last-child td {
+      border-bottom: none !important;
+    }
+
+     .table tr td,
+    table tr th {
+      border-bottom: 1px solid #343434 !important;
+      padding: 15px !important;
+      border-color: #343434 !important;
+
+    }

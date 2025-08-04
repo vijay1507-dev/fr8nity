@@ -146,3 +146,13 @@ select:disabled,
 .form-check-input[readonly] ~ .form-check-label {
     opacity: 0.8;
 }
+
+
+.iti--allow-dropdown { display: flex ; position: relative; border: 1px solid #dee2e6 !important; border-radius: 8px; }
+.iti--allow-dropdown input { padding: 7px 15px !important; border: 0; }
+div .iti__flag-container {
+    position: unset;
+}
+.iti--allow-dropdown .invalid-feedback { position: absolute; bottom: -18px; }
+
+

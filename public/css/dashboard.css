@@ -485,3 +485,14 @@ h4.table_head { width: fit-content; }
   width: 100% !important;
 }
 
+
+div .iti--allow-dropdown { display: flex ; position: relative; border: 1px solid #dee2e6 !important; border-radius: 8px; }
+div .iti--allow-dropdown input { padding: 7px 15px !important; border: 0; }
+div .iti__flag-container {
+    position: unset;
+}
+div .iti--allow-dropdown .invalid-feedback { position: absolute; bottom: -18px; }
+
+.select2-container--default .select2-selection--single{min-height: 41px;
+    padding: 5px;}
+div .select2-container--default .select2-selection--single .select2-selection__arrow{    height: 39px;}

@@ -214,7 +214,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="referred_by" class="form-label">Referred by</label>
                         <input type="text" class="form-control @error('referred_by') is-invalid @enderror" 
-                               id="referred_by" name="referred_by" value="{{ old('referred_by', $member->referredBy->name) }}" {{ auth()->user()->role == \App\Models\User::MEMBER ? 'readonly' : '' }}>
+                               id="referred_by" name="referred_by" value="{{ old('referred_by', $member->referredBy->name ?? '') }}" {{ auth()->user()->role == \App\Models\User::MEMBER ? 'readonly' : '' }}>
                         @error('referred_by')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
