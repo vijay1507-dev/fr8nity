@@ -178,6 +178,11 @@ class User extends Authenticatable
         return $this->belongsTo(User::class, 'referred_by');
     }
 
+    public function rewardPoints()
+    {
+        return $this->hasMany(RewardPoint::class);
+    }
+
     public function generateReferralCode()
     {
         if (!$this->referral_code) {

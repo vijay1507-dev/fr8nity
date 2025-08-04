@@ -21,19 +21,21 @@ Route::prefix('membership')->group(function () {
     Route::get('/', function () {
         return view('website.membership');
     })->name('membership');
-    // Membership Routes
-    Route::get('/explorer', function () {
-        return view('website.membership.explorer');
-    })->name('membership.explorer');
+     // Authenticated membership pages
+     Route::middleware('auth')->group(function () {
+         // Membership Routes
+        Route::get('/explorer', function () {
+            return view('website.membership.explorer');
+        })->name('membership.explorer');
 
-    Route::get('/elevate', function () {
-        return view('website.membership.elevate');
-    })->name('membership.elevate');
+        Route::get('/elevate', function () {
+            return view('website.membership.elevate');
+        })->name('membership.elevate');
 
-    Route::get('/summit', function () {
-        return view('website.membership.summit');
-    })->name('membership.summit');
-
+        Route::get('/summit', function () {
+            return view('website.membership.summit');
+        })->name('membership.summit');
+    });
     Route::get('/founder', function () {
         return view('website.membership.founder');
     })->name('membership.founder');

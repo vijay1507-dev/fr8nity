@@ -17,9 +17,16 @@ use App\Notifications\TwoFactorCodeNotification;
 use Illuminate\Support\Str;
 use App\Models\State;
 use App\Rules\ValidReferralCode;
+use App\Services\RewardPointService;
 
 class AuthController extends Controller
 {
+    protected $rewardPointService;
+
+    public function __construct(RewardPointService $rewardPointService)
+    {
+        $this->rewardPointService = $rewardPointService;
+    }
     // Show login form
     public function showLoginForm()
     {
@@ -103,7 +110,6 @@ class AuthController extends Controller
         if ($request->referral_code) {
             $referrer = User::where('referral_code', $request->referral_code)->first();
         }
-
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -129,12 +135,19 @@ class AuthController extends Controller
 
         // Create referral record if there's a referrer
         if ($referrer) {
-            Referral::create([
+            $referral = Referral::create([
                 'referrer_id' => $referrer->id,
                 'referred_id' => $user->id,
                 'referral_code' => $request->referral_code,
                 'registered_at' => now(),
             ]);
+            // Award points to the referrer
+            $this->rewardPointService->awardPoints(
+                $user,
+                $referrer,
+                'referral_join',
+                'Referred new member: ' . $user->name
+            );
         }
 
         $superAdmin = User::where('role', User::SUPER_ADMIN)->first();

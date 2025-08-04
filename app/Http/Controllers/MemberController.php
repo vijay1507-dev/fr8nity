@@ -58,7 +58,8 @@ class MemberController extends Controller
         $member->load(['membershipTier', 'region', 'country', 'city']);
         $membershipName = $member->membershipTier->name;
         $membershipTiers = MembershipTier::all();
-        return view('dashboard.members.show', compact('member', 'membershipTiers','membershipName'));
+        $totalPoints = $member->rewardPoints()->sum('points');
+        return view('dashboard.members.show', compact('member', 'membershipTiers','membershipName','totalPoints'));
     }
 
     /**

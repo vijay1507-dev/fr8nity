@@ -15,6 +15,11 @@ return Application::configure(basePath: dirname(__DIR__))
         SeedTrack::class
     ])
     ->withMiddleware(function (Middleware $middleware) {
+        // Register global middleware
+        $middleware->web([
+            \App\Http\Middleware\SetTimezone::class,
+        ]);
+        // Register middleware aliases
         $middleware->alias([
             'admin' => \App\Http\Middleware\AdminAccess::class,
             'kyc.complete' => \App\Http\Middleware\EnsureKycIsComplete::class,
