@@ -19,7 +19,7 @@
         </div>
 
         <div class="col-12 col-md-6 mb-md-3 right_image text-end">
-          <img src="https://fr8nity.sistagging.com/images/Explorer.png" alt="" class="img-fluid rounded-4  object-fit-cover"
+          <img src="https://fr8nity.sistagging.com/images/explorenew.png" alt="" class="img-fluid rounded-4  object-fit-cover"
             style="height: 100%; max-height: 450px; object-position: center;" />
         </div>
       </div>

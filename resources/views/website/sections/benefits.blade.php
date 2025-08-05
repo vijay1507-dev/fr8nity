@@ -15,7 +15,7 @@
                             class="img-fluid mb-3" />
                         <div class="card-content">
                             <div class="card-title">Business Opportunity Matching</div>
-                            <div class="card-desc"> Lorem ipsum, dolor sit amet consectetur adipisicing.</div>
+                            <div class="card-desc"> Uellock carated connections with trustad partsars and high-vala prospects-> mandied to accelerate your growth.</div>
                         </div>
                     </div>
                 </div>
@@ -27,7 +27,7 @@
                             class="img-fluid mb-3" />
                         <div class="card-content">
                             <div class="card-title">Cooperation Risk Protection</div>
-                            <div class="card-desc"> Lorem ipsum, dolor sit amet consectetur adipisicing.</div>
+                            <div class="card-desc"> Trade with confidence, bechad by salegaards designed to protect your inearests and preserve trust.</div>
                         </div>
                     </div>
                 </div>
@@ -39,7 +39,7 @@
                             class="img-fluid mb-3" />
                         <div class="card-content">
                             <div class="card-title">Marketing and Promotion Services</div>
-                            <div class="card-desc"> Lorem ipsum, dolor sit amet consectetur adipisicing.</div>
+                            <div class="card-desc"> Amplify your presence through strategic, high irepact prorsations within as exclusive global agrwad</div>
                         </div>
                     </div>
                 </div>
@@ -51,7 +51,7 @@
                             class="img-fluid mb-3" />
                         <div class="card-content">
                             <div class="card-title">Reduce Costs and Boost efficiency</div>
-                            <div class="card-desc"> Lorem ipsum, dolor sit amet consectetur adipisicing.</div>
+                            <div class="card-desc"> Sirsamine-operations, cat overbeach, sed elevate performance through collaborative network advantaρες</div>
                         </div>
                     </div>
                 </div>

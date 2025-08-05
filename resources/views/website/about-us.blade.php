@@ -13,7 +13,7 @@
                     <h1 class="fw-bold size text_image">
                        About Us
                     </h1>
-                    <p class="">Where Experience Meets Evolution Fr8nity isn’t just another freight forwarding network — we’re a generational alliance shaped by legacy, powered by innovation, and committed to rising together.</p>
+                    <p class="">Fr8nity is more than a network — it’s an alliance where trust is currency, collaboration is culture, and growth is the shared destination.</p>
                     <a href="{{ route('membership') }}" class="btn btnbg fe-semibold mt-3">
                         <span>Become a Member</span>
                     </a>
@@ -48,17 +48,17 @@
                     <span class="move delay-1"></span>
                 </div>
                 <p class="fs-6">
-                    FR8NITY is more than a freight forwarding network. It's a movement - where credibility moves faster than cargo.
+           Fr8nity is more than a network — it’s an alliance where trust is currency, collaboration is culture, and growth is the shared destination.
+
                 </p>
                 <p class="fs-6">
-                    Born from years in the trenches of logistics, FR8NITY was built to connect forwarders globally, offering not just access - but advantage.
+            We connect vetted freight forwarders from every corner of the globe, uniting those who believe in doing business with integrity and intention. In our circle, opportunities are not kept — they are exchanged. Partnerships are not transactional — they are cultivated. Every introduction, every connection, is a step toward collective success.
+
                 </p>
                     <p class="fs-6">
-                    It's a space where professionalism meets partnership. Where independent players rise together through shared trust, verified referrals, and meaningful growth.
+                  Here, experience meets fresh perspective. Tradition fuels innovation. Borders dissolve into bridges. And within this trusted space, every member finds not just opportunity, but the assurance that when one thrives, we all rise.
                 </p>
-                    <p class="fs-6">
-                    Because in this fast-paced, high-pressure industry, no one should have to move alone.
-                </p>
+                  
                 <a href="#" type="button" class="btn btnbg fe-semibold mt-4">
                     Contact Us
                 </a>

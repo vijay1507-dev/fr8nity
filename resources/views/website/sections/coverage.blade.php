@@ -12,52 +12,36 @@
 
         <div class="logos">
             <div class="logo_items" id="logoContainer">
-                <div class="gradient_rounded">
-                    <div class="logo_slide">
-                        <img src="{{ asset('images/Flag_of_Europe 1.png') }}" alt="logo-0" />
-                    </div>
+                <div class="logo_slide d-flex flex-column">
+                    <img src="{{ asset('images/oceaniaRegion.png') }}" alt="logo-0" />
+                    <h6 class="text-center mt-4">OCEANIA REGION</h6>   
                 </div>
-                <div class="gradient_rounded">
-                    <div class="logo_slide">
-                        <img src="{{ asset('images/Oceania_cruises_logo 2.png') }}" alt="logo-1" />
-                    </div>
+                <div class="logo_slide d-flex flex-column">
+                    <img src="{{ asset('images/asiaRegion.png') }}" alt="logo-1" />
+                    <h6 class="text-center mt-4">ASIA REGION</h6>
                 </div>
-                <div class="gradient_rounded">
-                    <div class="logo_slide">
-                        <img src="{{ asset('images/united-states 2.png') }}" alt="logo-2" />
-                    </div>
+                <div class="logo_slide d-flex flex-column">
+                    <img src="{{ asset('images/africaRegion.png') }}" alt="logo-0" />
+                    <h6 class="text-center mt-4">AFRICA REGION</h6>
                 </div>
-                <div class="gradient_rounded">
-                    <div class="logo_slide">
-                        <img src="{{ asset('images/Flag_of_Europe 1.png') }}" alt="logo-0" />
-                    </div>
+                <div class="logo_slide d-flex flex-column">
+                    <img src="{{ asset('images/europeReion.png') }}" alt="logo-1" />
+                    <h6 class="text-center mt-4">EUROPE REGION</h6>
                 </div>
-                <div class="gradient_rounded">
-                    <div class="logo_slide">
-                        <img src="{{ asset('images/Oceania_cruises_logo 2.png') }}" alt="logo-1" />
-                    </div>
+                <div class="logo_slide d-flex flex-column ">
+                    <img src="{{ asset('images/middleEastRegion.png') }}" alt="logo-0" />
+                    <h6 class="text-center mt-4">MIDDLE EAST REGION</h6>
                 </div>
-                <div class="gradient_rounded">
-                    <div class="logo_slide">
-                        <img src="{{ asset('images/united-states 2.png') }}" alt="logo-2" />
-                    </div>
+                <div class="logo_slide d-flex flex-column">
+                    <img src="{{ asset('images/indiaRegion.png') }}" alt="logo-1" />
+                    <h6 class="text-center mt-4 ">INDIA SUBCONTIENENT REGION</h6>
                 </div>
-                <div class="gradient_rounded">
-                    <div class="logo_slide">
-                        <img src="{{ asset('images/Flag_of_Europe 1.png') }}" alt="logo-0" />
-                    </div>
+                <div class="logo_slide d-flex flex-column">
+                    <img src="{{ asset('images/americaRegion.png') }}" alt="logo-2" />
+                    <h6 class="text-center mt-4 fs-6">AMERICA REGION</h6>
                 </div>
-                <div class="gradient_rounded">
-                    <div class="logo_slide">
-                        <img src="{{ asset('images/Oceania_cruises_logo 2.png') }}" alt="logo-1" />
-                    </div>
-                </div>
-                <div class="gradient_rounded">
-                    <div class="logo_slide">
-                        <img src="{{ asset('images/united-states 2.png') }}" alt="logo-2" />
-                    </div>
-                </div>
+           
             </div>
         </div>
     </div>
-</section> 
+</section>

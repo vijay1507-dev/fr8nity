@@ -19,7 +19,7 @@ Positioned just below the exclusive Founder tier, Summit members enjoy maximum p
         </div>
 
         <div class="col-12 col-md-6 mb-md-3 right_image text-end">
-          <img src="https://fr8nity.sistagging.com/images/summit.png" alt="" class="img-fluid rounded-4  object-fit-cover"
+          <img src="https://fr8nity.sistagging.com/images/summitimg.png" alt="" class="img-fluid rounded-4  object-fit-cover"
             style="height: 100%; max-height: 450px; object-position: center;" />
         </div>
       </div>
