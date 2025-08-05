@@ -21,8 +21,11 @@ class ReferralController extends Controller
 
     public function adminIndex()
     {
-        if (! auth()->user()->can('viewAny', Referral::class)) {
-            abort(403);
+        $user = auth()->user();
+        
+        // Check if user is admin or super admin
+        if (!in_array($user->role, [User::SUPER_ADMIN, User::ADMIN])) {
+            abort(403, 'Unauthorized access.');
         }
 
         $referrals = Referral::with(['referrer', 'referred'])
