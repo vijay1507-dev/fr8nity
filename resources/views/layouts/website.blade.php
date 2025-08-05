@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
     <title>@yield('title', 'Fr8nity')</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('images/fr8nity_fav.png') }}">
     <!-- Bootstrap CSS -->
