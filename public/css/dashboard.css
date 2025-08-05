@@ -496,3 +496,14 @@ div .iti--allow-dropdown .invalid-feedback { position: absolute; bottom: -18px; 
 .select2-container--default .select2-selection--single{min-height: 41px;
     padding: 5px;}
 div .select2-container--default .select2-selection--single .select2-selection__arrow{    height: 39px;}
+
+/*table to show expiring soon */
+.expiring-soon td {
+  border-color: #f8d7da !important;
+  background-color: #f8d7da !important;
+}
+.expiry-cell.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+  color: rgb(221, 12, 12) !important;
+}

@@ -25,20 +25,23 @@ Route::prefix('membership')->group(function () {
      Route::middleware('auth')->group(function () {
          // Membership Routes
         Route::get('/explorer', function () {
-            return view('website.membership.explorer');
+            $membershipTier = \App\Models\MembershipTier::where('slug', 'explorer')->first();
+            return view('website.membership.explorer', compact('membershipTier'));
         })->name('membership.explorer');
 
         Route::get('/elevate', function () {
-            return view('website.membership.elevate');
+            $membershipTier = \App\Models\MembershipTier::where('slug', 'elevate')->first();
+            return view('website.membership.elevate', compact('membershipTier'));
         })->name('membership.elevate');
 
         Route::get('/summit', function () {
-            return view('website.membership.summit');
+            $membershipTier = \App\Models\MembershipTier::where('slug', 'summit')->first();
+            return view('website.membership.summit', compact('membershipTier'));
         })->name('membership.summit');
     });
-    Route::get('/founder', function () {
-        return view('website.membership.founder');
-    })->name('membership.founder');
+    Route::get('/pinnacle', function () {
+        return view('website.membership.pinnacle');
+    })->name('membership.pinnacle');
     Route::get('/join-member', function () {
         return view('website.membership.join-member');
     })->name('membership.join-member');
@@ -116,7 +119,6 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::post('/store', [MemberController::class, 'store'])->name('members.store');
         Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
         Route::patch('/{member}/status', [MemberController::class, 'updateStatus'])->name('members.update-status');
-        Route::patch('/{member}/membership-tier', [MemberController::class, 'updateMembershipTier'])->name('members.update-membership-tier');
         Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
         Route::patch('/{member}', [MemberController::class, 'update'])->name('members.update');
         Route::delete('/{member}', [MemberController::class, 'destroy'])->name('members.destroy');

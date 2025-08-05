@@ -59,7 +59,7 @@
                   </g>
                 </svg>
                 <h6 class="textcolor fw-semibold fs-3">Annual Fee:</h6>
-                <p class="mb-0">USD $1,900/year</p>
+                <p class="mb-0">{{ $membershipTier->annual_fee ?? 'N/A' }}</p>
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@
                 </svg>
 
                 <h6 class="textcolor fw-semibold fs-3">Credit Protection:</h6>
-                <p class="mb-0 text-center">Up to USD $5,000/year (with self-participation on claims)</p>
+                <p class="mb-0 text-center">{{ $membershipTier->credit_protection ?? 'N/A' }} (with self-participation on claims)</p>
               </div>
             </div>
           </div>
@@ -282,7 +282,7 @@
                   </g>
                 </svg>
 
-                <h6 class="textcolor fw-semibold fs-4 text-center">Credit Protection (USD 5,000/year)</h6>
+                <h6 class="textcolor fw-semibold fs-4 text-center">Credit Protection ({{ $membershipTier->credit_protection ?? 'USD 5,000/year' }})</h6>
                 <p class="text-center mb-0"> Enjoy peace of mind with base-level coverage on secured deals within the
                   network, subject to claim guidelines and self-participation terms</p>
               </div>

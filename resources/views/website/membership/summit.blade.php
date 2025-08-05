@@ -59,7 +59,7 @@ Positioned just below the exclusive Founder tier, Summit members enjoy maximum p
                   </g>
                 </svg>
                 <h6 class="textcolor fw-semibold fs-3">Annual Fee:</h6>
-                <p class="mb-0">USD $2,850/year</p>
+                <p class="mb-0">{{ $membershipTier->annual_fee ?? 'N/A' }}</p>
               </div>
             </div>
           </div>
@@ -94,7 +94,7 @@ Positioned just below the exclusive Founder tier, Summit members enjoy maximum p
                 </svg>
 
                 <h6 class="textcolor fw-semibold fs-3">Credit Protection:</h6>
-                <p class="mb-0 text-center">Up to USD $12,000/year (with self-participation on claims)</p>
+                <p class="mb-0 text-center">{{ $membershipTier->credit_protection ?? 'N/A' }} (with self-participation on claims)</p>
               </div>
             </div>
           </div>

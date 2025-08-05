@@ -173,12 +173,16 @@
       </div>
      <div>
       @php
+      $startAt = Auth::user()->membership_start_at;
       $expiresAt = Auth::user()->membership_expires_at;
-  @endphp
+      @endphp
   
-  @if($expiresAt)
+      @if($startAt && $expiresAt)
         <p class="mb-3 text-end">
-            MEMBERSHIP PERIOD: {{ $expiresAt->copy()->subYear()->format('j/n/Y') }} TO {{ $expiresAt->format('j/n/Y') }}
+          MEMBERSHIP PERIOD: 
+          {{ optional($startAt)->format('j/n/Y') ?? 'N/A' }} 
+          TO 
+          {{ optional($expiresAt)->format('j/n/Y') ?? 'N/A' }}
         </p>
         @else
             <p class="mb-3 text-end">MEMBERSHIP PERIOD: N/A</p>

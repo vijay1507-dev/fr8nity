@@ -186,13 +186,7 @@
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label text-muted mb-2">CREDIT Protection</label>
-                                    @if(auth()->user()->membership_tier == 1)
-                                    <p class="mb-0">USD $5,000/year</p>
-                                    @elseif(auth()->user()->membership_tier == 2)
-                                    <p class="mb-0">USD $8,000/year</p>
-                                    @elseif(auth()->user()->membership_tier == 3)
-                                    <p class="mb-0">USD $12,000/year</p>
-                                    @endif
+                                    <p class="mb-0">{{ optional(auth()->user()->membershipTier)->credit_protection ?? 'No credit protection available' }}</p>
                                 </div>
                                 
                             </div>

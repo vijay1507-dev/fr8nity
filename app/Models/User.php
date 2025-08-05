@@ -46,6 +46,7 @@ class User extends Authenticatable
         'is_network_member',
         'network_name',
         'membership_tier',
+        'membership_start_at',
         'membership_expires_at',
         'status',
         'two_factor_code',
@@ -78,6 +79,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'specializations' => 'array',
             'two_factor_expires_at' => 'datetime',
+            'membership_start_at' => 'datetime',
             'membership_expires_at' => 'datetime',
             'two_factor_enabled' => 'boolean',
         ];

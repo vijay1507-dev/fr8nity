@@ -52,6 +52,7 @@ class AuthController extends Controller
     {
         $membershipTiers = MembershipTier::with('benefits')
             ->where('is_active', true)
+            ->where('is_visible', true)
             ->orderBy('order')
             ->get();
         

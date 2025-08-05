@@ -17,7 +17,9 @@
                         <th>Company Name</th>
                         <th>Company Telephone</th>
                         <th>Current Tier</th>
-                        <th>Created At</th>
+                        <th>Registered At</th>
+                        <th>Membership Start At</th>
+                        <th>Membership Expires At</th>
                         <th>Status</th>
                         <th>Action</th>
                     </tr>
@@ -46,6 +48,8 @@
                 {data: 'company_telephone', name: 'company_telephone'},
                 {data: 'current_tier', name: 'current_tier'},
                 {data: 'created_at', name: 'created_at'},
+                {data: 'membership_start_at', name: 'membership_start_at'},
+                {data: 'membership_expires_at', name: 'membership_expires_at'},
                 {
                     data: 'status', 
                     name: 'status',
@@ -59,7 +63,30 @@
                     orderable: false, 
                     searchable: false
                 },
-            ]
+            ],
+            "createdRow": function (row, data, dataIndex) {
+                // Check if membership expires in 15 days or less
+                if (data.membership_expires_at && data.membership_expires_at !== 'N/A') {
+                    var expiryDate = new Date(data.membership_expires_at.split('-').reverse().join('-'));
+                    var today = new Date();
+                    var diffTime = expiryDate.getTime() - today.getTime();
+                    var diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+                    
+                    if (diffDays <= 15 && diffDays >= 0) {
+                        $(row).addClass('expiring-soon');
+                        // Add blinking effect only to the expiry date cell
+                        $(row).find('td:eq(7)').addClass('expiry-cell blink');
+                        // Add a tooltip to show days remaining
+                        $(row).attr('title', '⚠️ URGENT: Membership expires in ' + diffDays + ' days');
+                        // Add data attribute for easier identification
+                        $(row).attr('data-expiry-days', diffDays);
+                    } else if (diffDays < 0) {
+                        $(row).addClass('expiring-soon');
+                        $(row).attr('title', '❌ EXPIRED: Membership expired ' + Math.abs(diffDays) + ' days ago');
+                        $(row).attr('data-expiry-days', diffDays);
+                    }
+                }
+            }
         });
     });
 </script>

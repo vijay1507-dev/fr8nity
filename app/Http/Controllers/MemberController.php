@@ -27,6 +27,12 @@ class MemberController extends Controller
                 ->addColumn('current_tier', function($row) {
                     return $row->membershipTier->name;
                 })
+                ->addColumn('membership_start_at', function($row) {
+                    return $row->membership_start_at ? $row->membership_start_at->format('d-m-Y') : 'N/A';
+                })
+                ->addColumn('membership_expires_at', function($row) {
+                    return $row->membership_expires_at ? $row->membership_expires_at->format('d-m-Y') : 'N/A';
+                })
                 ->addColumn('created_at', function($row) {
                     return $row->created_at->format('d-m-Y');
                 })
@@ -151,6 +157,7 @@ class MemberController extends Controller
             $member->update([
                 'status' => $request->status,
                 'password' => Hash::make($notification->getPassword()),
+                'membership_start_at' => now(),
                 'membership_expires_at' => now()->addYear()
             ]);
 
@@ -163,36 +170,6 @@ class MemberController extends Controller
         }
 
         return back()->with('success', 'Member status updated successfully.');
-    }
-
-    /**
-     * Update the specified member's membership tier.
-     */
-    public function updateMembershipTier(Request $request, User $member)
-    {
-        if ($member->role !== User::MEMBER) {
-            abort(404);
-        }
-
-        $request->validate([
-            'membership_tier' => ['required', 'exists:membership_tiers,id'],
-        ]);
-
-        $member->update([
-            'membership_tier' => $request->membership_tier,
-            'membership_expires_at' => now()->addYear(),
-        ]);
-
-        if ($request->ajax()) {
-            $membershipTier = MembershipTier::with('benefits')->find($request->membership_tier);
-            return response()->json([
-                'success' => true, 
-                'message' => 'Membership tier updated successfully',
-                'benefits' => $membershipTier->benefits
-            ]);
-        }
-
-        return back()->with('success', 'Membership tier updated successfully');
     }
 
     /**
