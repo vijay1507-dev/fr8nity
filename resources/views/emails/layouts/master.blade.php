@@ -59,7 +59,7 @@
 </head>
 <body>
     <div class="header">
-        <img src="{{ config('app.url') }}/images/logo.svg" alt="Fr8nity" class="logo">
+        <img src="{{ config('app.url') }}/images/logo_png.png" alt="Fr8nity" class="logo">
     </div>
 
     <div class="content">

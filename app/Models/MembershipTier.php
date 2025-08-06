@@ -11,12 +11,16 @@ class MembershipTier extends Model
         'name',
         'slug',
         'description',
+        'credit_protection',
+        'annual_fee',
         'order',
-        'is_active'
+        'is_active',
+        'is_visible'
     ];
 
     protected $casts = [
         'is_active' => 'boolean',
+        'is_visible' => 'boolean',
         'order' => 'integer'
     ];
 

@@ -27,7 +27,7 @@
                     <li><a class="dropdown-item" href="{{ route('membership.explorer') }}">Explorer</a></li>
                     <li><a class="dropdown-item" href="{{ route('membership.elevate') }}">Elevate</a></li>
                     <li><a class="dropdown-item" href="{{ route('membership.summit') }}">Summit</a></li>
-                    <li><a class="dropdown-item" href="{{ route('membership.founder') }}">Founder</a></li>
+                    <li><a class="dropdown-item" href="{{ route('membership.pinnacle') }}">Pinnacle</a></li>
                   </ul>
                 </li>
                 <li class="dropdown-submenu">

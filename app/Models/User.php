@@ -8,14 +8,14 @@ use App\Notifications\TwoFactorCodeNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use Laravel\Sanctum\HasApiTokens;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, Notifiable, SoftDeletes;
 
     /**
      * The attributes that are mass assignable.
@@ -32,6 +32,7 @@ class User extends Authenticatable
         'whatsapp_phone',
         'company_name',
         'company_logo',
+        'company_description',
         'company_telephone',
         'company_address',
         'country_id',
@@ -45,6 +46,7 @@ class User extends Authenticatable
         'is_network_member',
         'network_name',
         'membership_tier',
+        'membership_start_at',
         'membership_expires_at',
         'status',
         'two_factor_code',
@@ -77,6 +79,7 @@ class User extends Authenticatable
             'password' => 'hashed',
             'specializations' => 'array',
             'two_factor_expires_at' => 'datetime',
+            'membership_start_at' => 'datetime',
             'membership_expires_at' => 'datetime',
             'two_factor_enabled' => 'boolean',
         ];
@@ -165,5 +168,39 @@ class User extends Authenticatable
     public function membershipTier(): BelongsTo
     {
         return $this->belongsTo(MembershipTier::class,'membership_tier');
+    }
+
+    public function referrals()
+    {
+        return $this->hasMany(Referral::class, 'referrer_id');
+    }
+
+    public function referredBy()
+    {
+        return $this->belongsTo(User::class, 'referred_by');
+    }
+
+    public function rewardPoints()
+    {
+        return $this->hasMany(RewardPoint::class);
+    }
+
+    public function generateReferralCode()
+    {
+        if (!$this->referral_code) {
+            do {
+                $code = strtoupper(Str::random(8));
+            } while (static::where('referral_code', $code)->exists());
+            
+            $this->referral_code = $code;
+            $this->save();
+        }
+
+        return $this->referral_code;
+    }
+
+    public function getReferralLink()
+    {
+        return url('/register?ref=' . $this->generateReferralCode());
     }
 }

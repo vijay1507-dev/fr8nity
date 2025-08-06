@@ -77,7 +77,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="country_id" class="form-label">Country*</label>
                         <select class="form-select @error('country_id') is-invalid @enderror" 
-                                id="country" name="country_id" data-old="{{ old('country_id') }}">
+                                id="country" name="country_id" data-old="{{ old('country_id', get_default_locations()['country']?->id ?? '') }}">
                             <option value="">Select Country</option>
                         </select>
                         @error('country_id')
@@ -88,7 +88,7 @@
                     <div class="mb-3 col-12 col-md-6">
                         <label for="city_id" class="form-label">City*</label>
                         <select class="form-select @error('city_id') is-invalid @enderror" 
-                                id="city" name="city_id" data-old="{{ old('city_id') }}">
+                                id="city" name="city_id" data-old="{{ old('city_id', get_default_locations()['city']?->id ?? '') }}">
                             <option value="">Select City</option>
                         </select>
                         @error('city_id')
@@ -181,6 +181,17 @@
                     </div>
 
                     <div class="mb-3 col-12">
+                        <label for="company_description" class="form-label">About Company</label>
+                        <textarea class="form-control @error('company_description') is-invalid @enderror" 
+                                  id="company_description" name="company_description" rows="8" 
+                                  placeholder="Write about your company, services, experience, and what makes your company unique...">{{ old('company_description') }}</textarea>
+                        <div class="form-text">This description will be displayed on your member profile page and in the member directory. You can use the toolbar above to format your text.</div>
+                        @error('company_description')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+
+                    <div class="mb-3 col-12">
                         <label class="form-label">Are you currently a member of any other network?*</label>
                         <div class="d-flex gap-3 bg-light p-2 rounded align-items-center px-3 flex-wrap @error('is_network_member') is-invalid @enderror">
                             <div class="form-check mb-0">
@@ -222,7 +233,12 @@
                         @enderror
                     </div>
                 </div>
-
+                <!-- Back Button -->
+                <div class="position-fixed bottom-0 end-0 p-4">
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary rounded-circle shadow-sm" style="width: 50px; height: 50px; padding: 9px;">
+                        <i class="bi bi-arrow-left" style="font-size: 20px;"></i>
+                    </a>
+                </div>
                 <div class="d-flex justify-content-center gap-3 mt-4">
                     <a href="{{ route('members.index') }}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary">Create Member</button>
@@ -235,5 +251,46 @@
 
 @section('scripts')
 <link rel="stylesheet" href="{{ asset('css/memberAdd.css') }}?v={{ rand(1, 1000000) }}">
-<script src="{{asset('js/memberAdd.js')}}?v={{ rand(1, 1000000)"></script>
+<script src="{{asset('js/memberAdd.js')}}?v={{ rand(1, 1000000) }}"></script>
+
+<!-- CKEditor -->
+<script src="https://cdn.ckeditor.com/ckeditor5/40.1.0/classic/ckeditor.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    ClassicEditor
+        .create(document.querySelector('#company_description'), {
+            toolbar: {
+                items: [
+                    'undo', 'redo',
+                    '|', 'heading',
+                    '|', 'bold', 'italic',
+                    '|', 'link',
+                    '|', 'bulletedList', 'numberedList',
+                    '|', 'outdent', 'indent',
+                    '|', 'removeFormat'
+                ]
+            },
+            heading: {
+                options: [
+                    { model: 'paragraph', title: 'Paragraph', class: 'ck-heading_paragraph' },
+                    { model: 'heading1', view: 'h1', title: 'Heading 1', class: 'ck-heading_heading1' },
+                    { model: 'heading2', view: 'h2', title: 'Heading 2', class: 'ck-heading_heading2' },
+                    { model: 'heading3', view: 'h3', title: 'Heading 3', class: 'ck-heading_heading3' }
+                ]
+            },
+            removePlugins: ['CKFinderUploadAdapter', 'CKFinder', 'EasyImage', 'Image', 'ImageCaption', 'ImageStyle', 'ImageToolbar', 'ImageUpload'],
+            placeholder: 'Write about your company, services, experience, and what makes your company unique...'
+        })
+        .then(editor => {
+            // Auto-save content to textarea
+            editor.model.document.on('change:data', () => {
+                const data = editor.getData();
+                document.querySelector('#company_description').value = data;
+            });
+        })
+        .catch(error => {
+            console.error(error);
+        });
+});
+</script>
 @endsection 

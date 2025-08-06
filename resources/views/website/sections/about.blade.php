@@ -16,10 +16,19 @@
                             <span class="move delay-1"></span>
                         </div>
                         <p class="fs-6">
-                            It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                            Fr8nity is more than a network — it’s an alliance where trust is currency, collaboration is
+                            culture, and growth is the shared destination.
                         </p>
                         <p class="fs-6">
-                            has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.
+                            We connect vetted freight forwarders from every corner of the globe, uniting those who
+                            believe in doing business with integrity and intention. In our circle, opportunities are not
+                            kept — they are exchanged. Partnerships are not transactional — they are cultivated. Every
+                            introduction, every connection, is a step toward collective success.
+                        </p>
+                        <p class="fs-6">
+                            Here, experience meets fresh perspective. Tradition fuels innovation. Borders dissolve into
+                            bridges. And within this trusted space, every member finds not just opportunity, but the
+                            assurance that when one thrives, we all rise.
                         </p>
                         <button type="button" class="btn btnbg fe-semibold">
                             Read More

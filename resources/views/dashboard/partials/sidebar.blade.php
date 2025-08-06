@@ -38,8 +38,30 @@
                      <li class="sidebar-item">
                          <a href="{{ route('members.index') }}" class="sidebar-link">FRT Members</a>
                      </li>
+                     <li class="sidebar-item">
+                        <a href="{{ route('trade-members.index') }}" class="sidebar-link">Trade Members</a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.referrals.index') }}" class="sidebar-link">
+                            Referrals
+                        </a>
+                    </li>
                  </ul>
              </li>
+             <li class="sidebar-item">
+                 <a href="#" class="sidebar-link collapsed" data-bs-target="#shipments" data-bs-toggle="collapse"
+                     aria-expanded="false">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
+                         <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
+                     </svg>
+                     Shipment Enquiry
+                 </a>
+                 <ul id="shipments" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                                         <li class="sidebar-item">
+                        <a href="{{ route('shipments.index') }}" class="sidebar-link">All Enquiries</a>
+                    </li>
+                </ul>
+            </li>            
              <li class="sidebar-item">
                  <a href="#" class="sidebar-link collapsed" data-bs-target="#settings" data-bs-toggle="collapse"
                      aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -59,15 +81,25 @@
                  </ul>
              </li>
              @endif
-             <li class="sidebar-item">
-                 <a href="{{ route('profile') }}" class="sidebar-link">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
-                         <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
-                         <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
-                     </svg>
-                     My Profile
-                 </a>
-             </li>
+                         <li class="sidebar-item">
+                <a href="{{ route('profile') }}" class="sidebar-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">
+                        <path d="M11 6a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
+                        <path fill-rule="evenodd" d="M0 8a8 8 0 1 1 16 0A8 8 0 0 1 0 8m8-7a7 7 0 0 0-5.468 11.37C3.242 11.226 4.805 10 8 10s4.757 1.225 5.468 2.37A7 7 0 0 0 8 1"/>
+                    </svg>
+                    My Profile
+                </a>
+            </li>
+            @if(auth()->user()->role == \App\Models\User::MEMBER)
+            <li class="sidebar-item">
+                <a href="{{ route('referrals.index') }}" class="sidebar-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-share" viewBox="0 0 16 16">
+                        <path d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"/>
+                    </svg>
+                    My Referrals
+                </a>
+            </li>
+            @endif
              <li class="sidebar-item">
                  <form method="POST" action="{{ route('logout') }}" id="logout-form">
                      @csrf

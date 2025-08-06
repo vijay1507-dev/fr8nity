@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="robots" content="noindex">
   <title>@yield('title', 'Dashboard')</title>
   <link rel="icon" type="image/x-icon" href="{{ asset('images/fr8nity_fav.png') }}">
   <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}">
@@ -10,6 +11,7 @@
   <link href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css">
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.min.css" rel="stylesheet">
   @yield('styles')
 </head>
 <body>
@@ -37,7 +39,6 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/css/intlTelInput.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
     {{-- end member add --}}
   <script>
     // Configure toastr options
@@ -73,8 +74,28 @@
         @endif
     });
   </script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.19.5/jquery.validate.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.10.5/dist/sweetalert2.all.min.js"></script>
   <!-- Page-specific scripts -->
   @yield('scripts')
+  
+  @if(session('warning'))
+  <script>
+    Swal.fire({
+      title: "",
+      text: "{{ session('warning')['message'] }}",
+      icon: "warning",
+      showCancelButton: false,
+      confirmButtonColor: "#ffc107",
+      confirmButtonText: "Complete Profile Now"
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // The URL is already correct as we're on the edit profile page
+        document.getElementById('profile_photo').focus();
+      }
+    });
+  </script>
+  @endif
 </body>
 </html>

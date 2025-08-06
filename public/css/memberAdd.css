@@ -57,7 +57,102 @@
     border-color: #dee2e6 !important;
 }
 
+/* Disable select2 dropdown when disabled */
+select:disabled ~ .select2-container,
+.select2-container--disabled {
+    pointer-events: none !important;
+}
+
+select:disabled ~ .select2-container .select2-selection--single,
+.select2-container--disabled .select2-selection--single {
+    background-color: #dfdfdf !important;
+    cursor: not-allowed !important;
+}
+
+select:disabled ~ .select2-container .select2-selection__arrow,
+.select2-container--disabled .select2-selection__arrow {
+    display: none !important;
+}
+
+select:disabled ~ .select2-container .select2-selection__rendered,
+.select2-container--disabled .select2-selection__rendered {
+    background-color: #dfdfdf !important;
+}
+
+/* Prevent select2 dropdown from showing when disabled */
+select:disabled ~ .select2-container .select2-dropdown,
+.select2-container--disabled .select2-dropdown {
+    display: none !important;
+}
+
+/* Style the select2 container when disabled */
+select:disabled + .select2-container {
+    opacity: 0.95;
+    pointer-events: none !important;
+}
+
+/* Style the select2 arrow when disabled */
+select:disabled + .select2-container .select2-selection__arrow {
+    opacity: 0.5;
+}
+
+/* Prevent select2 dropdown from opening when disabled */
+select:disabled + .select2-container .select2-selection__rendered {
+    color: #495057 !important;
+    pointer-events: none !important;
+}
+
 .invalid-feedback {
     color: #dc3545 !important;
     margin-top: 0.25rem;
 }
+
+/* Styles for readonly and disabled fields */
+.form-control[readonly],
+.form-control:disabled,
+.form-select:disabled,
+input[type="text"]:disabled,
+select:disabled,
+.date-picker-wrapper input:disabled {
+    background-color: #dfdfdf !important;
+    cursor: not-allowed !important;
+    opacity: 0.95;
+    pointer-events: none !important;
+    -webkit-user-select: none !important;
+    -moz-user-select: none !important;
+    -ms-user-select: none !important;
+    user-select: none !important;
+}
+
+/* Specifically target the datepicker when disabled */
+.date-picker-wrapper.disabled {
+    pointer-events: none !important;
+}
+
+/* Ensure the calendar icon is also visually disabled */
+.date-picker-wrapper input:disabled + .calendar-icon {
+    opacity: 0.5;
+    pointer-events: none !important;
+}
+
+/* Style for readonly and disabled checkboxes/radio buttons */
+.form-check-input:disabled,
+.form-check-input[readonly] {
+    background-color: #dfdfdf !important;
+    opacity: 0.8;
+}
+
+.form-check-input:disabled ~ .form-check-label,
+.form-check-input[readonly] ~ .form-check-label {
+    opacity: 0.8;
+}
+
+
+.iti--allow-dropdown { display: flex ; position: relative; border: 1px solid #dee2e6 !important; border-radius: 8px; }
+.iti--allow-dropdown input { padding: 7px 15px !important; border: 0; }
+div .iti__flag-container {
+    position: unset;
+}
+.iti--allow-dropdown .invalid-feedback { position: absolute; bottom: -18px; }
+
+

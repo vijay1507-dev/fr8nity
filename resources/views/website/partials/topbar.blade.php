@@ -9,7 +9,7 @@
         </ul>
       </div>
       <div class="col-12 col-md-6">
-        <ul class="justify-content-end gap-3 d-flex">
+        <ul class="justify-content-end gap-1 d-flex">
           <li><a href="#"><img src="{{asset('images/fb_icon.png')}}" alt="Facebook" /></a></li>
           <li><a href="#"><img src="{{asset('images/insta_icon.png')}}" alt="Instagram" /></a></li>
           <li><a href="#"><img src="{{asset('images/x_icon.png')}}" alt="X" /></a></li>

@@ -159,7 +159,7 @@
                                         @if (auth()->user()->referred_by)
                                             <div class="info-item full-width">
                                                 <span class="info-label">Referred By</span>
-                                                <span class="info-value">{{ auth()->user()->referred_by }}</span>
+                                                <span class="info-value">{{ auth()->user()->referredBy->name ?? 'N/A' }}</span>
                                             </div>
                                         @endif
                                     </div>
@@ -184,18 +184,28 @@
                                             {{ optional(auth()->user()->membershipTier)->name ?? 'No Tier' }}</h4>
                                     </div>
                                 </div>
-                                @if(auth()->user()->membership_expires_at)
+                                <div class="mb-4">
+                                    <label class="form-label text-muted mb-2">CREDIT Protection</label>
+                                    <p class="mb-0">{{ optional(auth()->user()->membershipTier)->credit_protection ?? 'No credit protection available' }}</p>
+                                </div>
+                                
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label text-muted mb-2">Reward Points</label>
+                                <h4 class="mb-0 text-primary">{{ $totalPoints ?? 0 }} pts</h4>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                            <div class="mb-4">
+                                <label class="form-label text-muted mb-2">Member Since</label>
+                                <p class="mb-0">{{ auth()->user()->created_at->format('F j, Y') }}</p>
+                            </div>
+                            @if(auth()->user()->membership_expires_at)
                                 <div class="mb-4">
                                     <label class="form-label text-muted mb-2">Valid Till</label>
                                     <p class="mb-0">{{ auth()->user()->membership_expires_at->format('F j, Y') }}</p>
                                 </div>
                                 @endif
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label text-muted mb-2">Member Since</label>
-                                <p class="mb-0">{{ auth()->user()->created_at->format('F j, Y') }}</p>
-                            </div>
-
                             @if (auth()->user()->membershipTier)
                                 <div>
                                     <label class="form-label text-muted mb-2">Tier Benefits</label>
@@ -209,6 +219,17 @@
                                     </ul>
                                 </div>
                             @endif
+
+                            <div class="mt-4">
+                                <label class="form-label text-muted mb-2">About Company</label>
+                                @if(auth()->user()->company_description)
+                                    <div class="company-description">
+                                        {!! auth()->user()->company_description !!}
+                                    </div>
+                                @else
+                                    <p class="text-muted mb-0">Nothing about company</p>
+                                @endif
+                            </div>
                         </div>
                     </div>
                 </div>

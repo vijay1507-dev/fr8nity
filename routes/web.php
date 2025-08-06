@@ -7,6 +7,9 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\ReferralController;
+use App\Http\Controllers\TradeMemberController;
+use App\Http\Controllers\ShipmentController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
@@ -18,30 +21,37 @@ Route::prefix('membership')->group(function () {
     Route::get('/', function () {
         return view('website.membership');
     })->name('membership');
-    // Membership Routes
-    Route::get('/explorer', function () {
-        return view('website.membership.explorer');
-    })->name('membership.explorer');
+     // Authenticated membership pages
+     Route::middleware('auth')->group(function () {
+         // Membership Routes
+        Route::get('/explorer', function () {
+            $membershipTier = \App\Models\MembershipTier::where('slug', 'explorer')->first();
+            return view('website.membership.explorer', compact('membershipTier'));
+        })->name('membership.explorer');
 
-    Route::get('/elevate', function () {
-        return view('website.membership.elevate');
-    })->name('membership.elevate');
+        Route::get('/elevate', function () {
+            $membershipTier = \App\Models\MembershipTier::where('slug', 'elevate')->first();
+            return view('website.membership.elevate', compact('membershipTier'));
+        })->name('membership.elevate');
 
-    Route::get('/summit', function () {
-        return view('website.membership.summit');
-    })->name('membership.summit');
-
-    Route::get('/founder', function () {
-        return view('website.membership.founder');
-    })->name('membership.founder');
+        Route::get('/summit', function () {
+            $membershipTier = \App\Models\MembershipTier::where('slug', 'summit')->first();
+            return view('website.membership.summit', compact('membershipTier'));
+        })->name('membership.summit');
+    });
+    Route::get('/pinnacle', function () {
+        return view('website.membership.pinnacle');
+    })->name('membership.pinnacle');
     Route::get('/join-member', function () {
         return view('website.membership.join-member');
     })->name('membership.join-member');
-    
     Route::get('/shipment-enquiry', function () {
         return view('website.membership.shipment-enquiry');
     })->name('membership.shipment-enquiry');
-    
+    Route::post('/shipment-enquiry', [ShipmentController::class, 'store'])->name('shipment-enquiry.store');
+    Route::get('/thank-you', function () {
+        return view('website.thank-you');
+    })->name('thank-you');
 });
 
 // Events routes
@@ -93,7 +103,7 @@ Route::post('/register', [AuthController::class, 'register'])->name('register.po
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // Protected routes (require login)
-Route::middleware('auth')->group(function () {
+Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
@@ -109,12 +119,21 @@ Route::middleware('auth')->group(function () {
         Route::post('/store', [MemberController::class, 'store'])->name('members.store');
         Route::get('/{member}', [MemberController::class, 'show'])->name('members.show');
         Route::patch('/{member}/status', [MemberController::class, 'updateStatus'])->name('members.update-status');
-        Route::patch('/{member}/membership-tier', [MemberController::class, 'updateMembershipTier'])->name('members.update-membership-tier');
         Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
         Route::patch('/{member}', [MemberController::class, 'update'])->name('members.update');
+        Route::delete('/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
     });
     Route::get('/{member}/edit-profile', [MemberController::class, 'edit'])->name('editmemberprofile');
-    Route::patch('/{member}/update-profile', [MemberController::class, 'update'])->name('members.updateprofile');
+    Route::patch('/{member}/update-profile', [MemberController::class, 'update'])->name('members.updateprofile')->withoutMiddleware('kyc.complete');
+    
+    // Shipment management routes - requires admin access
+    Route::middleware('admin')->prefix('shipments')->group(function () {
+        Route::get('/', [ShipmentController::class, 'index'])->name('shipments.index');
+        Route::get('/{shipment}', [ShipmentController::class, 'show'])->name('shipments.show');
+        Route::get('/{shipment}/edit', [ShipmentController::class, 'edit'])->name('shipments.edit');
+        Route::patch('/{shipment}', [ShipmentController::class, 'update'])->name('shipments.update');
+        Route::delete('/{shipment}', [ShipmentController::class, 'destroy'])->name('shipments.destroy');
+    });
 });
 
 // Public API routes
@@ -126,6 +145,21 @@ Route::get('/get-regions', [AuthController::class, 'getRegions'])->name('get.reg
 Route::get('/two-factor', [AuthController::class, 'showTwoFactorForm'])->name('two-factor.show');
 Route::post('/two-factor', [AuthController::class, 'verifyTwoFactor'])->name('two-factor.verify');
 Route::post('/two-factor/resend', [AuthController::class, 'resendTwoFactorCode'])->name('two-factor.resend');
+
+// Trade Member Routes
+Route::resource('trade-members', TradeMemberController::class)->only(['store']);
+Route::resource('trade-members', TradeMemberController::class)->except(['store'])->middleware('admin');
+
+// Referral Routes
+Route::middleware(['auth', 'kyc.complete'])->group(function () {
+    Route::get('/referrals', [ReferralController::class, 'index'])->name('referrals.index');
+    Route::get('/referrals/generate-link', [ReferralController::class, 'generateLink'])->name('referrals.generate-link');
+    
+    // Admin only routes
+    Route::middleware('admin')->group(function () {
+        Route::get('/admin/referrals', [ReferralController::class, 'adminIndex'])->name('admin.referrals.index');
+    });
+});
 
 
 

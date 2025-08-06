@@ -330,7 +330,7 @@ $(document).ready(function() {
         width: '100%',
         templateResult: formatCountryOption,
         templateSelection: formatCountryOption
-    }).on('select2:clearing', function(e) {
+    }).on('select2:clear', function(e) {
         e.preventDefault();
         $(this).val(null).trigger('change');
         $('#city').val(null).trigger('change').prop('disabled', true);
@@ -352,7 +352,7 @@ $(document).ready(function() {
         placeholder: 'Select Region',
         allowClear: true,
         width: '100%'
-    }).on('select2:clearing', function(e) {
+    }).on('select2:clear', function(e) {
         e.preventDefault();
         $(this).val(null).trigger('change');
     });

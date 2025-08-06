@@ -18,7 +18,9 @@ class DashboardController extends Controller
 
     public function profile()
     {
-        return view('dashboard.profile');
+        $totalPoints = auth()->user()->rewardPoints()->sum('points');
+
+        return view('dashboard.profile', compact('totalPoints'));
     }
 
     public function editprofile()

@@ -44,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function() {
             { name: 'incorporation_date', label: 'Incorporation Date' },
             { name: 'tax_id', label: 'Tax ID' },
             { name: 'website_linkedin', label: 'Website / LinkedIn' },
+            { name: 'company_description', label: 'About Company' },
             { name: 'membership_tier', label: 'Membership Tier' }
         ];
 
@@ -109,6 +110,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
+    // Ensure password fields are not disabled for member role
+    $('#current_password, #password, #password_confirmation').prop('disabled', false);
+
     // Initialize Flatpickr for date input
     flatpickr("#incorporation_date", {
         dateFormat: "Y-m-d",
@@ -128,7 +132,7 @@ document.addEventListener('DOMContentLoaded', function() {
         width: '100%',
         templateResult: formatCountryOption,
         templateSelection: formatCountryOption
-    }).on('select2:clearing', function(e) {
+    }).on('select2:clear', function(e) {
         e.preventDefault();
         $(this).val(null).trigger('change');
         $('#city').val(null).trigger('change').prop('disabled', true);
@@ -140,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
         placeholder: 'Select City',
         allowClear: true,
         width: '100%'
-    }).on('select2:clearing', function(e) {
+    }).on('select2:clear', function(e) {
         e.preventDefault();
         $(this).val(null).trigger('change');
     });
@@ -173,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Set old value if exists
         if (oldCountryId) {
-            countrySelect.val(oldCountryId).trigger('change');
+            countrySelect.val(oldCountryId).trigger('change', { skipCityLoad: true });
             // Load cities for the selected country
             loadCities(oldCountryId);
         }
@@ -199,12 +203,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (oldCityId) {
                     citySelect.val(oldCityId).trigger('change');
                 }
+                // Force disable for member role
+                if (auth_user_role == 2) {
+                    citySelect.prop('disabled', true);
+                    citySelect.next('.select2-container').addClass('select2-container--disabled');
+                }
             });
         }
     }
 
     // Handle country change
-    $('#country').on('change', function() {
+    $('#country').on('change', function(e, data) {
+        // Skip city loading if explicitly requested (during initialization with old values)
+        if (data && data.skipCityLoad) {
+            return;
+        }
         let countryId = $(this).val();
         loadCities(countryId);
     });
@@ -215,7 +228,7 @@ document.addEventListener('DOMContentLoaded', function() {
         placeholder: 'Select Region',
         allowClear: true,
         width: '100%'
-    }).on('select2:clearing', function(e) {
+    }).on('select2:clear', function(e) {
         e.preventDefault();
         $(this).val(null).trigger('change');
     });
