@@ -11,9 +11,17 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Services\RewardPointService;
+use App\Models\Referral;
 
 class MemberController extends Controller
 {
+    protected $rewardPointService;
+
+    public function __construct(RewardPointService $rewardPointService)
+    {
+        $this->rewardPointService = $rewardPointService;
+    }
     /**
      * Display a listing of the members.
      */
@@ -160,6 +168,20 @@ class MemberController extends Controller
                 'membership_start_at' => now(),
                 'membership_expires_at' => now()->addYear()
             ]);
+
+            // Check if member was referred and award points to referrer
+            $referral = Referral::where('referred_id', $member->id)->first();
+            if ($referral) {
+                $referrer = User::find($referral->referrer_id);
+                if ($referrer) {
+                    $this->rewardPointService->awardPoints(
+                        $member,
+                        $referrer,
+                        'referral_join',
+                        'Referred new member: ' . $member->name
+                    );
+                }
+            }
 
             // Send notification with login credentials
             $member->notify($notification);

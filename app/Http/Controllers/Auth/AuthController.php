@@ -136,19 +136,13 @@ class AuthController extends Controller
 
         // Create referral record if there's a referrer
         if ($referrer) {
-            $referral = Referral::create([
+            Referral::create([
                 'referrer_id' => $referrer->id,
                 'referred_id' => $user->id,
                 'referral_code' => $request->referral_code,
                 'registered_at' => now(),
             ]);
-            // Award points to the referrer
-            $this->rewardPointService->awardPoints(
-                $user,
-                $referrer,
-                'referral_join',
-                'Referred new member: ' . $user->name
-            );
+
         }
 
         $superAdmin = User::where('role', User::SUPER_ADMIN)->first();
