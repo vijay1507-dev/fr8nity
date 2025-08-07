@@ -1,0 +1,41 @@
+@extends('layouts.dashboard')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-body">
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <form action="{{ route('settings.update') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="form-group">
+                            <label for="membership_reminder_days" class="form-label text-bold mb-2">Membership Expiry Reminder Days</label>
+                            <input type="number" 
+                                   class="form-control @error('membership_reminder_days') is-invalid @enderror" 
+                                   id="membership_reminder_days" 
+                                   name="membership_reminder_days" 
+                                   value="{{ old('membership_reminder_days', $reminderDays) }}"
+                                   min="1"
+                                   max="90">
+                            <small class="form-text text-muted">Number of days before membership expiry to start sending reminder emails (1-90 days)</small>
+                            @error('membership_reminder_days')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Update</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection

@@ -321,6 +321,54 @@
                         @enderror
                     </div>
                 </div>
+
+                @if(auth()->user()->role === App\Models\User::SUPER_ADMIN)
+                <!-- Certificate Section -->
+                <div class="card mt-4 mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Member Certificate</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                @if($member->certificate_document)
+                                    <div class="alert alert-info">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <p class="mb-1"><strong>Current Certificate:</strong></p>
+                                                <p class="mb-0">Uploaded on {{ $member->certificate_uploaded_at->format('M d, Y') }}</p>
+                                            </div>
+                                            <div>
+                                                <a href="{{ Storage::url($member->certificate_document) }}" class="btn btn-primary btn-sm" target="_blank">
+                                                    <i class="bi bi-file-earmark-text me-2"></i>View
+                                                </a>
+                                                <form action="{{ route('members.delete-certificate', $member) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this certificate?')">
+                                                        <i class="bi bi-trash me-2"></i>Delete
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <div class="mb-3">
+                                    <label for="certificate_document" class="form-label">Upload Certificate</label>
+                                    <input type="file" class="form-control @error('certificate_document') is-invalid @enderror" 
+                                           id="certificate_document" name="certificate_document" 
+                                           accept=".pdf,.doc,.docx">
+                                    <div class="form-text">Supported formats: PDF, DOC, DOCX. Maximum file size: 5MB</div>
+                                    @error('certificate_document')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
                 
                 <!-- Password Update Section -->
                 <div class="card mt-4 mb-4">

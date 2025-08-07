@@ -23,7 +23,12 @@ class MembershipTier extends Model
         'is_visible' => 'boolean',
         'order' => 'integer'
     ];
-
+    const MEMBERSHIP_NUMBER_PREFIXES = [
+        'explorer' => 'F8EXP08050',
+        'elevate'  => 'F8ELV08050',
+        'summit'   => 'F8SMT08050',
+        'pinnacle' => 'F8PIN08050',
+    ];
     public function benefits(): BelongsToMany
     {
         return $this->belongsToMany(MembershipBenefit::class, 'membership_tier_benefits')

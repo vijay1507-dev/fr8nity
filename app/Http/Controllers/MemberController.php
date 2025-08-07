@@ -279,6 +279,7 @@ class MemberController extends Controller
                 'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
                 'membership_tier' => ['required'],
                 'profile_photo' => ['nullable', 'image', 'max:2048'],
+                'certificate_document' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
             ];
 
             if ($request->filled('password')) {
@@ -293,7 +294,25 @@ class MemberController extends Controller
             if ($request->hasFile('company_logo')) {
                 $companyLogoPath = $request->file('company_logo')->store('company-logos', 'public');
             }
-
+            $certificatePath = null;
+            if ($request->hasFile('certificate_document')) {
+                $certificatePath = $request->file('certificate_document')->store('member-certificates', 'public');
+                $updateData['certificate_document'] = $certificatePath;
+                $updateData['certificate_uploaded_at'] = now();
+            }
+            $membershipTier = MembershipTier::find($request->membership_tier);
+            $prefix = MembershipTier::MEMBERSHIP_NUMBER_PREFIXES[$membershipTier->slug] ?? '';
+            $lastNumber = User::where('membership_tier', $request->membership_tier)
+                ->whereNotNull('membership_number')
+                ->orderBy('id', 'desc')
+                ->value('membership_number');
+            if ($lastNumber) {
+                $lastSequence = intval(substr($lastNumber, -3));
+                $newSequence = str_pad($lastSequence + 1, 3, '0', STR_PAD_LEFT);
+            } else {
+                $newSequence = '001';
+            }
+            $membershipNumber = $prefix . $newSequence;
             $updateData = [
                 'name' => $request->name,
                 'email' => $request->email,
@@ -313,7 +332,10 @@ class MemberController extends Controller
                 'website_linkedin' => $request->website_linkedin,
                 'is_network_member' => $request->is_network_member,
                 'network_name' => $request->network_name,
+                'membership_number' => $membershipNumber,
                 'membership_tier' => $request->membership_tier,
+                'certificate_document' => $certificatePath,
+                'certificate_uploaded_at' => now(),
             ];
 
             if (isset($path)) {
@@ -356,23 +378,65 @@ class MemberController extends Controller
     /**
      * Display the member directory.
      */
-    public function directory()
+    public function directory(Request $request)
     {
-        $members = User::where('role', User::MEMBER)
+        $query = User::where('role', User::MEMBER)
             ->where('status', 'approved')
-            ->with(['membershipTier', 'region', 'country', 'city'])
-            ->get();
+            ->where('is_active', true)
+            ->with(['membershipTier', 'region', 'country', 'city']);
+
+        // Filter by company name
+        if ($request->filled('company_name')) {
+            $query->where(function($q) use ($request) {
+                $q->where('company_name', 'like', '%' . $request->company_name . '%')
+                  ->orWhere('name', 'like', '%' . $request->company_name . '%');
+            });
+        }
+
+        // Filter by country
+        if ($request->filled('country')) {
+            $query->whereHas('country', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->country . '%');
+            });
+        }
+
+        // Filter by city
+        if ($request->filled('city')) {
+            $query->whereHas('city', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->city . '%');
+            });
+        }
+
+        // Filter by specialization
+        if ($request->filled('specialization')) {
+            $specialization = $request->specialization;
+            $query->where(function($q) use ($specialization) {
+                $q->where('specializations', 'like', '%' . $specialization . '%')
+                  ->orWhere('specializations', 'like', '%"' . $specialization . '"%');
+            });
+        }
+
+        $members = $query->get();
 
         return view('website.member-directory', compact('members'));
     }
-    public function viewProfile()
+    public function viewProfile($company_name, $encrypted_id)
     {
-        $members = User::where('role', User::MEMBER)
-            ->where('status', 'approved')
-            ->with(['membershipTier', 'region', 'country', 'city'])
-            ->get();
+        try {
+            // Decrypt the ID
+            $id = decrypt($encrypted_id);
+            
+            $member = User::where('role', User::MEMBER)
+                ->where('status', 'approved')
+                ->where('is_active', true)
+                ->where('id', $id)
+                ->with(['membershipTier', 'region', 'country', 'city'])
+                ->firstOrFail();
 
-        return view('website.member-directory-view-profile', compact('members'));
+            return view('website.member-directory-view-profile', compact('member'));
+        } catch (\Exception $e) {
+            abort(404, 'Member not found');
+        }
     }
     
 } 

@@ -190,9 +190,17 @@
                                 </div>
                                 
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label text-muted mb-2">Reward Points</label>
-                                <h4 class="mb-0 text-primary">{{ $totalPoints ?? 0 }} pts</h4>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div class="mb-4">
+                                    <label class="form-label text-muted mb-2">Reward Points</label>
+                                    <h4 class="mb-0 text-primary">{{ $totalPoints ?? 0 }} pts</h4>
+                                </div>
+                                @if(auth()->user()->membership_number)
+                                    <div class="mb-4">
+                                        <label class="form-label text-muted mb-2">Membership No.</label>
+                                        <p class="mb-0">{{ auth()->user()->membership_number }}</p>
+                                    </div>
+                                @endif
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
                             <div class="mb-4">
@@ -230,6 +238,28 @@
                                     <p class="text-muted mb-0">Nothing about company</p>
                                 @endif
                             </div>
+                            @if(auth()->user()->certificate_document)
+                            <div class="mt-4">
+                                <label class="form-label text-muted mb-2">E-certificate</label>
+                                <div class="e-certificate-section">
+                                    <div class="gradient_rounded radies_20">
+                                        <div class="p-3 py-4 radies_20 text-center h-100 d-flex flex-column justify-content-center align-items-start">
+                                            <a href="{{ Storage::url(auth()->user()->certificate_document) }}" 
+                                               class="e-certificate-btn" 
+                                               target="_blank"
+                                               download>
+                                                <i class="bi bi-download me-2"></i>Download & Preview
+                                            </a>
+                                            @if(auth()->user()->certificate_uploaded_at)
+                                            <small class="text-muted mt-3">
+                                                Last updated: {{ auth()->user()->certificate_uploaded_at->format('M d, Y') }}
+                                            </small>
+                                            @endif
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>

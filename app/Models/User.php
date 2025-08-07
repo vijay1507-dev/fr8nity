@@ -46,12 +46,16 @@ class User extends Authenticatable
         'is_network_member',
         'network_name',
         'membership_tier',
+        'membership_number',
         'membership_start_at',
         'membership_expires_at',
         'status',
         'two_factor_code',
         'two_factor_expires_at',
         'two_factor_enabled',
+        'certificate_document',
+        'certificate_uploaded_at',
+        'is_active',
     ];
 
     const SUPER_ADMIN = 0;
@@ -82,6 +86,8 @@ class User extends Authenticatable
             'membership_start_at' => 'datetime',
             'membership_expires_at' => 'datetime',
             'two_factor_enabled' => 'boolean',
+            'certificate_uploaded_at' => 'datetime',
+            'is_active' => 'boolean',
         ];
     }
 

@@ -3,28 +3,36 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Console\Commands\SeedTrack;
+use Illuminate\Console\Scheduling\Schedule;
+use App\Console\Commands\{SeedTrack,SendMembershipExpiryReminders};
+use App\Http\Middleware\{SetTimezone,AdminAccess,EnsureKycIsComplete};
 
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
-        web: __DIR__.'/../routes/web.php',
-        commands: __DIR__.'/../routes/console.php',
+        web: __DIR__ . '/../routes/web.php',
+        commands: __DIR__ . '/../routes/console.php',
         health: '/up',
     )
     ->withCommands([
-        SeedTrack::class
+        SeedTrack::class,
+        SendMembershipExpiryReminders::class,
     ])
+    ->withSchedule(function (Schedule $schedule) {
+        $schedule->command('membership:send-expiry-reminders')->daily();
+    })
     ->withMiddleware(function (Middleware $middleware) {
         // Register global middleware
         $middleware->web([
-            \App\Http\Middleware\SetTimezone::class,
+            SetTimezone::class,
         ]);
-        // Register middleware aliases
+
+        // Register route middleware aliases
         $middleware->alias([
-            'admin' => \App\Http\Middleware\AdminAccess::class,
-            'kyc.complete' => \App\Http\Middleware\EnsureKycIsComplete::class,
+            'admin' => AdminAccess::class,
+            'kyc.complete' => EnsureKycIsComplete::class,
         ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
-        //
-    })->create();
+    ->withExceptions(function (Exceptions $exceptions) {
+        // You can register custom exception handling here if needed
+    })
+    ->create();

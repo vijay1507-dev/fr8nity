@@ -134,6 +134,24 @@ class AuthController extends Controller
             'status' => 'pending',
         ]);
 
+        $prefix = MembershipTier::MEMBERSHIP_NUMBER_PREFIXES[$user->membershipTier->slug] ?? '';
+
+        $lastNumber = User::where('membership_tier', $user->membership_tier)
+            ->whereNotNull('membership_number')
+            ->orderBy('id', 'desc')
+            ->value('membership_number');
+
+        if ($lastNumber) {
+            $lastSequence = intval(substr($lastNumber, -3));
+            $newSequence = str_pad($lastSequence + 1, 3, '0', STR_PAD_LEFT);
+        } else {
+            $newSequence = '001';
+        }
+
+        $membershipNumber = $prefix . $newSequence;
+
+        //  Update user with membership number
+        $user->update(['membership_number' => $membershipNumber]);
         // Create referral record if there's a referrer
         if ($referrer) {
             Referral::create([
@@ -170,10 +188,14 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
             
-            if ($user->status !== 'approved') {
+            // Check approval and active status
+            if ($user->status !== 'approved' || !$user->is_active) {
                 Auth::logout();
+                $message = ($user->status !== 'approved')
+                    ? 'Your application is pending approval.'
+                    : 'Your account is blocked. Please contact support.';
                 return back()->withErrors([
-                    'email' => 'Your application is pending approval.',
+                    'email' => $message,
                 ]);
             }
 

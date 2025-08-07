@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex">
+    <meta name="robots" content="noindex, nofollow">
     <title>@yield('title', 'Fr8nity')</title>
     <link rel="icon" type="image/x-icon" href="{{ asset('images/fr8nity_fav.png') }}">
     <!-- Bootstrap CSS -->
@@ -21,6 +21,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/17.0.19/js/intlTelInput.min.js"></script>
     <link rel="stylesheet" href="{{asset('css/auth.css?v=' . rand(1, 1000000))}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
+    @stack('styles')
 </head>
 <body>
     @include('website.partials.topbar')
@@ -67,5 +68,6 @@
             @endif
         });
       </script>
+    @stack('scripts')
 </body>
 </html>

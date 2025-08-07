@@ -79,7 +79,7 @@
         </div>
 
         <div class="row mx-auto align-items-stretch">
-              <div class="col-12 col-lg-6 mb-3">
+              <div class="col-12 col-md-6 mb-3">
                 <div class="gradient_rounded radies_20 m-2 h-100">
                     <div class="p-3 h-100 radies_20 blacklight">
                         <img src="{{ asset('images/dawn.webp') }}" alt="Dawn Tan" class="img-fluid mb-3" />
@@ -94,7 +94,7 @@
                 </div>
             </div>
             
-            <div class="col-12 col-lg-6 mb-3">
+            <div class="col-12 col-md-6 mb-3">
                 <div class="gradient_rounded radies_20 m-2 h-100">
                     <div class="p-3 h-100 radies_20 blacklight">
                         <img src="{{ asset('images/creryl.webp') }}" alt="Cheryl Tan" class="img-fluid mb-3" />

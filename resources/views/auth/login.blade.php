@@ -3,7 +3,7 @@
 @section('title', 'Login')
 
 @section('content')
-<body style="overflow: hidden;">
+<body >
   <section class="p-0">
       <div class="w-100 userlogin">
         <div class="row bg-black justify-content-center mx-0">
@@ -11,14 +11,14 @@
             <div class="m-0">
               <div class="row g-0">
                 <div class="col-12 col-md-6 p-0 login_img">
-                  <img class="img-fluid rounded-start w-100 object-fit-cover" loading="lazy"
+                  <img class="img-fluid rounded-start w-100 object-fit-cover imghide" loading="lazy"
                     src="{{asset('images/admin-login.webp')}}" alt="Welcome back!">
                 </div>
                 <div class="col-12 col-md-6 d-flex align-items-center justify-content-center custom-card">
                   <div class="col-12  col-lg-11 col-xl-10">
-                    <div class="card-body p-3 p-md-4 p-xl-5">
+                    <div class="card-body p-3 p-md-4 p-xl-5 ">
                       <div class="row">
-                        <div class="col-12">
+                        <div class="col-12  d-flex align-items-center justify-content-center">
                           <div class="mb-4">
                             <div class="text-center mb-4">
                               <a href="/">
@@ -80,7 +80,6 @@
                             </div>
                           </div>
 
-                         
 
                           {{-- <div class="col-12 mt-3">
                             <div class="d-grid">

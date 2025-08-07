@@ -13,6 +13,7 @@ body {
     opacity: 1;
     overflow-y: scroll;
     margin: 0;
+    background-color: #000000;
 }
 
 a {
@@ -56,7 +57,7 @@ table th, table td { border: 1px solid #e5e5e5; }
 
 /* user-login */
 .userlogin { background: #f1f1f1; }
-.userlogin .custom-card { height: 100vh; overflow-y: scroll; }
+.userlogin .custom-card { height: 100%;  }
 span.rating img { width: 90px !important; margin-inline: 10px; }
 .card img.reviewuser { width: 140px; height: 140px; object-fit: cover; min-width: 140px; }
 .btn-primary { background: linear-gradient(90deg, #b58320 0%, #ffff78 52%, #f3ab0b 100%) !important; border-color: #f3ab0b !important; border-radius: 60px !important; color: #000 !important; }
@@ -86,11 +87,24 @@ span.rating img { width: 90px !important; margin-inline: 10px; }
     color: #000 !important;
     font-weight: 600;
 }
-
+.userlogin .custom-card-register { height: 100vh; overflow-y: scroll; }
 .progress-bar-container {
     padding: 0 170px;
     margin-top: 30px;
     margin-bottom: -20px !important;
+}
+
+@media (max-width: 560px) {
+     .imghide {
+        display: none;
+    }
+}
+
+
+@media only screen and (max-width: 560px) {
+    .progress-bar-container {
+        padding: 0 30px;
+    }
 }
 .progress {
     background-color: #2d2d2d;
