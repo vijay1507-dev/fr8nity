@@ -149,83 +149,106 @@
                 <div class="col-12 col-md-4 member_sidebar">
                     <div class="enquiryform gradient_rounded radies_20">
 
-                        <form class="bg-dark text-white p-md-4 p-3 radies_20">
+                        <form class="bg-dark text-white p-md-4 p-3 radies_20" method="POST" action="{{ route('member.quotations.store') }}" enctype="multipart/form-data">
+                            @csrf
+                            <input type="hidden" name="member_id" value="{{ $member->id }}">
+                            
                             <h4 class="text-center w-100">Obtain quotation from this member</h4>
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Name</label>
-                                <input type="text" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="John Doe">
+                                <label for="name" class="form-label">Name*</label>
+                                <input type="text" class="form-control" id="name" name="name"
+                                    placeholder="Enter your name" value="{{ old('name') }}">
+                                @error('name')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Phone</label>
-                                <input type="tel" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="(123) 456-7890">
+                                <label for="phone" class="form-label">Phone*</label>
+                                <input type="tel" class="form-control" id="phone" name="phone"
+                                    placeholder="Enter your phone number" value="{{ old('phone') }}">
+                                @error('phone')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="name@example.com">
+                                <label for="email" class="form-label">Email*</label>
+                                <input type="email" class="form-control" id="email" name="email"
+                                    placeholder="Enter your email" value="{{ old('email') }}">
+                                @error('email')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Alternate Email</label>
-                                <input type="email" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="name@example.com">
+                                <label for="alternate_email" class="form-label">Alternate Email</label>
+                                <input type="email" class="form-control" id="alternate_email" name="alternate_email"
+                                    placeholder="Enter your alternate email" value="{{ old('alternate_email') }}">
                             </div>
                             <div class="mb-3">
-                                <label for="exampleFormControlInput1" class="form-label">Upload documents</label>
-                                <input type="file" class="form-control" id="exampleFormControlInput1"
-                                    placeholder="Upload documents">
+                                <label for="document" class="form-label">Upload documents</label>
+                                <input type="file" class="form-control" id="document" name="document">
+                                <small class="text-muted">Max file size: 10MB</small>
                             </div>
                             <div class="row">
                                 <div class="mb-3 col-md-6">
-                                    <label for="exampleFormControlInput1" class="form-label">Port of Loading</label>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>Select Loading</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                    <label for="port_of_loading_id" class="form-label">Port of Loading</label>
+                                    <select class="form-select" name="port_of_loading_id" id="port_of_loading_id">
+                                        <option value="">Select Loading Port</option>
+                                        @foreach($ports as $port)
+                                            <option style="font-size: 14px;" value="{{ $port->id }}" {{ old('port_of_loading_id') == $port->id ? 'selected' : '' }}>
+                                                {{ $port->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
+                                
                                 <div class="mb-3 col-md-6">
-                                    <label for="exampleFormControlInput1" class="form-label">Port of Discharge</label>
-                                    <select class="form-select" aria-label="Default select example">
-                                        <option selected>Select Discharge</option>
-                                        <option value="1">One</option>
-                                        <option value="2">Two</option>
-                                        <option value="3">Three</option>
+                                    <label for="port_of_discharge_id" class="form-label">Port of Discharge</label>
+                                    <select class="form-select" name="port_of_discharge_id" id="port_of_discharge_id">
+                                        <option value="">Select Discharge Port</option>
+                                        @foreach($ports as $port)
+                                            <option style="font-size: 14px;" value="{{ $port->id }}" {{ old('port_of_discharge_id') == $port->id ? 'selected' : '' }}>
+                                                {{ $port->name }}
+                                            </option>
+                                        @endforeach
                                     </select>
                                 </div>
                             </div>
                             <div
                                 class="checkbox-group d-flex gap-3 bg-black p-2 rounded align-items-center px-3 flex-wrap row-gap-1">
                                 <div class="form-check">
-                                    <input class="form-check-input checkboxpadding" type="checkbox" id="Air">
+                                    <input class="form-check-input checkboxpadding" type="checkbox" name="specifications[]" value="Air" id="Air" {{ in_array('Air', old('specifications', [])) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="Air">Air</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input checkboxpadding" type="checkbox" id="FCL">
-                                    <label class="form-check-label " for="FCL">FCL</label>
+                                    <input class="form-check-input checkboxpadding" type="checkbox" name="specifications[]" value="FCL" id="FCL" {{ in_array('FCL', old('specifications', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="FCL">FCL</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input checkboxpadding" type="checkbox" id="LCL">
-                                    <label class="form-check-label " for="LCL">LCL</label>
+                                    <input class="form-check-input checkboxpadding" type="checkbox" name="specifications[]" value="LCL" id="LCL" {{ in_array('LCL', old('specifications', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="LCL">LCL</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input checkboxpadding" type="checkbox" id="Land">
+                                    <input class="form-check-input checkboxpadding" type="checkbox" name="specifications[]" value="Land" id="Land" {{ in_array('Land', old('specifications', [])) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="Land">Land</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input checkboxpadding" type="checkbox" id="Multimodal">
+                                    <input class="form-check-input checkboxpadding" type="checkbox" name="specifications[]" value="Multimodal" id="Multimodal" {{ in_array('Multimodal', old('specifications', [])) ? 'checked' : '' }}>
                                     <label class="form-check-label" for="Multimodal">Multimodal</label>
                                 </div>
                                 <div class="form-check">
-                                    <input class="form-check-input checkboxpadding" type="checkbox" id="Cango">
-                                    <label class="form-check-label" for="Cango">Project Cango</label>
+                                    <input class="form-check-input checkboxpadding" type="checkbox" name="specifications[]" value="Project Cargo" id="ProjectCargo" {{ in_array('Project Cargo', old('specifications', [])) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="ProjectCargo">Project Cargo</label>
                                 </div>
+                                @error('specifications')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
-                            <div class="mb-3">
-                                <label for="exampleFormControlTextarea1" class="form-label">Message</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                            <div class="mb-3 mt-3">
+                                <label for="message" class="form-label">Message*</label>
+                                <textarea class="form-control" id="message" name="message" rows="3">{{ old('message') }}</textarea>
+                                @error('message')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
                             </div>
                             <div class="text-center mt-3">
                                 <button type="submit" class="btn ms-auto btn btnbg fe-semibold">Submit</button>

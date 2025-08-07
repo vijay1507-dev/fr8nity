@@ -7,6 +7,7 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MemberQuotationController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\TradeMemberController;
 use App\Http\Controllers\ShipmentController;
@@ -113,6 +114,13 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::delete('/two-factor/disable', [AuthController::class, 'disableTwoFactor'])->name('two-factor.disable');
     Route::get('/members-directory', [MemberController::class, 'directory'])->name('members.directory');
     Route::get('/members-directory/{company_name}/{encrypted_id}', [MemberController::class, 'viewProfile'])->name('members.directory-view-profile');
+    Route::post('/member-quotations', [MemberQuotationController::class, 'store'])->name('member.quotations.store');
+    
+    // Member Quotation routes
+    Route::prefix('quotations')->group(function () {
+        Route::get('/', [MemberQuotationController::class, 'index'])->name('member.quotations.index');
+        Route::get('/{quotation}', [MemberQuotationController::class, 'show'])->name('member.quotations.show');
+    });
     // Member management routes - requires admin access
     Route::middleware('admin')->prefix('members')->group(function () {
         Route::get('/', [MemberController::class, 'index'])->name('members.index');

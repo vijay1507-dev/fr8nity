@@ -4,8 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\MembershipTier;
-use App\Models\TradeMember;
-use App\Models\Shipment;
+use App\Models\Port;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
@@ -432,8 +431,8 @@ class MemberController extends Controller
                 ->where('id', $id)
                 ->with(['membershipTier', 'region', 'country', 'city'])
                 ->firstOrFail();
-
-            return view('website.member-directory-view-profile', compact('member'));
+            $ports = Port::all();
+            return view('website.member-directory-view-profile', compact('member', 'ports'));
         } catch (\Exception $e) {
             abort(404, 'Member not found');
         }
