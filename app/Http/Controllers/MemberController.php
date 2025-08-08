@@ -245,7 +245,7 @@ class MemberController extends Controller
                 'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
                 'membership_tier' => ['required'],
                 'profile_photo' => ['nullable', 'image', 'max:2048'],
-                'certificate_document' => ['nullable', 'file', 'mimes:pdf,doc,docx', 'max:5120'],
+                'certificate_document' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             ];
 
             if ($request->filled('password')) {
