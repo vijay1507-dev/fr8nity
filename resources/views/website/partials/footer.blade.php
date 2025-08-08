@@ -8,14 +8,22 @@
                         Lorem Ipsum is simply dummy text of the printing and typesetting.
                     </p>
                     <div class="d-flex gap-2  justify-content-start ">
-                        <a href="#" class="footericon"><img src="{{asset('images/twitter (1) 1.svg')}}" alt="Twitter"
-                                class="img-fluid" /></a>
-                        <a href="#" class="footericon"><img src="{{asset('images/footerfacebook.svg')}}" alt="Facebook"
-                                class="img-fluid" /></a>
-                        <a href="#" class="footericon"><img src="{{asset('images/linkedin (1) 1.svg')}}" alt="LinkedIn"
-                                class="img-fluid" /></a>
-                        <a href="#" class="footericon"><img src="{{asset('images/instagram.svg')}}" alt="Instagram"
-                                class="img-fluid" /></a>
+                        @if(!empty($siteSettings['social_twitter']))
+                            <a href="{{ $siteSettings['social_twitter'] }}" target="_blank" rel="noopener" class="footericon"><img src="{{asset('images/twitter (1) 1.svg')}}" alt="Twitter"
+                                    class="img-fluid" /></a>
+                        @endif
+                        @if(!empty($siteSettings['social_facebook']))
+                            <a href="{{ $siteSettings['social_facebook'] }}" target="_blank" rel="noopener" class="footericon"><img src="{{asset('images/footerfacebook.svg')}}" alt="Facebook"
+                                    class="img-fluid" /></a>
+                        @endif
+                        @if(!empty($siteSettings['social_instagram']))
+                            <a href="{{ $siteSettings['social_instagram'] }}" target="_blank" rel="noopener" class="footericon"><img src="{{asset('images/instagram.svg')}}" alt="Instagram"
+                                    class="img-fluid" /></a>
+                        @endif
+                        @if(!empty($siteSettings['social_linkedin']))
+                            <a href="{{ $siteSettings['social_linkedin'] }}" target="_blank" rel="noopener" class="footericon"><img src="{{asset('images/linkedin (1) 1.svg')}}" alt="LinkedIn"
+                                    class="img-fluid" /></a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -104,14 +112,18 @@
                     <div class="col-12 col-sm-6 col-md-3">
                         <h5 class="fw-semibold fs-5">Contact Us</h5>
                         <ul class="list-unstyled mt-3">
+                            @if(!empty($siteSettings['site_phone']))
                             <li class="d-flex align-items-center mb-2">
                                 <img src="{{asset('images/footerphn.svg')}}" alt="Phone" class="me-2" />
-                                <span>+65 8088 9324</span>
+                                <a href="tel:{{ $siteSettings['site_phone'] }}" class="text-decoration-none text-white">{{ $siteSettings['site_phone'] }}</a>
                             </li>
+                            @endif
+                            @if(!empty($siteSettings['site_email']))
                             <li class="d-flex align-items-center pt-3 mb-2">
                                 <img src="{{asset('images/footermessage.svg')}}" alt="Email" class="me-2" />
-                                <span>hello@fr8nity.com</span>
+                                <a href="mailto:{{ $siteSettings['site_email'] }}" class="text-decoration-none text-white">{{ $siteSettings['site_email'] }}</a>
                             </li>
+                            @endif
                             <li class="d-flex align-items-start pt-3 mb-2">
                                 <img src="{{asset('images/footerlocation.svg')}}" alt="Location" class="me-2" />
                                 <span>Dummy Address</span>

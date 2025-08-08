@@ -77,7 +77,7 @@
                      Settings
                  </a>
                  <ul id="settings" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                                         <li class="sidebar-item">
+                    <li class="sidebar-item">
                         <a href="{{ route('security.settings') }}" class="sidebar-link">
                             <i class="nav-icon fas fa-shield-alt"></i>
                             <p class="mb-0 submenufont">2FA Settings</p>
@@ -87,6 +87,12 @@
                         <a href="{{ route('settings.index') }}" class="sidebar-link">
                             <i class="nav-icon fas fa-clock"></i>
                             <p class="mb-0 submenufont">Membership Reminders</p>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('settings.site.index') }}" class="sidebar-link">
+                            <i class="nav-icon fas fa-globe"></i>
+                            <p class="mb-0 submenufont">Site Settings</p>
                         </a>
                     </li>
                 </ul>

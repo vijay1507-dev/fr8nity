@@ -137,6 +137,10 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::middleware('admin')->group(function () {
         Route::get('/settings/membership-reminders', [SettingsController::class, 'index'])->name('settings.index');
         Route::put('/settings/membership-reminders', [SettingsController::class, 'update'])->name('settings.update');
+
+        // Site settings
+        Route::get('/settings/site', [SettingsController::class, 'siteIndex'])->name('settings.site.index');
+        Route::put('/settings/site', [SettingsController::class, 'siteUpdate'])->name('settings.site.update');
     });
     // Admin Quotations routes
     Route::middleware('admin')->prefix('admin')->group(function () {
