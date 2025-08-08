@@ -10,16 +10,16 @@ use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
-use App\Services\RewardPointService;
-use App\Models\Referral;
+use App\Services\MemberApprovalService;
+use App\Services\MembershipNumberService;
+use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
 {
-    protected $rewardPointService;
-
-    public function __construct(RewardPointService $rewardPointService)
-    {
-        $this->rewardPointService = $rewardPointService;
+    public function __construct(
+        private readonly MemberApprovalService $memberApprovalService,
+        private readonly MembershipNumberService $membershipNumberService,
+    ) {
     }
     /**
      * Display a listing of the members.
@@ -155,40 +155,7 @@ class MemberController extends Controller
             'status' => ['required', 'in:pending,approved'],
         ]);
 
-        // If status is being changed to approved
-        if ($request->status === 'approved' && $member->status !== 'approved') {
-            // Create and send notification
-            $notification = new \App\Notifications\ProfileApprovalNotification();
-            
-            // Update member with generated password and set membership expiration
-            $member->update([
-                'status' => $request->status,
-                'password' => Hash::make($notification->getPassword()),
-                'membership_start_at' => now(),
-                'membership_expires_at' => now()->addYear()
-            ]);
-
-            // Check if member was referred and award points to referrer
-            $referral = Referral::where('referred_id', $member->id)->first();
-            if ($referral) {
-                $referrer = User::find($referral->referrer_id);
-                if ($referrer) {
-                    $this->rewardPointService->awardPoints(
-                        $member,
-                        $referrer,
-                        'referral_join',
-                        'Referred new member: ' . $member->name
-                    );
-                }
-            }
-
-            // Send notification with login credentials
-            $member->notify($notification);
-        } else {
-            $member->update([
-                'status' => $request->status,
-            ]);
-        }
+        $this->memberApprovalService->updateStatus($member, $request->status);
 
         return back()->with('success', 'Member status updated successfully.');
     }
@@ -299,19 +266,7 @@ class MemberController extends Controller
                 $updateData['certificate_document'] = $certificatePath;
                 $updateData['certificate_uploaded_at'] = now();
             }
-            $membershipTier = MembershipTier::find($request->membership_tier);
-            $prefix = MembershipTier::MEMBERSHIP_NUMBER_PREFIXES[$membershipTier->slug] ?? '';
-            $lastNumber = User::where('membership_tier', $request->membership_tier)
-                ->whereNotNull('membership_number')
-                ->orderBy('id', 'desc')
-                ->value('membership_number');
-            if ($lastNumber) {
-                $lastSequence = intval(substr($lastNumber, -3));
-                $newSequence = str_pad($lastSequence + 1, 3, '0', STR_PAD_LEFT);
-            } else {
-                $newSequence = '001';
-            }
-            $membershipNumber = $prefix . $newSequence;
+            $membershipNumber = $this->membershipNumberService->generateForTierId((int) $request->membership_tier);
             $updateData = [
                 'name' => $request->name,
                 'email' => $request->email,

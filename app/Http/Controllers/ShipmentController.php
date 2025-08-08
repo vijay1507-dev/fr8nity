@@ -8,11 +8,13 @@ use App\Models\City;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Yajra\DataTables\Facades\DataTables;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\ShipmentEnquiryNotification;
+use App\Services\ShipmentService;
 
 class ShipmentController extends Controller
 {
+    public function __construct(private readonly ShipmentService $shipmentService)
+    {
+    }
     /**
      * Display a listing of the shipments.
      */
@@ -104,22 +106,7 @@ class ShipmentController extends Controller
             'consent' => 'required|accepted'
         ]);
 
-        // Handle file upload if present
-        if ($request->hasFile('documents')) {
-            $path = $request->file('documents')->store('shipment-documents', 'public');
-            $validated['documents'] = $path;
-        }
-
-        // Create shipment
-        $shipment = Shipment::create($validated);
-
-        // Send notification to the enquirer
-        Notification::route('mail', $shipment->email)
-            ->notify(new ShipmentEnquiryNotification($shipment));
-
-        // Send notification to all admins
-        $admins = User::where('role',User::SUPER_ADMIN)->get();
-        Notification::send($admins, new ShipmentEnquiryNotification($shipment, true));
+        $shipment = $this->shipmentService->createShipment($validated, $request->file('documents'));
 
         return redirect()->route('thank-you')->with('message', 'Your shipment enquiry has been submitted successfully. Our team will review your request and provide quotations shortly.');
     }
@@ -157,13 +144,7 @@ class ShipmentController extends Controller
             'special_notes' => 'nullable|string',
             'delivery_remark' => 'nullable|string',
         ]);
-        // Handle file upload if present
-        if ($request->hasFile('documents')) {
-            $path = $request->file('documents')->store('shipment-documents', 'public');
-            $validated['documents'] = $path;
-        }
-
-        $shipment->update($validated);
+        $this->shipmentService->updateShipment($shipment, $validated, $request->file('documents'));
 
         return redirect()->route('shipments.show', $shipment)
             ->with('success', 'Shipment enquiry updated successfully!');

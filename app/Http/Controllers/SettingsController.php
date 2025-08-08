@@ -2,14 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Setting;
+use App\Services\SettingsService;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
 {
+    public function __construct(private readonly SettingsService $settingsService)
+    {
+    }
+
     public function index()
     {
-        $reminderDays = Setting::get('membership_reminder_days', 15);
+        $reminderDays = $this->settingsService->getMembershipReminderDays();
         return view('dashboard.settings.index', compact('reminderDays'));
     }
 
@@ -19,7 +23,7 @@ class SettingsController extends Controller
             'membership_reminder_days' => 'required|integer|min:1|max:90'
         ]);
 
-        Setting::set('membership_reminder_days', $request->membership_reminder_days);
+        $this->settingsService->setMembershipReminderDays((int) $request->membership_reminder_days);
 
         return redirect()->route('settings.index')
             ->with('success', 'Settings updated successfully');

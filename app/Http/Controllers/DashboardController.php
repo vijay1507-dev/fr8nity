@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Password;
+use App\Services\UserProfileService;
 
 class DashboardController extends Controller
 {
+    public function __construct(private readonly UserProfileService $userProfileService)
+    {
+    }
     public function index()
     {
         return view('dashboard.dashboard');
@@ -18,7 +20,9 @@ class DashboardController extends Controller
 
     public function profile()
     {
-        $totalPoints = auth()->user()->rewardPoints()->sum('points');
+        $user = \Illuminate\Support\Facades\Auth::user();
+        /** @var User $user */
+        $totalPoints = $user->rewardPoints()->sum('points');
 
         return view('dashboard.profile', compact('totalPoints'));
     }
@@ -57,29 +61,12 @@ class DashboardController extends Controller
 
         $request->validate($rules);
 
-        $updateData = [
-            'name' => $request->name,
-            'email' => $request->email,
-        ];
-
-        // Handle profile photo upload
-        if ($request->hasFile('profile_photo')) {
-            // Delete old photo if exists
-            if ($user->profile_photo) {
-                Storage::disk('public')->delete($user->profile_photo);
-            }
-            
-            // Store new photo
-            $path = $request->file('profile_photo')->store('profile-photos', 'public');
-            $updateData['profile_photo'] = $path;
-        }
-
-        // Only update password if provided and current password is correct
-        if ($request->filled('new_password')) {
-            $updateData['password'] = Hash::make($request->new_password);
-        }
-
-        $user->update($updateData);
+        $this->userProfileService->updateSuperAdminProfile(
+            $user,
+            $request->only(['name', 'email']),
+            $request->file('profile_photo'),
+            $request->filled('new_password') ? $request->new_password : null,
+        );
 
         return redirect()->route('profile')->with('success', 'Profile updated successfully');
     }

@@ -342,13 +342,6 @@
                                                 <a href="{{ Storage::url($member->certificate_document) }}" class="btn btn-primary btn-sm" target="_blank">
                                                     <i class="bi bi-file-earmark-text me-2"></i>View
                                                 </a>
-                                                <form action="{{ route('members.delete-certificate', $member) }}" method="POST" class="d-inline">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this certificate?')">
-                                                        <i class="bi bi-trash me-2"></i>Delete
-                                                    </button>
-                                                </form>
                                             </div>
                                         </div>
                                     </div>

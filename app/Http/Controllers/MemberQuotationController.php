@@ -4,16 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\MemberQuotation;
 use App\Notifications\QuotationNotification;
+use App\Services\MemberQuotationService;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
+use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class MemberQuotationController extends Controller
 {
+    public function __construct(private readonly MemberQuotationService $memberQuotationService)
+    {
+    }
     public function index(Request $request)
     {
         $quotations = MemberQuotation::with(['portOfLoading', 'portOfDischarge'])
-        ->where('member_id', auth()->id());
+        ->where('member_id', Auth::id());
         if ($request->ajax()) {
           
             return DataTables::of($quotations)
@@ -25,7 +29,7 @@ class MemberQuotationController extends Controller
                     return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
                 })
                 ->addColumn('action', function ($row) {
-                    $url = route('member.quotations.show', $row->id);
+                    $url = route('member.quotations.show', $row);
                     return '<a href="'.$url.'" class="btn btn-sm btn-info">View</a>';
                 })
                 ->make(true);
@@ -37,7 +41,7 @@ class MemberQuotationController extends Controller
     public function show(MemberQuotation $quotation)
     {
         // Check if the quotation belongs to the current user
-        if ($quotation->member_id !== auth()->id()) {
+        if ($quotation->member_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -66,25 +70,8 @@ class MemberQuotationController extends Controller
             'message.required' => 'Message is required.',
         ]);
 
-        if ($request->hasFile('document')) {
-            $path = $request->file('document')->store('quotation-documents', 'public');
-            $validated['uploaded_document'] = $path;
-        }
+        $quotation = $this->memberQuotationService->createAndNotify($validated, $request->file('document'));
 
-        $quotation = MemberQuotation::create($validated);
-        
-        // Send notifications
-        // Send to super admin
-        Notification::route('mail', config('mail.super_admin_email'))
-            ->notify(new QuotationNotification($quotation, true));
-
-        // Send to receiver (member)
-        $quotation->member->notify(new QuotationNotification($quotation));
-
-        // Send to sender
-        Notification::route('mail', $quotation->email)
-            ->notify(new QuotationNotification($quotation, false, true));
-        
         return redirect()->back()->with('success', 'Quotation request submitted successfully');
     }
 }
