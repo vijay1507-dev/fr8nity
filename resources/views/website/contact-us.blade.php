@@ -63,8 +63,8 @@
                 <!-- Right Panel (Form) -->
                 <div class="col-12 col-lg-8 d-flex">
 
-                    <div class="gradient_rounded radies_20">
-                        <div class="w-100 blacklight p-4 radies_20 d-flex flex-column">
+                    <div class="radies_20">
+                        <div class="w-100 blacklight p-4 radies_20 d-flex flex-column" style="border: 1px solid #b58320;">
                             <h2 class="mb-4">How we can help you?</h2>
                             <form class="flex-grow-1 d-flex flex-column justify-content-between">
                                 <div class="row">
