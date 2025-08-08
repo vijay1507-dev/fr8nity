@@ -48,6 +48,9 @@ class AuthController extends Controller
 
     public function showRegistrationForm(Request $request)
     {
+        if (Auth::check() && Auth::user()->role == User::MEMBER) {
+            return redirect()->route('dashboard');
+        }
         $membershipTiers = MembershipTier::with('benefits')
             ->where('is_active', true)
             ->where('is_visible', true)
