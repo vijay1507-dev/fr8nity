@@ -93,14 +93,8 @@
                                         <textarea class="form-control mb-3 rounded-30" id="message" name="message"
                                             rows="4" placeholder="Message*" required></textarea>
                                     </div>
-                                    <div class="col-12">
-                                        <p>
-                                            We are committed to protecting your privacy. We will never collect
-                                            information about you without your explicit consent.
-                                        </p>
-                                    </div>
-                                    <div class="col-12 d-flex justify-content-end">
-                                        <button type="submit" class="btn btnbg">Submit</button>
+                                    <div class="col-12 d-flex justify-content-center">
+                                        <button type="submit" class="btn btnbg">Send</button>
                                     </div>
                                 </div>
                             </form>
