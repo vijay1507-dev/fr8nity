@@ -36,13 +36,13 @@
                  </a>
                  <ul id="auth" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                      <li class="sidebar-item">
-                         <a href="{{ route('members.index') }}" class="sidebar-link">FRT Members</a>
+                         <a href="{{ route('members.index') }}" class="sidebar-link submenufont">FRT Members</a>
                      </li>
-                     <li class="sidebar-item">
-                        <a href="{{ route('trade-members.index') }}" class="sidebar-link">Trade Members</a>
+                     <li class="sidebar-item ">
+                        <a href="{{ route('trade-members.index') }}" class="sidebar-link submenufont ">Trade Members</a>
                     </li>
                     <li class="sidebar-item">
-                        <a href="{{ route('admin.referrals.index') }}" class="sidebar-link">
+                        <a href="{{ route('admin.referrals.index') }}" class="sidebar-link submenufont">
                             Referrals
                         </a>
                     </li>
@@ -58,7 +58,7 @@
                  </a>
                  <ul id="shipments" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                                          <li class="sidebar-item">
-                        <a href="{{ route('shipments.index') }}" class="sidebar-link">All Enquiries</a>
+                        <a href="{{ route('shipments.index') }}" class="sidebar-link submenufont">All Enquiries</a>
                     </li>
                 </ul>
             </li>            
@@ -75,13 +75,13 @@
                                          <li class="sidebar-item">
                         <a href="{{ route('security.settings') }}" class="sidebar-link">
                             <i class="nav-icon fas fa-shield-alt"></i>
-                            <p class="mb-0">2FA Settings</p>
+                            <p class="mb-0 submenufont">2FA Settings</p>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a href="{{ route('settings.index') }}" class="sidebar-link">
                             <i class="nav-icon fas fa-clock"></i>
-                            <p class="mb-0">Membership Reminders</p>
+                            <p class="mb-0 submenufont">Membership Reminders</p>
                         </a>
                     </li>
                 </ul>

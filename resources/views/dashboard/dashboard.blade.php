@@ -126,9 +126,9 @@
       $startAt = Auth::user()->membership_start_at;
       $expiresAt = Auth::user()->membership_expires_at;
     @endphp
-<div class="d-flex membership align-items-center justify-content-center px-3 ">
+<div class="d-flex membership align-items-center justify-content-center bg-white px-3 ">
   @if($startAt && $expiresAt)
-  <h6 class="fw-semibold mb-0">Membership Period : </h6><span class="fs-6 mb-1"> {{ optional($startAt)->format('j/n/Y') ?? 'N/A' }}
+  <h6 class="fw-semibold mb-0">Membership Period : </h6><span class="fs-6 "> {{ optional($startAt)->format('j/n/Y') ?? 'N/A' }}
       TO
       {{ optional($expiresAt)->format('j/n/Y') ?? 'N/A' }}</span></div>
        @else
@@ -136,81 +136,9 @@
     @endif
     </div>
 
-    <!-- <div class="d-flex justify-content-between flex-column flex-md-row">
-    <div>
-      <p class="mb-0">ACCUMULATED POINTS TO DATE: 1234567890</p>
-      <p class="mb-0">REDEEMPED POINTS: 1234567890</p>
-    </div>
-    <div>
-      
-      <div class=" d-flex justify-content-between align-items-center">
-      <button type="button" class="monthbtn p-1 px-2 ms-2">Last 6 months</button>
-      <button type="button" class="monthbtn p-1 px-2 ms-2 active">Last 1 year</button>
-      <button type="button" class="monthbtn p-1 px-2 ms-2">Lifetime</button>
-      <button type="button" class="tooltip-btn p-1 px-3 ms-2 " data-bs-toggle="tooltip" data-bs-placement="top"
-      data-bs-title="Tooltip on top">
-      !
-      </button>
-      </div>
-    </div>
-    </div> -->
-
-
+ 
     <div class="container rounded  bg-white ">
     <div class="row mt-3 pt-4 pb-2">
-      <!-- <div class="col-12 col-md-6 col-lg-4 mb-3 ">
-      <div class="row h-100 border rounded_10 mx-0">
-      <div class="col-6 bg-white  py-4 px-3  border-radius-left ">
-      <h6 class="text-center">Transaction Value Give</h6>
-      <h3 class="mb-0 text-center">$11,233</h3>
-      </div>
-      <div class="col-6  bg-white py-4 px-2 card-border  border-radius-right ">
-      <h6 class="text-center">Enquiries Given (Freight Member)</h6>
-      <h3 class="mb-0 text-center">11</h3>
-      </div>
-      <button class="w-100 cardbtn fw-semibold">View</button>
-      </div>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-3">
-      <div class="row h-100 border rounded_10 mx-0">
-      <div class="col-6 bg-white border-radius-left py-4 px-3  ">
-
-      <h6 class="text-center">Transaction Value Received</h6>
-      <h3 class="mb-0 text-center">$11,233</h3>
-      </div>
-      <div class="col-6  bg-white py-4 px-2 border-radius-right   card-border">
-      <h6 class="text-center">Enquiries Receive (Freight Member)</h6>
-      <h3 class="mb-0 text-center">11</h3>
-      </div>
-      <button class="w-100 cardbtn fw-semibold">View</button>
-      </div>
-      </div>
-
-      <div class="col-12 col-md-6 col-lg-4 mb-3 px-0">
-      <div class="row h-100 mx-0">
-      <div class="col-6">
-      <div class="h-100 border rounded_10">
-        <div class="bg-white py-4 px-2 border-radius-right border-radius-left ">
-        <h6 class="text-center">Members referred to </h6>
-        <h3 class="mb-0 text-center">11</h3>
-        </div>
-        <button class="w-100 cardbtn fw-semibold">View</button>
-      </div>
-      </div>
-      <div class="col-6 ">
-      <div class="h-100 border rounded_10">
-        <div class="bg-white py-4 px-2 border-radius-right border-radius-left">
-        <h6 class="text-center">Events attended till date</h6>
-        <h3 class="mb-0 text-center">11</h3>
-        </div>
-        <button class="w-100 cardbtn fw-semibold">View</button>
-      </div>
-      </div>
-      </div>
-      </div> -->
- 
- 
       <div class="d-flex justify-content-between">
     <div class="d-flex gap-2">
 <div class="d-flex membership align-items-center justify-content-center px-3 py-1 ">
@@ -221,93 +149,128 @@
 </div>
     </div>
     <div>    
-      <button type="button" class="monthbtn  p-2  ms-2">Last 6 months</button>
-   <button type="button" class="monthbtn p-2  ms-2 active"> Last 1 year</button>
-    <button type="button" class="monthbtn p-2 ms-2 ">Lifetime</button>
-      <button type="button" class="tooltip-btn p-2 px-4 ms-2 " data-bs-toggle="tooltip" data-bs-placement="top"
+      <button type="button" class="monthbtn  p-2 px-3 ms-2">Last 6 months</button>
+   <button type="button" class="monthbtn p-2  ms-2 px-3 active"> Last 1 year</button>
+    <button type="button" class="monthbtn p-2 ms-2 px-3 ">Lifetime</button>
+      <button type="button" class="tooltip-btn p-1 ms-2 " data-bs-toggle="tooltip" data-bs-placement="top"
       data-bs-title="Tooltip on top">!</button>
   </div>
-
-
-
-  </div>
-   
-
-   
+  </div>   
     </div>
 
-    <div class="row g-4 pt-3">
+    <div class="row g-3 pt-3">
       <!-- Card 1 -->
       <div class="col-12 col-lg-4">
-        <div class="dashboard-card rounded p-0 h-100 d-flex flex-column">
+        <div class="dashboard-card  p-0 h-100 d-flex flex-column">
           <div class="row flex-grow-1">
             <div class="col-6 p-4">
               <img src="{{asset('images/dashboardIcon1.svg')}}" alt="ransaction Value Give">
-              <h2 class="mb-0 mt-2">$11,123</h2>
-              <p>Transaction Value Give</p>
+              <h2 class="mb-0 mt-3">$11,123</h2>
+              <p class="pt-2">Transaction Value Give</p>
             </div>
             <div class="col-6 p-3 py-4  border-l">
             <img src="{{asset('images/dashboardIcon2.svg')}}" alt="Enquiries Given (Freight Member)">
-              <h2 class="mb-0 mt-2">$11,123</h2>
-              <p>Enquiries Given (Freight Member)</p>
+              <h2 class="mb-0 mt-3">$11,123</h2>
+              <p class="pt-2">Enquiries Given (Freight Member)</p>
             </div>
           </div>
           <div class="text-center pb-3">
-            <button class="view-btn px-4">View</button>
+            <button class="view-btn   ">View</button>
           </div>
         </div>
       </div>
 
       <!-- Card 2 -->
       <div class="col-12 col-lg-4">
-        <div class="dashboard-card rounded p-0 h-100 d-flex flex-column">
+        <div class="dashboard-card  p-0 h-100 d-flex flex-column">
           <div class="row flex-grow-1">
             <div class="col-6 p-4">
            <img src="{{asset('images/dashboardIcon3.svg')}}" alt="Transaction Value Received">
-              <h2 class="mb-0 mt-2">$11,123</h2>
-              <p>Transaction Value Received</p>
+              <h2 class="mb-0 mt-3">$11,123</h2>
+              <p class="pt-2">Transaction Value Received</p>
             </div>
             <div class="col-6 p-3 py-4 border-l">
             <img src="{{asset('images/dashboardIcon4.svg')}}" alt="Enquiries Given (Freight Member)">
-              <h2 class="mb-0 mt-2">11</h2>
-              <p>Enquiries Given (Freight Member)</p>
+              <h2 class="mb-0 mt-3">11</h2>
+              <p class="pt-2">Enquiries Given (Freight Member)</p>
             </div>
           </div>
           <div class="text-center pb-3">
-            <button class="view-btn px-4">View</button>
+            <button class="view-btn ">View</button>
+          </div>
+        </div>
+      </div>
+<div class="col-12 col-lg-2 ">
+     <div class="dashboard-card  p-0 h-100 d-flex flex-column">
+          <div class="row flex-grow-1">
+            <div class="col-12 p-4">
+         <img src="{{asset('images/dashboardIcon5.svg')}}" alt="Members referred to">
+              <h2 class="mb-0 mt-3">11</h2>
+              <p class="pt-2">Members referred to</p>
+            </div>
+       
+          </div>
+          <div class="text-center pb-3">
+            <button class="view-btn ">View</button>
+          </div>
+        </div>
+</div>
+
+<div class="col-12 col-lg-2 ">
+     <div class="dashboard-card  p-0 h-100 d-flex flex-column">
+          <div class="row flex-grow-1">
+            <div class="col-12 p-4">
+              <img src="{{asset('images/dashboardIcon6.svg')}}" alt="Events attended till date">
+              <h2 class="mb-0 mt-3">11</h2>
+              <p class="pt-2">Events attended till date</p>
+            </div>
+       
+          </div>
+          <div class="text-center pb-3">
+            <button class="view-btn  ">View</button>
+          </div>
+        </div>
+</div>
+
+
+
+
+      </div>
+
+    <div class="row g-3 pt-3 align-items-stretch">
+      <!-- Membership Chart -->
+      <div class="col-lg-7 d-flex">
+        <div class="chart-card w-100">
+          <div class="d-flex justify-content-between align-items-center">
+          <h1 class="chart-title">Membership Leadership Board</h1>
+          <div> <img src="{{asset('images/graphicondashboard.svg')}}" alt="Membership Leadership Board"></div>
+             
+        </div>
+          <div class="chart-wrapper">
+            <canvas id="membershipChart"></canvas>
           </div>
         </div>
       </div>
 
-      <!-- Card 3 (Restructured for consistency) -->
-<div class="col-12 col-lg-4">
-  <div class="row">
-  <div class="col-6 ">
-    <div class="dashboard-card rounded  p-3 py-4">
-     <img src="{{asset('images/dashboardIcon5.svg')}}" alt="Members referred to">
-      <h2 class="mb-0 mt-2">11</h2>
-      <p class="pt-2">Members referred to</p>
-      <div class="text-center pb-3">
-        <button class="view-btn px-4">View</button>
-      </div>
-    </div>
-  </div>
-  <div class="col-6 ">
-    <div class="dashboard-card rounded  p-3 py-4">
-  <img src="{{asset('images/dashboardIcon6.svg')}}" alt="Events attended till date">
-      <h2 class="mb-0 mt-2 ">11</h2>
-      <p class="pt-2">Events attended till date</p>
-      <div class="text-center pb-3">
-        <button class="view-btn px-4 ">View</button>
-      </div>
-    </div>
-  </div>
-  </div>
-</div>
-
+      <!-- Trade Surplus/Deficit Chart -->
+      <div class="col-lg-5 d-flex">
+        <div class="chart-card w-100">
+               <div class="d-flex justify-content-between align-items-center">
+          <h1 class="chart-title">Trade Surplus/Deficit </h1>
+        <div> <img src="{{asset('images/graphicondashboard.svg')}}" alt="Membership Leadership Board"></div>   
+        </div>
+          <div class="chart-wrapper">
+            <canvas id="tradeChart"></canvas>
+          </div>
+        </div>
       </div>
     </div>
 
+
+
+    </div>
+
+    
 
     
 </div>
@@ -450,5 +413,116 @@
 
     new Chart(ctx, config);
     });
+</script>
+
+<!-- new -->
+   <script>
+    // Membership Chart
+    const ctx = document.getElementById('membershipChart').getContext('2d');
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(181, 131, 32, 0.15)');
+    gradient.addColorStop(1, 'rgba(181, 131, 32, 0)');
+
+    new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
+        datasets: [{
+          data: [8, 12, 9, 11, 18, 9, 11, 6],
+          backgroundColor: gradient,
+          borderColor: 'rgba(181, 131, 32, 1)',
+          borderWidth: 2,
+          pointBackgroundColor: 'rgba(181, 131, 32, 1)',
+          pointRadius: 5,
+          pointHoverRadius: 6,
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: '#222',
+            titleColor: '#fff',
+            bodyColor: '#fff'
+          }
+        },
+        scales: {
+          x: {
+            grid: {
+              display: false,
+              drawTicks: false,
+              drawBorder: false
+            },
+            ticks: {
+              color: (context) => context.tick.label === 'May' ? 'rgba(181, 131, 32, 1)' : '#555',
+              font: context => {
+                const label = context.tick.label;
+                return {
+                  weight: label === 'May' ? '600' : '400'
+                };
+              }
+            }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: {
+              color: '#888',
+              stepSize: 5
+            },
+            grid: {
+              color: 'rgba(0,0,0,0.05)',
+              drawBorder: false
+            }
+          }
+        }
+      }
+    });
+
+    // Trade Surplus/Deficit Chart
+    new Chart(document.getElementById('tradeChart').getContext('2d'), {
+      type: 'line',
+      data: {
+        labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun'],
+        datasets: [
+          {
+            data: [5, 30, 25, 28, 40],
+            borderColor: 'rgba(181, 131, 32, 1)',
+            backgroundColor: 'rgba(181, 131, 32, 0.1)',
+            borderWidth: 2,
+            fill: false,
+            tension: 0.5
+          },
+          {
+            data: [3, 25, 20, 22, 35],
+            borderColor: '#000',
+            borderDash: [5, 5],
+            borderWidth: 2,
+            fill: false,
+            tension: 0.5
+          }
+        ]
+      },
+      options: {
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { display: false }
+        },
+        scales: {
+          x: {
+            grid: { display: false },
+            ticks: { color: '#000' }
+          },
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 10, color: '#000' },
+            grid: { color: '#eee' }
+          }
+        }
+      }
+    });
   </script>
+
 @endsection

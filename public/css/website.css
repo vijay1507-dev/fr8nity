@@ -106,6 +106,7 @@
 }
 body {
   background-color: #000000;
+  overflow-x: hidden; 
 }
 
 body,
@@ -315,7 +316,6 @@ Link {
   bottom: 0;
 }
 
-
 .header_nav .navbar-nav .dropdown-toggle:after {
   border: 0;
   border-right: 2px solid;
@@ -374,7 +374,6 @@ Link {
     color: white !important;
   }
 
-
   .header_nav {
     display: flex;
     flex-direction: column;
@@ -401,35 +400,39 @@ Link {
   }
 
   .header_nav .navbar-nav .nav-link {
-    padding: 1px ;
+    padding: 1px;
     width: fit-content;
-
   }
 
   .navbar-dark .dropdown-menu {
     position: static !important;
     width: 50%;
     padding: 0px;
-     transition: left 0.3s ease-in-out;
+    transition: left 0.3s ease-in-out;
     background: #f5f5f5;
     border: none;
     box-shadow: none;
+    max-height: 0; /* Initially collapsed */
+    overflow: hidden;
+    transition: max-height 3s ease-in-out; /* 3-second transition for opening */
+  }
+
+  .navbar-dark .dropdown-menu.show {
+    max-height: 500px; /* Large enough to accommodate content */
   }
 
   .navbar-dark .dropdown-item {
     padding: 10px 30px;
-
     color: white !important;
   }
 
   .navbar-dark .frt_submenu {
     padding-left: 20px;
-
   }
 
   .navbar-toggler {
     z-index: 1100;
-         transition: left 0.8s ease-in-out;
+    transition: left 0.8s ease-in-out;
   }
 
   .navbar-collapse::before {
@@ -447,7 +450,6 @@ Link {
   .navbar-collapse.show::before {
     opacity: 1;
     pointer-events: auto;
-  
   }
 
   /* Close button styles */
@@ -484,8 +486,6 @@ Link {
     display: none;
   }
 }
-
-
 
 
 
