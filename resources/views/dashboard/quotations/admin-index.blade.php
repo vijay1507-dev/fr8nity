@@ -1,0 +1,62 @@
+@extends('layouts.dashboard')
+  
+@section('title', 'All Quotations')
+
+@section('content')
+<div class="container-fluid">
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <h4 class="card-title mb-0">All Quotations</h4>
+        </div>
+        <div class="card-body">
+            <table class="table table-bordered data-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Member (Receiver)</th>
+                        <th>Sender Name</th>
+                        <th>Sender Email</th>
+                        <th>Phone</th>
+                        <th>Port of Loading</th>
+                        <th>Port of Discharge</th>
+                        <th>Specifications</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<script type="text/javascript">
+    $(function () {
+        var table = $('.data-table').DataTable({
+            processing: true,
+            serverSide: true,
+            ajax: "{{ route('admin.quotations.index') }}",
+            columns: [
+                {data: 'DT_RowIndex', name: 'id'},
+                {data: 'member', name: 'member.company_name'},
+                {data: 'name', name: 'name'},
+                {data: 'email', name: 'email'},
+                {data: 'phone', name: 'phone'},
+                {data: 'port_of_loading', name: 'port_of_loading'},
+                {data: 'port_of_discharge', name: 'port_of_discharge'},
+                {data: 'specifications', name: 'specifications'},
+                {
+                    data: 'action', 
+                    name: 'action', 
+                    orderable: false, 
+                    searchable: false
+                },
+            ],
+        });
+    });
+</script>
+@endsection
+
+

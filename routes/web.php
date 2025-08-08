@@ -138,6 +138,11 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::get('/settings/membership-reminders', [SettingsController::class, 'index'])->name('settings.index');
         Route::put('/settings/membership-reminders', [SettingsController::class, 'update'])->name('settings.update');
     });
+    // Admin Quotations routes
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::get('/quotations', [MemberQuotationController::class, 'adminIndex'])->name('admin.quotations.index');
+        Route::get('/quotations/{quotation}', [MemberQuotationController::class, 'adminShow'])->name('admin.quotations.show');
+    });
     Route::get('/{member}/edit-profile', [MemberController::class, 'edit'])->name('editmemberprofile');
     Route::patch('/{member}/update-profile', [MemberController::class, 'update'])->name('members.updateprofile')->withoutMiddleware('kyc.complete');
     

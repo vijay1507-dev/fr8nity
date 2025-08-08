@@ -46,6 +46,11 @@
                             Referrals
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.quotations.index') }}" class="sidebar-link submenufont">
+                            Quotations
+                        </a>
+                    </li>
                  </ul>
              </li>
              <li class="sidebar-item">

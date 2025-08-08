@@ -48,6 +48,51 @@ class MemberQuotationController extends Controller
         return view('dashboard.quotations.show', compact('quotation'));
     }
 
+    // Admin: list all quotations
+    public function adminIndex(Request $request)
+    {
+        $this->authorizeAdmin();
+
+        $quotations = MemberQuotation::with(['member', 'portOfLoading', 'portOfDischarge']);
+
+        if ($request->ajax()) {
+            return \Yajra\DataTables\Facades\DataTables::of($quotations)
+                ->addIndexColumn()
+                ->addColumn('member', function ($quotation) {
+                    return $quotation->member ? $quotation->member->company_name : '-';
+                })
+                ->addColumn('port_of_loading', function ($quotation) {
+                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
+                })
+                ->addColumn('port_of_discharge', function ($quotation) {
+                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
+                })
+                ->addColumn('action', function ($row) {
+                    $url = route('admin.quotations.show', $row);
+                    return '<a href="'.$url.'" class="btn btn-sm btn-info">View</a>';
+                })
+                ->make(true);
+        }
+
+        return view('dashboard.quotations.admin-index');
+    }
+
+    // Admin: show single quotation with both sender and receiver details
+    public function adminShow(MemberQuotation $quotation)
+    {
+        $this->authorizeAdmin();
+        $quotation->load(['member', 'portOfLoading', 'portOfDischarge']);
+        return view('dashboard.quotations.admin-show', compact('quotation'));
+    }
+
+    private function authorizeAdmin(): void
+    {
+        $user = Auth::user();
+        if (!$user || !in_array($user->role, [\App\Models\User::SUPER_ADMIN, \App\Models\User::ADMIN])) {
+            abort(403, 'Unauthorized Access.');
+        }
+    }
+
     public function store(Request $request)
     {   
         $validated = $request->validate([
