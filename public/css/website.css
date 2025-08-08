@@ -106,7 +106,7 @@
 }
 body {
   background-color: #000000;
-  overflow-x: hidden; 
+  overflow-x: hidden;
 }
 
 body,
@@ -347,6 +347,19 @@ Link {
   color: #000;
 }
 
+/* Enable hover for submenus on large screens */
+@media (min-width: 992px) {
+  .dropdown-submenu {
+    position: relative;
+  }
+  .dropdown-submenu:hover > .dropdown-menu {
+    display: block;
+    top: 0;
+    left: 100%;
+    margin-top: -1px;
+  }
+}
+
 /* Styles for small screen sidebar */
 @media (max-width: 991px) {
   .navbar-collapse {
@@ -395,7 +408,6 @@ Link {
   .header_nav .navbar-nav .nav-item {
     padding: 10px 0;
     width: 100%;
-    transition: left 0.3s ease-in-out;
     display: block !important;
   }
 
@@ -406,19 +418,18 @@ Link {
 
   .navbar-dark .dropdown-menu {
     position: static !important;
-    width: 50%;
+    width: 100%;
     padding: 0px;
-    transition: left 0.3s ease-in-out;
     background: #f5f5f5;
     border: none;
     box-shadow: none;
-    max-height: 0; /* Initially collapsed */
+    max-height: 0;
     overflow: hidden;
-    transition: max-height 3s ease-in-out; /* 3-second transition for opening */
+    transition: max-height 0.3s ease-in-out;
   }
 
   .navbar-dark .dropdown-menu.show {
-    max-height: 500px; /* Large enough to accommodate content */
+    max-height: 500px;
   }
 
   .navbar-dark .dropdown-item {
@@ -1159,3 +1170,20 @@ table tr th {
   border-color: #343434 !important;
 
 }
+
+
+/* fqa */
+
+  .faq-title {
+      font-weight: 600;
+      background-color: #000000 !important;
+      color: white !important;
+      border-top: 1px solid #292929;
+      font-family: "blauer_nuemedium";
+  }
+  .accordion-body{
+      background-color: #000000 !important;
+  }
+  .faq-dis{
+    font-size: 16px;
+  }

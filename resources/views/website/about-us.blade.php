@@ -13,7 +13,7 @@
                     <h1 class="fw-bold size text_image">
                        About Us
                     </h1>
-                    <p class="">Fr8nity is more than a network — it’s an alliance where trust is currency, collaboration is culture, and growth is the shared destination.</p>
+                    <p class="fs-6">Fr8nity is more than a network — it’s an alliance where trust is currency, collaboration is culture, and growth is the shared destination.</p>
                     <a href="{{ route('membership') }}" class="btn btnbg fe-semibold mt-3">
                         <span>Become a Member</span>
                     </a>

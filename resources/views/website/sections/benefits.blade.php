@@ -3,12 +3,12 @@
         <div class="text-center">
             <h2 class="text-center fw-bold fs-2">Your Benefits</h2>
             <div class="underline mb-4 mx-auto">
-                <span class="move delay-0" />
-                <span class="move delay-1" />
+                <span class="move delay-0" ></span>
+                <span class="move delay-1" ></span>
             </div>
         </div>
         <div class="row mx-auto align-items-stretch">
-            <div class="col-12 col-sm-6 col-lg-3 mb-3">
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
                 <div class="gradient_rounded radies_20 m-2 h-100">
                     <div class="card blacklight radies_20 p-2 h-100">
                         <img src="{{ asset('images/Mask group (3).png') }}" alt="Benefit 1"
