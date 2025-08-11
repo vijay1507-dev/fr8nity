@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('ports', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('company_id');
+            $table->unsignedBigInteger('country_id');
             $table->string('name');
             $table->timestamps();
         });
