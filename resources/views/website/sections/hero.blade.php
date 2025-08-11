@@ -7,7 +7,7 @@
                     <h1 class="fw-bold size text_image">
                         When One Thrives,<br /> We All Rise
                     </h1>
-                    <p class="fs-2">Logistics Network Reimagined</p>
+               <p class="fs-3 fs-sm-5">Logistics Network Reimagined</p>
                     <a href="{{ route('register') }}" class="btn btnbg fe-semibold mt-3">
                         <span>Become a Member</span>
                     </a>

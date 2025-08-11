@@ -17,15 +17,13 @@ use App\Notifications\TwoFactorCodeNotification;
 use Illuminate\Support\Str;
 use App\Models\State;
 use App\Rules\ValidReferralCode;
-use App\Services\RewardPointService;
+use App\Services\RegistrationService;
 
 class AuthController extends Controller
 {
-    protected $rewardPointService;
-
-    public function __construct(RewardPointService $rewardPointService)
-    {
-        $this->rewardPointService = $rewardPointService;
+    public function __construct(
+        private readonly RegistrationService $registrationService,
+    ) {
     }
     // Show login form
     public function showLoginForm()
@@ -50,6 +48,9 @@ class AuthController extends Controller
 
     public function showRegistrationForm(Request $request)
     {
+        if (Auth::check() && Auth::user()->role == User::MEMBER) {
+            return redirect()->route('dashboard');
+        }
         $membershipTiers = MembershipTier::with('benefits')
             ->where('is_active', true)
             ->where('is_visible', true)
@@ -111,54 +112,7 @@ class AuthController extends Controller
         if ($request->referral_code) {
             $referrer = User::where('referral_code', $request->referral_code)->first();
         }
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'designation' => $request->designation,
-            'whatsapp_phone' => $request->whatsapp_phone,
-            'company_name' => $request->company_name,
-            'company_telephone' => $request->company_telephone,
-            'company_address' => $request->company_address,
-            'country_id' => $request->country_id,
-            'city_id' => $request->city_id,
-            'region_id' => $request->region_id,
-            'referred_by' => $referrer ? $referrer->id : null,
-            'specializations' => json_encode($request->specializations),
-            'incorporation_date' => $request->incorporation_date,
-            'tax_id' => $request->tax_id,
-            'website_linkedin' => $request->website_linkedin,
-            'is_network_member' => $request->is_network_member,
-            'network_name' => $request->network_name,
-            'membership_tier' => $request->membership_tier,
-            'role' => User::MEMBER,
-            'status' => 'pending',
-        ]);
-
-        // Create referral record if there's a referrer
-        if ($referrer) {
-            $referral = Referral::create([
-                'referrer_id' => $referrer->id,
-                'referred_id' => $user->id,
-                'referral_code' => $request->referral_code,
-                'registered_at' => now(),
-            ]);
-            // Award points to the referrer
-            $this->rewardPointService->awardPoints(
-                $user,
-                $referrer,
-                'referral_join',
-                'Referred new member: ' . $user->name
-            );
-        }
-
-        $superAdmin = User::where('role', User::SUPER_ADMIN)->first();
-        // Send notification to admin
-        if ($superAdmin) {
-            $superAdmin->notify(new NewRegistrationNotification($user));
-        }
-        
-        // Send confirmation email to the user
-        $user->notify(new RegistrationConfirmationNotification($user));
+        $user = $this->registrationService->registerMember($request->all(), $referrer);
 
         return redirect()->route('login')->with('success', 'Your registration request has been successfully submitted. We will notify you via email once your application is approved.');
     }
@@ -176,10 +130,14 @@ class AuthController extends Controller
         if (Auth::attempt($credentials, $remember)) {
             $user = Auth::user();
             
-            if ($user->status !== 'approved') {
+            // Check approval and active status
+            if ($user->status !== 'approved' || !$user->is_active) {
                 Auth::logout();
+                $message = ($user->status !== 'approved')
+                    ? 'Your application is pending approval.'
+                    : 'Your account is blocked. Please contact support.';
                 return back()->withErrors([
-                    'email' => 'Your application is pending approval.',
+                    'email' => $message,
                 ]);
             }
 
@@ -196,11 +154,9 @@ class AuthController extends Controller
             }
 
             // Only generate 2FA code if enabled
+            /** @var User $user */
             if ($user->two_factor_enabled) {
-                $user->two_factor_code = Str::random(6);
-                $user->two_factor_expires_at = now()->addMinutes(10);
-                $user->save();
-                $user->notify(new TwoFactorCodeNotification());
+                $user->generateTwoFactorCode();
                 return redirect()->route('two-factor.show');
             }
 
@@ -228,7 +184,7 @@ class AuthController extends Controller
             'two_factor_code' => 'required|string',
         ]);
 
-        $user = Auth::user();
+        $user = User::findOrFail(Auth::id());
 
         if (!$user->two_factor_enabled) {
             return redirect()->intended('dashboard');
@@ -248,9 +204,9 @@ class AuthController extends Controller
 
     public function enableTwoFactor(Request $request)
     {
+        /** @var User $user */
         $user = Auth::user();
-        $user->two_factor_enabled = '1';
-        $user->save();
+        $user->enableTwoFactorAuth();
 
         return redirect()->route('security.settings')
             ->with('status', 'Two-factor authentication has been enabled.');
@@ -258,15 +214,16 @@ class AuthController extends Controller
 
     public function disableTwoFactor(Request $request)
     {
+        /** @var User $user */
         $user = Auth::user();
-        $user->two_factor_enabled = '0';
-        $user->save();
+        $user->disableTwoFactorAuth();
         return redirect()->route('security.settings')
             ->with('status', 'Two-factor authentication has been disabled.');
     }
 
     public function resendTwoFactorCode(Request $request)
     {
+        /** @var User $user */
         $user = Auth::user();
         
         if (!$user->two_factor_enabled) {

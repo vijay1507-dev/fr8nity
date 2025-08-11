@@ -10,10 +10,10 @@
             <h1 class="fw-bold size text_image pt-5 pb-1 pt-lg-0">
               Explorer Membership
             </h1>
-            <p class="bannerp">As an Explorer Member, you’ve entered the network at the perfect pace — with the
-              flexibility to connect,</p>
-            <p class="bannerp"></p>learn, and grow. Here’s everything you need to know to make the most of your
+            <p class="bannerp fs-6">As an Explorer Member, you’ve entered the network at the perfect pace — with the
+              flexibility to connect, learn, and grow. Here’s everything you need to know to make the most of your
             membershi</p>
+           
 
           </div>
         </div>
@@ -356,12 +356,13 @@
   </section>
 
 <section class="  blackdark pb-5">
-    <div class="container pt-5 px-2">
+    <div class="container pt-5 px-4 px-lg-2">
       <div class="row d-flex">
+        <h3 class="fw-bold fs-2 fs-md-4 text-center pb-5">How to Earn RisePoints</h3>
         <div class="col-12 col-lg-6 d-flex flex-column h-100">
           <div class="flex-grow-1">
-            <h2 class="fw-bold fs-2">How to Earn RisePoints</h2>
-            <p>Your actions within the FR8NITY network don't just build relationships - they also earn you points.</p>
+       <h3 class="fw-bold fs-3 mt-4 mt-lg-0 text-center">Membership Renewal</h3>
+            <p class="text-center">Your actions within the FR8NITY network don't just build relationships - they also earn you points.</p>
             <div class="row mx-auto">
               <div class="p-0 radies_20 tableborder">
                 <div class="table-responsive blacklight radius_20">
@@ -386,7 +387,7 @@
         <div class="col-12 col-lg-6 d-flex flex-column h-100">
           <div class="flex-grow-1">
             <div class="text-center">
-              <h3 class="fw-bold fs-3">Referral of Members</h3>
+              <h3 class="fw-bold fs-3 mt-4 mt-lg-0">Referral of Members</h3>
             </div>
             <div class="row mx-auto">
               <div class="p-0 radies_20 tableborder mt-2">
@@ -414,7 +415,7 @@
         </div>
       </div>
     </div>
-    <div class="container pt-5 px-2">
+    <div class="container pt-5 px-4 px-lg-2">
       <div class="text-center">
         <h3 class="text-center fw-bold fs-3 mb-4">Business Collaboration (As a Giver)</h3>
       </div>
@@ -429,7 +430,7 @@
               </thead>
               <tbody>
                 <tr class="bg-transparent px-2">
-                  <td class="bg-transparent text-white">Monthly Transaction Value >USD50 & <=USD1000< /td>
+                  <td class="bg-transparent text-white">Monthly Transaction Value >USD50 & <=USD1000</td>
                   <td class="bg-transparent text-white">500</td>
                   <td class="bg-transparent text-white">x1</td>
 
@@ -441,13 +442,13 @@
 
                 </tr>
                 <tr class="bg-transparent px-2">
-                  <td class="bg-transparent text-white p-2">Monthly Transaction Value >USD5000 & <=USD2500< /td>
+                  <td class="bg-transparent text-white p-2">Monthly Transaction Value >USD5000 & <=USD2500</td>
                   <td class="bg-transparent text-white">1000</td>
                   <td class="bg-transparent text-white">x1</td>
 
                 </tr>
                 <tr class="bg-transparent px-2">
-                  <td class="bg-transparent text-white p-2">Monthly Transaction Value >USD25000 & <=USD100< /td>
+                  <td class="bg-transparent text-white p-2">Monthly Transaction Value >USD25000 & <=USD100</td>
                   <td class="bg-transparent text-white">1500</td>
                   <td class="bg-transparent text-white">x2.5</td>
 
@@ -463,7 +464,7 @@
         </div>
       </div>
     </div>
-    <div class="container pt-5 px-2">
+    <div class="container pt-5 px-4 px-lg-2">
       <div class="text-center">
         <h3 class="text-center fw-bold fs-3 mb-4">Engagement & Participation Online/Conference attendance</h3>
       </div>
@@ -512,7 +513,7 @@
       </div>
     </div>
 
-    <div class="container pt-5 px-2">
+    <div class="container pt-5 px-4 px-lg-2">
       <div class="text-center">
         <h3 class="text-center fw-bold fs-3 mb-4">Can you exchange your points with?</h3>
       </div>

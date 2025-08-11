@@ -4,16 +4,23 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use App\Models\MembershipTier;
-use App\Models\TradeMember;
-use App\Models\Shipment;
+use App\Models\Port;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Services\MemberApprovalService;
+use App\Services\MembershipNumberService;
+use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
 {
+    public function __construct(
+        private readonly MemberApprovalService $memberApprovalService,
+        private readonly MembershipNumberService $membershipNumberService,
+    ) {
+    }
     /**
      * Display a listing of the members.
      */
@@ -148,26 +155,7 @@ class MemberController extends Controller
             'status' => ['required', 'in:pending,approved'],
         ]);
 
-        // If status is being changed to approved
-        if ($request->status === 'approved' && $member->status !== 'approved') {
-            // Create and send notification
-            $notification = new \App\Notifications\ProfileApprovalNotification();
-            
-            // Update member with generated password and set membership expiration
-            $member->update([
-                'status' => $request->status,
-                'password' => Hash::make($notification->getPassword()),
-                'membership_start_at' => now(),
-                'membership_expires_at' => now()->addYear()
-            ]);
-
-            // Send notification with login credentials
-            $member->notify($notification);
-        } else {
-            $member->update([
-                'status' => $request->status,
-            ]);
-        }
+        $this->memberApprovalService->updateStatus($member, $request->status);
 
         return back()->with('success', 'Member status updated successfully.');
     }
@@ -257,6 +245,7 @@ class MemberController extends Controller
                 'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
                 'membership_tier' => ['required'],
                 'profile_photo' => ['nullable', 'image', 'max:2048'],
+                'certificate_document' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             ];
 
             if ($request->filled('password')) {
@@ -271,7 +260,13 @@ class MemberController extends Controller
             if ($request->hasFile('company_logo')) {
                 $companyLogoPath = $request->file('company_logo')->store('company-logos', 'public');
             }
-
+            $certificatePath = null;
+            if ($request->hasFile('certificate_document')) {
+                $certificatePath = $request->file('certificate_document')->store('member-certificates', 'public');
+                $updateData['certificate_document'] = $certificatePath;
+                $updateData['certificate_uploaded_at'] = now();
+            }
+            $membershipNumber = $this->membershipNumberService->generateForTierId((int) $request->membership_tier);
             $updateData = [
                 'name' => $request->name,
                 'email' => $request->email,
@@ -291,7 +286,10 @@ class MemberController extends Controller
                 'website_linkedin' => $request->website_linkedin,
                 'is_network_member' => $request->is_network_member,
                 'network_name' => $request->network_name,
+                'membership_number' => $membershipNumber,
                 'membership_tier' => $request->membership_tier,
+                'certificate_document' => $certificatePath,
+                'certificate_uploaded_at' => now(),
             ];
 
             if (isset($path)) {
@@ -334,23 +332,65 @@ class MemberController extends Controller
     /**
      * Display the member directory.
      */
-    public function directory()
+    public function directory(Request $request)
     {
-        $members = User::where('role', User::MEMBER)
+        $query = User::where('role', User::MEMBER)
             ->where('status', 'approved')
-            ->with(['membershipTier', 'region', 'country', 'city'])
-            ->get();
+            ->where('is_active', true)
+            ->with(['membershipTier', 'region', 'country', 'city']);
+
+        // Filter by company name
+        if ($request->filled('company_name')) {
+            $query->where(function($q) use ($request) {
+                $q->where('company_name', 'like', '%' . $request->company_name . '%')
+                  ->orWhere('name', 'like', '%' . $request->company_name . '%');
+            });
+        }
+
+        // Filter by country
+        if ($request->filled('country')) {
+            $query->whereHas('country', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->country . '%');
+            });
+        }
+
+        // Filter by city
+        if ($request->filled('city')) {
+            $query->whereHas('city', function($q) use ($request) {
+                $q->where('name', 'like', '%' . $request->city . '%');
+            });
+        }
+
+        // Filter by specialization
+        if ($request->filled('specialization')) {
+            $specialization = $request->specialization;
+            $query->where(function($q) use ($specialization) {
+                $q->where('specializations', 'like', '%' . $specialization . '%')
+                  ->orWhere('specializations', 'like', '%"' . $specialization . '"%');
+            });
+        }
+
+        $members = $query->get();
 
         return view('website.member-directory', compact('members'));
     }
-    public function viewProfile()
+    public function viewProfile($company_name, $encrypted_id)
     {
-        $members = User::where('role', User::MEMBER)
-            ->where('status', 'approved')
-            ->with(['membershipTier', 'region', 'country', 'city'])
-            ->get();
-
-        return view('website.member-directory-view-profile', compact('members'));
+        try {
+            // Decrypt the ID
+            $id = decrypt($encrypted_id);
+            
+            $member = User::where('role', User::MEMBER)
+                ->where('status', 'approved')
+                ->where('is_active', true)
+                ->where('id', $id)
+                ->with(['membershipTier', 'region', 'country', 'city'])
+                ->firstOrFail();
+            $ports = Port::all();
+            return view('website.member-directory-view-profile', compact('member', 'ports'));
+        } catch (\Exception $e) {
+            abort(404, 'Member not found');
+        }
     }
     
 } 

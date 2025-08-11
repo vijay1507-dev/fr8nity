@@ -10,7 +10,7 @@
         <div class="wrapper userlogin p-0 bg-black">
             <main class="content">
                 <div class="row justify-content-center mx-0 bg-white overflow-hidden">
-                    <div class="col-12 col-md-4 left-img vh-100 d-flex justify-content-center p-4"
+                    <div class="col-12 col-md-4 left-img vh-100 d-flex justify-content-center p-4 d-none d-md-block"
                         style="background: url(./images/admin-login.webp) no-repeat center / cover">
                         <div class="left-side">
                             <a href="/"><img class="mb-3" src="{{ asset('images/logo.svg') }}" alt="Logo"
@@ -18,12 +18,12 @@
                         </div>
                     </div>
                     <div class="col-md-8 col-12 bg-black">
-                        <div class="custom-card m-0 p-md-4">
+                        <div class="custom-card-register  m-0 p-md-4">
                             <form role="form" method="POST" action="{{ route('register.post') }}">
                                 @csrf
                                 <div class="row setup-content mx-0" id="step-1">
                                     <div class="col-md-12 px-0">
-                                        <h3 class="text-white text-center mb-3">Become a Member</h3>
+                                        <h3 class="text-white text-center my-3">Become a Member</h3>
                                         <div class="progress-bar-container mb-4">
                                             <div class="progress" style="height: 3px;">
                                                 <div class="progress-bar" role="progressbar" style="width: 50%;"
@@ -331,7 +331,7 @@
                                         </div>
                                         <div class="d-flex justify-content-center mt-4 pt-4 gap-3">
                                             <button class="btn btn-secondary px-4 rounded_30 backBtn" type="button">Back</button>
-                                            <button class="btn btn-primary pull-right px-4" type="submit">Submit</button>
+                                            <button class="btn btn-primary pull-right px-4 pb-2" type="submit">Submit</button>
                                         </div>
                                     </div>
                                 </div>

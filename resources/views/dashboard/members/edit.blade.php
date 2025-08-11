@@ -3,8 +3,9 @@
 @section('content')
 <div class="container-fluid">
     <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="card-title">@if(auth()->user()->role == \App\Models\User::MEMBER) Edit Profile @else Edit Member @endif</h4>
+            <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
         </div>
         <div class="card-body">
 
@@ -321,6 +322,47 @@
                         @enderror
                     </div>
                 </div>
+
+                @if(auth()->user()->role === App\Models\User::SUPER_ADMIN)
+                <!-- Certificate Section -->
+                <div class="card mt-4 mb-4">
+                    <div class="card-header">
+                        <h5 class="card-title mb-0">Member E-Certificate</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                @if($member->certificate_document)
+                                    <div class="alert alert-info">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <p class="mb-1"><strong>Current E-Certificate:</strong></p>
+                                                <p class="mb-0">Uploaded on {{ $member->certificate_uploaded_at->format('M d, Y') }}</p>
+                                            </div>
+                                            <div>
+                                                <a href="{{ Storage::url($member->certificate_document) }}" class="btn btn-primary btn-sm" target="_blank">
+                                                    <i class="bi bi-file-earmark-text me-2"></i>View
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
+                                <div class="mb-3">
+                                    <label for="certificate_document" class="form-label">Upload E-Certificate</label>
+                                    <input type="file" class="form-control @error('certificate_document') is-invalid @enderror" 
+                                           id="certificate_document" name="certificate_document" 
+                                           accept="jpg,.jpeg,.png">
+                                    <div class="form-text">Supported formats: JPG, JPEG, PNG. Maximum file size: 5MB</div>
+                                    @error('certificate_document')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @endif
                 
                 <!-- Password Update Section -->
                 <div class="card mt-4 mb-4">
@@ -366,12 +408,12 @@
                 </div>
                 <!-- Back Button -->
                 <div class="position-fixed bottom-0 end-0 p-4">
-                    <a href="{{ url()->previous() }}" class="btn btn-secondary rounded-circle shadow-sm" style="width: 50px; height: 50px; padding: 9px;">
-                        <i class="bi bi-arrow-left" style="font-size: 20px;"></i>
+                    <a href="{{ url()->previous() }}" class="btn btn-secondary shadow-sm d-flex align-items-center gap-2">
+                        <i class="bi bi-arrow-left" style="font-size: 15px;"></i>
+                        <span class="d-none d-md-inline">Back</span>
                     </a>
                 </div>
                 <div class="d-flex justify-content-center gap-3 mt-4">
-                    <a href="{{ url()->previous() }}" class="btn btn-secondary">Cancel</a>
                     <button type="submit" class="btn btn-primary">Update Member</button>
                 </div>
             </form>

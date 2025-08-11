@@ -13,7 +13,7 @@
                     <h1 class="fw-bold size text_image">
                        About Us
                     </h1>
-                    <p class="">Fr8nity is more than a network — it’s an alliance where trust is currency, collaboration is culture, and growth is the shared destination.</p>
+                    <p class="fs-6">Fr8nity is more than a network — it’s an alliance where trust is currency, collaboration is culture, and growth is the shared destination.</p>
                     <a href="{{ route('membership') }}" class="btn btnbg fe-semibold mt-3">
                         <span>Become a Member</span>
                     </a>
@@ -79,7 +79,7 @@
         </div>
 
         <div class="row mx-auto align-items-stretch">
-              <div class="col-12 col-lg-6 mb-3">
+              <div class="col-12 col-md-6 mb-3">
                 <div class="gradient_rounded radies_20 m-2 h-100">
                     <div class="p-3 h-100 radies_20 blacklight">
                         <img src="{{ asset('images/dawn.webp') }}" alt="Dawn Tan" class="img-fluid mb-3" />
@@ -94,7 +94,7 @@
                 </div>
             </div>
             
-            <div class="col-12 col-lg-6 mb-3">
+            <div class="col-12 col-md-6 mb-3">
                 <div class="gradient_rounded radies_20 m-2 h-100">
                     <div class="p-3 h-100 radies_20 blacklight">
                         <img src="{{ asset('images/creryl.webp') }}" alt="Cheryl Tan" class="img-fluid mb-3" />

@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Models\TradeMember;
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Notification;
-use App\Notifications\TradeMembershipNotification;
+use App\Services\TradeMemberService;
 use Yajra\DataTables\Facades\DataTables;
 
 class TradeMemberController extends Controller
 {
+    public function __construct(private readonly TradeMemberService $tradeMemberService)
+    {
+    }
     /**
      * Display a listing of trade members.
      */
@@ -64,30 +66,7 @@ class TradeMemberController extends Controller
             'consent' => 'required|accepted'
         ]);
 
-        $tradeMember = TradeMember::create([
-            'company_name' => $validated['company_name'],
-            'product_industry_category' => $validated['product_industry_category'],
-            'shipping_frequency' => $validated['shipping_frequency'],
-            'mode_of_shipment' => $validated['mode_of_shipment'],
-            'origin_country' => $validated['origin_country'],
-            'destination_country' => $validated['destination_country'],
-            'estimated_shipment_volume' => $validated['estimated_shipment_volume'],
-            'looking_for' => $validated['looking_for'],
-            'name' => $validated['name'],
-            'designation' => $validated['designation'],
-            'email' => $validated['email'],
-            'whatsapp_phone' => $validated['whatsapp_phone'],
-            'additional_details' => $validated['additional_details'],
-            'consent' => true
-        ]);
-
-        // Send notification to the applicant
-        Notification::route('mail', $tradeMember->email)
-            ->notify(new TradeMembershipNotification($tradeMember));
-
-        // Send notification to all admins
-        $admins = User::where('role',User::SUPER_ADMIN)->get();
-        Notification::send($admins, new TradeMembershipNotification($tradeMember, true));
+        $tradeMember = $this->tradeMemberService->createAndNotify($validated);
 
         return redirect()->route('thank-you')->with('message', 'Your trade membership request has been submitted successfully. Our team will review your application and contact you soon.');
     }

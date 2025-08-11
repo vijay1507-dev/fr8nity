@@ -263,9 +263,6 @@
 
                 <div class="row mt-4">
                     <div class="col-12 text-center">
-                        <a href="{{ route('shipments.show', $shipment) }}" class="btn btn-secondary">
-                            <i class="fas fa-times"></i> Cancel
-                        </a>
                         <button type="submit" class="btn btn-primary">
                             <i class="fas fa-save"></i> Update Shipment Enquiry
                         </button>
@@ -273,6 +270,13 @@
                 </div>
             </form>
         </div>
+    </div>
+    <!-- Back Button -->
+    <div class="position-fixed bottom-0 end-0 p-4">
+        <a href="{{ url()->previous() }}" class="btn btn-secondary shadow-sm d-flex align-items-center gap-2">
+            <i class="bi bi-arrow-left" style="font-size: 15px;"></i>
+            <span class="d-none d-md-inline">Back</span>
+        </a>
     </div>
 </div>
 @endsection

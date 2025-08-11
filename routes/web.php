@@ -7,9 +7,11 @@ use App\Http\Controllers\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Auth\NewPasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\MemberController;
+use App\Http\Controllers\MemberQuotationController;
 use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\TradeMemberController;
 use App\Http\Controllers\ShipmentController;
+use App\Http\Controllers\SettingsController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
@@ -69,7 +71,7 @@ Route::prefix('events')->group(function () {
 
 Route::get('/about-us', function () {
     return view('website.about-us');
-})->name('about-us');
+})->name('about-us')->middleware('auth');
 Route::get('/spotlight', function () {
     return view('website.spotlight');
 })->name('spotlight');
@@ -80,8 +82,7 @@ Route::get('/faq', function () {
     return view('website.faq');
 })->name('faq');
 
-Route::get('/members-directory', [MemberController::class, 'directory'])->name('members.directory');
-Route::get('/members-directory/view-profile', [MemberController::class, 'viewProfile'])->name('members.directory-view-profile');
+
 
 Route::get('/register', [AuthController::class, 'showRegistrationForm'])->name('register');
 
@@ -111,7 +112,15 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::get('/security-settings', [AuthController::class, 'showSecuritySettings'])->name('security.settings');
     Route::post('/two-factor/enable', [AuthController::class, 'enableTwoFactor'])->name('two-factor.enable');
     Route::delete('/two-factor/disable', [AuthController::class, 'disableTwoFactor'])->name('two-factor.disable');
+    Route::get('/members-directory', [MemberController::class, 'directory'])->name('members.directory');
+    Route::get('/members-directory/{company_name}/{encrypted_id}', [MemberController::class, 'viewProfile'])->name('members.directory-view-profile');
+    Route::post('/member-quotations', [MemberQuotationController::class, 'store'])->name('member.quotations.store');
     
+    // Member Quotation routes
+    Route::prefix('quotations')->group(function () {
+        Route::get('/', [MemberQuotationController::class, 'index'])->name('member.quotations.index');
+        Route::get('/{quotation}', [MemberQuotationController::class, 'show'])->name('member.quotations.show');
+    });
     // Member management routes - requires admin access
     Route::middleware('admin')->prefix('members')->group(function () {
         Route::get('/', [MemberController::class, 'index'])->name('members.index');
@@ -122,6 +131,21 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
         Route::patch('/{member}', [MemberController::class, 'update'])->name('members.update');
         Route::delete('/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
+    });
+
+    // Settings routes
+    Route::middleware('admin')->group(function () {
+        Route::get('/settings/membership-reminders', [SettingsController::class, 'index'])->name('settings.index');
+        Route::put('/settings/membership-reminders', [SettingsController::class, 'update'])->name('settings.update');
+
+        // Site settings
+        Route::get('/settings/site', [SettingsController::class, 'siteIndex'])->name('settings.site.index');
+        Route::put('/settings/site', [SettingsController::class, 'siteUpdate'])->name('settings.site.update');
+    });
+    // Admin Quotations routes
+    Route::middleware('admin')->prefix('admin')->group(function () {
+        Route::get('/quotations', [MemberQuotationController::class, 'adminIndex'])->name('admin.quotations.index');
+        Route::get('/quotations/{quotation}', [MemberQuotationController::class, 'adminShow'])->name('admin.quotations.show');
     });
     Route::get('/{member}/edit-profile', [MemberController::class, 'edit'])->name('editmemberprofile');
     Route::patch('/{member}/update-profile', [MemberController::class, 'update'])->name('members.updateprofile')->withoutMiddleware('kyc.complete');
