@@ -4,17 +4,15 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="col-12">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="page-title">Quotation Details</h4>
-                <a href="{{ url()->previous() }}" class="btn btn-secondary shadow-sm d-flex align-items-center gap-2">
-                    <span class="d-none d-md-inline">Back</span>
-                </a>
-            </div>
-        </div>
         <div class="row">
             <div class="col-12">
                 <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="page-title">Quotation Details</h4>
+                        <a href="{{ url()->previous() }}" class="btn btn-secondary shadow-sm d-flex align-items-center gap-2">
+                            <span class="d-none d-md-inline">Back</span>
+                        </a>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">

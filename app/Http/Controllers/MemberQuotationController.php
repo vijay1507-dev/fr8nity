@@ -28,6 +28,9 @@ class MemberQuotationController extends Controller
                 ->addColumn('port_of_discharge', function ($quotation) {
                     return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
                 })
+                ->addColumn('created_at', function ($quotation) {
+                    return $quotation->created_at->format('d-m-Y');
+                })
                 ->addColumn('action', function ($row) {
                     $url = route('member.quotations.show', $row);
                     return '<a href="'.$url.'" class="btn btn-sm btn-info">View</a>';
@@ -66,6 +69,9 @@ class MemberQuotationController extends Controller
                 })
                 ->addColumn('port_of_discharge', function ($quotation) {
                     return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
+                })
+                ->addColumn('created_at', function ($quotation) {
+                    return $quotation->created_at->format('d-m-Y');
                 })
                 ->addColumn('action', function ($row) {
                     $url = route('admin.quotations.show', $row);

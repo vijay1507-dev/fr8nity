@@ -20,6 +20,7 @@
                         <th>Port of Loading</th>
                         <th>Port of Discharge</th>
                         <th>Specifications</th>
+                        <th>Created At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -47,6 +48,7 @@
                 {data: 'port_of_loading', name: 'port_of_loading'},
                 {data: 'port_of_discharge', name: 'port_of_discharge'},
                 {data: 'specifications', name: 'specifications'},
+                {data: 'created_at', name: 'created_at'},
                 {
                     data: 'action', 
                     name: 'action', 
