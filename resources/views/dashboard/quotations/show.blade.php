@@ -7,13 +7,6 @@
     <div class="row">
         <div class="col-12">
             <div class="page-title-box">
-                <div class="page-title-right">
-                    <ol class="breadcrumb m-0">
-                        <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Dashboard</a></li>
-                        <li class="breadcrumb-item"><a href="{{ route('member.quotations.index') }}">My Quotations</a></li>
-                        <li class="breadcrumb-item active">Quotation Details</li>
-                    </ol>
-                </div>
                 <h4 class="page-title">Quotation Details</h4>
             </div>
         </div>
@@ -25,11 +18,11 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h5 class="mb-3">Sender Information</h5>
+                            <h5 class="mb-3">{{ $quotation->given_by_id === Auth::id() ? 'Receiver' : 'Sender' }} Information</h5>
                             <table class="table table-sm table-borderless">
                                 <tr>
                                     <td width="150"><strong>Company Name:</strong></td>
-                                    <td>{{ $quotation->member->company_name }}</td>
+                                    <td>{{ $quotation->given_by_id === Auth::id() ? $quotation->receiver->company_name : $quotation->givenBy->company_name }}</td>
                                 </tr>
                                 <tr>
                                     <td width="150"><strong>Name:</strong></td>
@@ -104,8 +97,8 @@
 
                     <div class="row mt-4">
                         <div class="col-12">
-                            <a href="{{ route('member.quotations.index') }}" class="btn btn-secondary">
-                                <i class="mdi mdi-arrow-left"></i> Back to Quotations
+                            <a href="{{ $quotation->given_by_id === Auth::id() ? route('member.quotations.given') : route('member.quotations.received') }}" class="btn btn-secondary">
+                                <i class="mdi mdi-arrow-left"></i> Back to {{ $quotation->given_by_id === Auth::id() ? 'Given' : 'Received' }} Quotations
                             </a>
                         </div>
                     </div>

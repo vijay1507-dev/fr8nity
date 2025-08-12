@@ -7,8 +7,23 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class MemberQuotation extends Model
 {
+    /**
+     * Status constants for quotation
+     */
+    const STATUS_CLOSED_UNSUCCESSFUL = 0;
+    const STATUS_CLOSED_SUCCESSFUL = 1;
+
+    /**
+     * Status labels for display
+     */
+    const STATUS_LABELS = [
+        self::STATUS_CLOSED_UNSUCCESSFUL => 'Closed Unsuccessfully',
+        self::STATUS_CLOSED_SUCCESSFUL => 'Closed Successfully',
+    ];
+
     protected $fillable = [
-        'member_id',
+        'receiver_id',
+        'given_by_id',
         'name',
         'phone',
         'email',
@@ -18,15 +33,21 @@ class MemberQuotation extends Model
         'port_of_discharge_id',
         'specifications',
         'message',
+        'transaction_value',
+        'status',
     ];
 
     protected $casts = [
         'specifications' => 'array',
     ];
 
-    public function member(): BelongsTo
+    public function receiver(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'member_id');
+        return $this->belongsTo(User::class, 'receiver_id');
+    }
+    public function givenBy(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'given_by_id');
     }
     public function portOfLoading(): BelongsTo
     {
@@ -35,5 +56,13 @@ class MemberQuotation extends Model
     public function portOfDischarge(): BelongsTo
     {
         return $this->belongsTo(Port::class, 'port_of_discharge_id');
+    }
+
+    /**
+     * Get the status label for display
+     */
+    public function getStatusLabel(): string
+    {
+        return self::STATUS_LABELS[$this->status] ?? 'N/A';
     }
 }

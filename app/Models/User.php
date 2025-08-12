@@ -209,4 +209,20 @@ class User extends Authenticatable
     {
         return url('/register?ref=' . $this->generateReferralCode());
     }
+
+    /**
+     * Get quotations given by the user
+     */
+    public function givenQuotations()
+    {
+        return $this->hasMany(MemberQuotation::class, 'given_by_id');
+    }
+
+    /**
+     * Get quotations received by the user
+     */
+    public function receivedQuotations()
+    {
+        return $this->hasMany(MemberQuotation::class, 'receiver_id');
+    }
 }

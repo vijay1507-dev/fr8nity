@@ -14,19 +14,25 @@ class MemberQuotationController extends Controller
     public function __construct(private readonly MemberQuotationService $memberQuotationService)
     {
     }
-    public function index(Request $request)
+    public function givenQuotations(Request $request)
     {
-        $quotations = MemberQuotation::with(['portOfLoading', 'portOfDischarge'])
-        ->where('member_id', Auth::id());
+        $quotations = MemberQuotation::with(['portOfLoading', 'portOfDischarge', 'receiver'])
+            ->where('given_by_id', Auth::id());
+
         if ($request->ajax()) {
-          
             return DataTables::of($quotations)
                 ->addIndexColumn()
+                ->addColumn('receiver', function ($quotation) {
+                    return $quotation->receiver ? $quotation->receiver->company_name : '-';
+                })
                 ->addColumn('port_of_loading', function ($quotation) {
                     return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
                 })
                 ->addColumn('port_of_discharge', function ($quotation) {
                     return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
+                })
+                ->addColumn('status', function ($quotation) {
+                    return $quotation->getStatusLabel();
                 })
                 ->addColumn('created_at', function ($quotation) {
                     return $quotation->created_at->format('d-m-Y');
@@ -38,13 +44,46 @@ class MemberQuotationController extends Controller
                 ->make(true);
         }
 
-        return view('dashboard.quotations.index');
+        return view('dashboard.quotations.given');
+    }
+
+    public function receivedQuotations(Request $request)
+    {
+        $quotations = MemberQuotation::with(['portOfLoading', 'portOfDischarge', 'givenBy'])
+            ->where('receiver_id', Auth::id());
+
+        if ($request->ajax()) {
+            return DataTables::of($quotations)
+                ->addIndexColumn()
+                ->addColumn('given_by', function ($quotation) {
+                    return $quotation->givenBy ? $quotation->givenBy->company_name : '-';
+                })
+                ->addColumn('port_of_loading', function ($quotation) {
+                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
+                })
+                ->addColumn('port_of_discharge', function ($quotation) {
+                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
+                })
+                ->addColumn('status', function ($quotation) {
+                    return $quotation->getStatusLabel();
+                })
+                ->addColumn('created_at', function ($quotation) {
+                    return $quotation->created_at->format('d-m-Y');
+                })
+                ->addColumn('action', function ($row) {
+                    $url = route('member.quotations.show', $row);
+                    return '<a href="'.$url.'" class="btn btn-sm btn-info">View</a>';
+                })
+                ->make(true);
+        }
+
+        return view('dashboard.quotations.received');
     }
 
     public function show(MemberQuotation $quotation)
     {
-        // Check if the quotation belongs to the current user
-        if ($quotation->member_id !== Auth::id()) {
+        // Check if the user is either the giver or receiver of the quotation
+        if ($quotation->given_by_id !== Auth::id() && $quotation->receiver_id !== Auth::id()) {
             abort(403, 'Unauthorized action.');
         }
 
@@ -56,16 +95,16 @@ class MemberQuotationController extends Controller
     {
         $this->authorizeAdmin();
 
-        $quotations = MemberQuotation::with(['member', 'portOfLoading', 'portOfDischarge']);
+        $quotations = MemberQuotation::with(['receiver', 'portOfLoading', 'portOfDischarge']);
 
         if ($request->ajax()) {
             return \Yajra\DataTables\Facades\DataTables::of($quotations)
                 ->addIndexColumn()
                 ->addColumn('member', function ($quotation) {
-                    return $quotation->member ? $quotation->member->company_name : '-';
+                    return $quotation->receiver ? $quotation->receiver->company_name : '-';
                 })
                 ->addColumn('company_name', function ($quotation) {
-                    return $quotation->member ? $quotation->member->company_name : '-';
+                    return $quotation->receiver ? $quotation->receiver->company_name : '-';
                 })
                 ->addColumn('port_of_loading', function ($quotation) {
                     return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
@@ -90,7 +129,7 @@ class MemberQuotationController extends Controller
     public function adminShow(MemberQuotation $quotation)
     {
         $this->authorizeAdmin();
-        $quotation->load(['member', 'portOfLoading', 'portOfDischarge']);
+        $quotation->load(['receiver', 'portOfLoading', 'portOfDischarge']);
         return view('dashboard.quotations.admin-show', compact('quotation'));
     }
 
@@ -105,7 +144,8 @@ class MemberQuotationController extends Controller
     public function store(Request $request)
     {   
         $validated = $request->validate([
-            'member_id' => 'required|exists:users,id',
+            'receiver_id' => 'required|exists:users,id',
+            'given_by_id' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|max:255',

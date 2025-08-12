@@ -9,7 +9,8 @@ return new class extends Migration {
     {
         Schema::create('member_quotations', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('member_id'); // Receiver of the quotation
+            $table->unsignedBigInteger('receiver_id'); // Receiver of the quotation
+            
             $table->string('name');
             $table->string('phone')->nullable();
             $table->string('email');
@@ -17,8 +18,8 @@ return new class extends Migration {
 
             $table->string('uploaded_document')->nullable();
 
-            $table->unsignedBigInteger('port_of_loading_id');
-            $table->unsignedBigInteger('port_of_discharge_id');
+            $table->unsignedBigInteger('port_of_loading_id')->nullable();
+            $table->unsignedBigInteger('port_of_discharge_id')->nullable();
 
             $table->json('specifications')->nullable();
 

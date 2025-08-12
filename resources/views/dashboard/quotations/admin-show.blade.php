@@ -20,7 +20,7 @@
                                 <table class="table table-sm table-borderless">
                                     <tr>
                                         <td width="150"><strong>Company Name:</strong></td>
-                                        <td>{{ $quotation->member->company_name }}</td>
+                                        <td>{{ $quotation->givenBy->company_name }}</td>
                                     </tr>
                                     <tr>
                                         <td width="180"><strong>Name:</strong></td>
@@ -43,23 +43,23 @@
                                 </table>
                             </div>
                             <div class="col-md-6">
-                                <h5 class="mb-3">Receiver (Member) Information</h5>
+                                <h5 class="mb-3">Receiver Information</h5>
                                 <table class="table table-sm table-borderless">
                                     <tr>
                                         <td width="180"><strong>Company:</strong></td>
-                                        <td>{{ optional($quotation->member)->company_name }}</td>
+                                        <td>{{ optional($quotation->receiver)->company_name }}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Contact Person:</strong></td>
-                                        <td>{{ optional($quotation->member)->name }}</td>
+                                        <td>{{ optional($quotation->receiver)->name }}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Email:</strong></td>
-                                        <td>{{ optional($quotation->member)->email }}</td>
+                                        <td>{{ optional($quotation->receiver)->email }}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Phone:</strong></td>
-                                        <td>{{ optional($quotation->member)->company_telephone }}</td>
+                                        <td>{{ optional($quotation->receiver)->company_telephone }}</td>
                                     </tr>
                                 </table>
                             </div>

@@ -118,7 +118,8 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     
     // Member Quotation routes
     Route::prefix('quotations')->group(function () {
-        Route::get('/', [MemberQuotationController::class, 'index'])->name('member.quotations.index');
+        Route::get('/given', [MemberQuotationController::class, 'givenQuotations'])->name('member.quotations.given');
+        Route::get('/received', [MemberQuotationController::class, 'receivedQuotations'])->name('member.quotations.received');
         Route::get('/{quotation}', [MemberQuotationController::class, 'show'])->name('member.quotations.show');
     });
     // Member management routes - requires admin access

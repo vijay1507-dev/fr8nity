@@ -23,7 +23,7 @@ class MemberQuotationService
         Notification::route('mail', config('mail.super_admin_email'))
             ->notify(new QuotationNotification($quotation, true));
 
-        $quotation->member->notify(new QuotationNotification($quotation));
+        $quotation->receiver->notify(new QuotationNotification($quotation));
 
         Notification::route('mail', $quotation->email)
             ->notify(new QuotationNotification($quotation, false, true));
