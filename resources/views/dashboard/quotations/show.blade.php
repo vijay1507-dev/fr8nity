@@ -28,6 +28,10 @@
                             <h5 class="mb-3">Sender Information</h5>
                             <table class="table table-sm table-borderless">
                                 <tr>
+                                    <td width="150"><strong>Company Name:</strong></td>
+                                    <td>{{ $quotation->member->company_name }}</td>
+                                </tr>
+                                <tr>
                                     <td width="150"><strong>Name:</strong></td>
                                     <td>{{ $quotation->name }}</td>
                                 </tr>
