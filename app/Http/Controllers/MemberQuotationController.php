@@ -64,6 +64,9 @@ class MemberQuotationController extends Controller
                 ->addColumn('member', function ($quotation) {
                     return $quotation->member ? $quotation->member->company_name : '-';
                 })
+                ->addColumn('company_name', function ($quotation) {
+                    return $quotation->member ? $quotation->member->company_name : '-';
+                })
                 ->addColumn('port_of_loading', function ($quotation) {
                     return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
                 })

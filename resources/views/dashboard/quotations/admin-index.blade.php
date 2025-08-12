@@ -14,6 +14,7 @@
                     <tr>
                         <th>No</th>
                         <th>Member (Receiver)</th>
+                        <th>Company Name</th>
                         <th>Sender Name</th>
                         <th>Sender Email</th>
                         <th>Phone</th>
@@ -42,6 +43,7 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'member', name: 'member.company_name'},
+                {data: 'company_name', name: 'company_name'},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
                 {data: 'phone', name: 'phone'},
