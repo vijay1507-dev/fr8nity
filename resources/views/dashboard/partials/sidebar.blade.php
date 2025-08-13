@@ -117,7 +117,7 @@
                 </a>
                 <ul id="quotations" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item">
-                        <a href="{{ route('member.quotations.given') }}" class="sidebar-link submenufont">Giver Quotation</a>
+                        <a href="{{ route('member.quotations.given') }}" class="sidebar-link submenufont">Given Quotation</a>
                     </li>
                     <li class="sidebar-item">
                         <a href="{{ route('member.quotations.received') }}" class="sidebar-link submenufont">Receiver Quotation</a>
