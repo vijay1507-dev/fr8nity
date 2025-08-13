@@ -1,0 +1,184 @@
+<?php
+
+namespace App\Services;
+
+use App\Models\User;
+use App\Models\MemberQuotation;
+use Illuminate\Support\Collection;
+use Carbon\Carbon;
+
+class SalesReportService
+{
+    /**
+     * Get all members for dropdown
+     */
+    public function getMembers(): Collection
+    {
+        return User::where('role', User::MEMBER)
+            ->select('id', 'name', 'company_name')
+            ->orderBy('name')
+            ->get()
+            ->map(function ($member) {
+                return [
+                    'id' => $member->id,
+                    'display_name' => $member->name . ' - ' . $member->company_name
+                ];
+            });
+    }
+
+    /**
+     * Get successful quotations for a member within date range
+     */
+    public function getSuccessfulQuotations(int $memberId, ?string $dateFrom = null, ?string $dateTo = null): Collection
+    {
+        $query = MemberQuotation::with(['receiver', 'givenBy', 'portOfLoading', 'portOfDischarge'])
+            ->where(function ($q) use ($memberId) {
+                $q->where('receiver_id', $memberId)
+                  ->orWhere('given_by_id', $memberId);
+            })
+            ->where('status', MemberQuotation::STATUS_CLOSED_SUCCESSFUL); // Only successful quotations
+
+        // Apply date filters if provided
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        return $query->orderBy('created_at', 'desc')->get();
+    }
+
+    /**
+     * Generate CSV data from quotations
+     */
+    public function generateCsvData(Collection $quotations, User $member): string
+    {
+        $csvData = "Successful Sales Report for: {$member->name} - {$member->company_name}\n";
+        $csvData .= "Generated on: " . now()->format('Y-m-d H:i:s') . "\n";
+        $csvData .= "\n";
+
+        // CSV Headers
+        $headers = [
+            'Date',
+            'Quotation ID',
+            'Role',
+            'Giver Name',
+            'Giver Company',
+            'Receiver Name',
+            'Receiver Company',
+            'Port of Loading',
+            'Port of Discharge',
+            'Transaction Value',
+            'Status',
+            'Contact Name',
+            'Contact Phone',
+            'Contact Email',
+            'Message'
+        ];
+
+        $csvData .= implode(',', array_map([$this, 'escapeCsvValue'], $headers)) . "\n";
+
+        // CSV Data rows
+        foreach ($quotations as $quotation) {
+            $role = $quotation->receiver_id == $member->id ? 'Receiver' : 'Giver';
+            
+            $row = [
+                $quotation->created_at->format('Y-m-d'),
+                $quotation->id,
+                $role,
+                $quotation->givenBy->name ?? 'N/A',
+                $quotation->givenBy->company_name ?? 'N/A',
+                $quotation->receiver->name ?? 'N/A',
+                $quotation->receiver->company_name ?? 'N/A',
+                $quotation->portOfLoading->name ?? 'N/A',
+                $quotation->portOfDischarge->name ?? 'N/A',
+                $quotation->transaction_value ?? 'N/A',
+                $quotation->getStatusLabel(),
+                $quotation->name ?? 'N/A',
+                $quotation->phone ?? 'N/A',
+                $quotation->email ?? 'N/A',
+                $quotation->message ?? 'N/A'
+            ];
+
+            $csvData .= implode(',', array_map([$this, 'escapeCsvValue'], $row)) . "\n";
+        }
+
+        return $csvData;
+    }
+
+    /**
+     * Generate filename for CSV export
+     */
+    public function generateFilename(User $member): string
+    {
+        return 'successful_sales_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . now()->format('Y_m_d_H_i_s') . '.csv';
+    }
+
+    /**
+     * Escape CSV values to handle commas, quotes, and newlines
+     */
+    private function escapeCsvValue($value): string
+    {
+        // Convert null to empty string
+        if ($value === null) {
+            $value = '';
+        }
+
+        // Convert to string
+        $value = (string) $value;
+
+        // Remove newlines and carriage returns
+        $value = str_replace(["\r\n", "\r", "\n"], ' ', $value);
+
+        // If value contains comma, quote, or starts with space, wrap in quotes
+        if (strpos($value, ',') !== false || strpos($value, '"') !== false || strpos($value, ' ') === 0) {
+            // Escape existing quotes by doubling them
+            $value = str_replace('"', '""', $value);
+            $value = '"' . $value . '"';
+        }
+
+        return $value;
+    }
+
+    /**
+     * Get member details by ID
+     */
+    public function getMember(int $memberId): User
+    {
+        return User::findOrFail($memberId);
+    }
+
+    /**
+     * Check if quotations exist for the given criteria
+     */
+    public function hasQuotations(Collection $quotations): bool
+    {
+        return $quotations->isNotEmpty();
+    }
+
+    /**
+     * Get report summary data
+     */
+    public function getReportSummary(Collection $quotations, User $member, ?string $dateFrom, ?string $dateTo): array
+    {
+        $totalValue = $quotations->sum('transaction_value');
+        $giverCount = $quotations->where('given_by_id', $member->id)->count();
+        $receiverCount = $quotations->where('receiver_id', $member->id)->count();
+
+        return [
+            'total_transactions' => $quotations->count(),
+            'total_value' => $totalValue,
+            'giver_transactions' => $giverCount,
+            'receiver_transactions' => $receiverCount,
+            'date_range' => [
+                'from' => $dateFrom,
+                'to' => $dateTo
+            ],
+            'member' => [
+                'name' => $member->name,
+                'company' => $member->company_name
+            ]
+        ];
+    }
+}
