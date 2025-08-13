@@ -24,7 +24,7 @@ class TradeMemberController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('created_at', function($row) {
-                    return $row->created_at->format('d-m-Y');
+                    return $row->created_at->format('d M Y H:i');
                 })
                 ->addColumn('action', function($row) {
                     $viewBtn = '<a href="' . route('trade-members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';

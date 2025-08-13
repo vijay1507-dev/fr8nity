@@ -20,7 +20,7 @@
                         <th>Port of Loading</th>
                         <th>Port of Discharge</th>
                         <th>Specifications</th>
-                        <th>Status</th>
+                        <th>Quotation Status</th>
                         <th>Created At</th>
                         <th>Action</th>
                     </tr>

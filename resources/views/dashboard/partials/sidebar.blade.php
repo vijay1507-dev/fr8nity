@@ -38,9 +38,6 @@
                      <li class="sidebar-item">
                          <a href="{{ route('members.index') }}" class="sidebar-link submenufont">FRT Members</a>
                      </li>
-                     <li class="sidebar-item ">
-                        <a href="{{ route('trade-members.index') }}" class="sidebar-link submenufont ">Trade Members</a>
-                    </li>
                     <li class="sidebar-item">
                         <a href="{{ route('admin.referrals.index') }}" class="sidebar-link submenufont">
                             Referrals
@@ -53,6 +50,20 @@
                     </li>
                  </ul>
              </li>
+             <li class="sidebar-item">
+                <a href="#" class="sidebar-link collapsed" data-bs-target="#trade-member" data-bs-toggle="collapse"
+                    aria-expanded="false">  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                    class="bi bi-briefcase" viewBox="0 0 16 16">
+                    <path d="M6.5 0a.5.5 0 0 0-.5.5V2h-1A1.5 1.5 0 0 0 3.5 3.5V4H2a2 2 0 0 0-2 2v1h16V6a2 2 0 0 0-2-2h-1.5v-.5A1.5 1.5 0 0 0 9.5 2h-1V.5a.5.5 0 0 0-.5-.5h-1zM8 2h1.5v1H6.5V2H8zM0 8v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8H0z" />
+                </svg>
+                    Trade Member Enquiry
+                </a>
+                <ul id="trade-member" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item ">
+                       <a href="{{ route('trade-members.index') }}" class="sidebar-link submenufont ">All Enquiries</a>
+                   </li>
+                </ul>
+            </li>
              <li class="sidebar-item">
                  <a href="#" class="sidebar-link collapsed" data-bs-target="#shipments" data-bs-toggle="collapse"
                      aria-expanded="false">

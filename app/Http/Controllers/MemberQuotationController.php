@@ -35,7 +35,7 @@ class MemberQuotationController extends Controller
                     return $quotation->getStatusLabel();
                 })
                 ->addColumn('created_at', function ($quotation) {
-                    return $quotation->created_at->format('d-m-Y');
+                    return $quotation->created_at->format('d M Y H:i');
                 })
                 ->addColumn('action', function ($row) {
                     $url = route('member.quotations.show', $row);
@@ -68,7 +68,7 @@ class MemberQuotationController extends Controller
                     return $quotation->getStatusLabel();
                 })
                 ->addColumn('created_at', function ($quotation) {
-                    return $quotation->created_at->format('d-m-Y');
+                    return $quotation->created_at->format('d M Y H:i');
                 })
                 ->addColumn('action', function ($row) {
                     $url = route('member.quotations.show', $row);
@@ -88,6 +88,35 @@ class MemberQuotationController extends Controller
         }
 
         return view('dashboard.quotations.show', compact('quotation'));
+    }
+
+    public function close(Request $request, MemberQuotation $quotation)
+    {
+        if ($quotation->given_by_id !== Auth::id() && $quotation->receiver_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $quotation->update(['status' => MemberQuotation::STATUS_CLOSED_UNSUCCESSFUL]);
+
+        return back()->with('success', 'Enquiry closed unsuccessfully.');
+    }
+
+    public function success(Request $request, MemberQuotation $quotation)
+    {
+        if ($quotation->given_by_id !== Auth::id() && $quotation->receiver_id !== Auth::id()) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        $validated = $request->validate([
+            'transaction_value' => ['required','numeric','min:0'],
+        ]);
+
+        $quotation->update([
+            'transaction_value' => $validated['transaction_value'],
+            'status' => MemberQuotation::STATUS_CLOSED_SUCCESSFUL,
+        ]);
+
+        return back()->with('success', 'Quotation marked successful.');
     }
 
     // Admin: list all quotations
@@ -113,7 +142,7 @@ class MemberQuotationController extends Controller
                     return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
                 })
                 ->addColumn('created_at', function ($quotation) {
-                    return $quotation->created_at->format('d-m-Y');
+                    return $quotation->created_at->format('d M Y H:i');
                 })
                 ->addColumn('action', function ($row) {
                     $url = route('admin.quotations.show', $row);

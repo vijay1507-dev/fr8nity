@@ -120,7 +120,7 @@
     @else
   <!-- memder dashboard -->
     <div class="dashboard-header d-flex justify-content-between">
-      <div>   <h5>Welcome Back Emma</h5></div>
+      <div>   <h5>Welcome Back, <span style="color: rgba(181, 131, 32, 1);">{{ucfirst(Auth::user()->name)}}</span></h5></div>
  
 @php
       $startAt = Auth::user()->membership_start_at;
@@ -128,9 +128,9 @@
     @endphp
 <div class="d-flex membership align-items-center justify-content-center bg-white px-3 ">
   @if($startAt && $expiresAt)
-  <h6 class="fw-semibold mb-0">Membership Period : </h6><span class="fs-6 "> {{ optional($startAt)->format('j/n/Y') ?? 'N/A' }}
-      TO
-      {{ optional($expiresAt)->format('j/n/Y') ?? 'N/A' }}</span></div>
+  <h6 class="fw-semibold mb-0">Membership Period : </h6><span class="fs-6 ps-1" style="color: rgba(181, 131, 32, 1);"> {{ optional($startAt)->format('d M Y') ?? 'N/A' }}
+      <span style="color: #000">-</span>
+      {{ optional($expiresAt)->format('d M Y') ?? 'N/A' }}</span></div>
        @else
       <h6 class="fw-semibold mb-0">Membership Period : </h6>><span class="fs-6"> N/A</span>
     @endif
@@ -153,7 +153,7 @@
    <button type="button" class="monthbtn p-2  ms-2 px-3 active"> Last 1 year</button>
     <button type="button" class="monthbtn p-2 ms-2 px-3 ">Lifetime</button>
       <button type="button" class="tooltip-btn p-1 ms-2 " data-bs-toggle="tooltip" data-bs-placement="top"
-      data-bs-title="Tooltip on top">!</button>
+      data-bs-title="You can filter the data by selecting the time period">!</button>
   </div>
   </div>   
     </div>

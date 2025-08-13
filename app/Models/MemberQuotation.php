@@ -17,8 +17,8 @@ class MemberQuotation extends Model
      * Status labels for display
      */
     const STATUS_LABELS = [
-        self::STATUS_CLOSED_UNSUCCESSFUL => 'Closed Unsuccessfully',
-        self::STATUS_CLOSED_SUCCESSFUL => 'Closed Successfully',
+        self::STATUS_CLOSED_UNSUCCESSFUL => 'Closed on Unsuccessful',
+        self::STATUS_CLOSED_SUCCESSFUL => 'Successful',
     ];
 
     protected $fillable = [
