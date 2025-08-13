@@ -50,14 +50,29 @@ class SalesReportService
     }
 
     /**
+     * Get successful quotations for all members within date range
+     */
+    public function getAllMembersSuccessfulQuotations(?string $dateFrom = null, ?string $dateTo = null): Collection
+    {
+        $query = MemberQuotation::with(['receiver', 'givenBy', 'portOfLoading', 'portOfDischarge'])
+            ->where('status', MemberQuotation::STATUS_CLOSED_SUCCESSFUL); // Only successful quotations
+
+        // Apply date filters if provided
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        return $query->orderBy('created_at', 'desc')->get();
+    }
+
+    /**
      * Generate CSV data from quotations
      */
-    public function generateCsvData(Collection $quotations, User $member): string
+    public function generateCsvData(Collection $quotations, ?User $member = null): string
     {
-        $csvData = "Successful Sales Report for: {$member->name} - {$member->company_name}\n";
-        $csvData .= "Generated on: " . now()->format('Y-m-d H:i:s') . "\n";
-        $csvData .= "\n";
-
         // CSV Headers
         $headers = [
             'Date',
@@ -77,11 +92,14 @@ class SalesReportService
             'Message'
         ];
 
-        $csvData .= implode(',', array_map([$this, 'escapeCsvValue'], $headers)) . "\n";
+        $csvData = implode(',', array_map([$this, 'escapeCsvValue'], $headers)) . "\n";
 
         // CSV Data rows
         foreach ($quotations as $quotation) {
-            $role = $quotation->receiver_id == $member->id ? 'Receiver' : 'Giver';
+            // Determine role based on whether we have a specific member or all members
+            $role = $member ? 
+                ($quotation->receiver_id == $member->id ? 'Receiver' : 'Giver') : 
+                'Both';
             
             $row = [
                 $quotation->created_at->format('Y-m-d'),
@@ -108,11 +126,91 @@ class SalesReportService
     }
 
     /**
+     * Generate CSV data for all members with proper header
+     */
+    public function generateAllMembersCsvData(Collection $quotations, ?string $dateFrom = null, ?string $dateTo = null): string
+    {
+        $csvData = "";
+        if ($dateFrom || $dateTo) {
+            $csvData .= "Date Range: ";
+            if ($dateFrom && $dateTo) {
+                $csvData .= "From {$dateFrom} to {$dateTo}\n";
+            } elseif ($dateFrom) {
+                $csvData .= "From {$dateFrom}\n";
+            } elseif ($dateTo) {
+                $csvData .= "Until {$dateTo}\n";
+            }
+        }
+
+        // CSV Headers
+        $headers = [
+            'Date',
+            'Quotation ID',
+            'Giver Name',
+            'Giver Company',
+            'Receiver Name',
+            'Receiver Company',
+            'Port of Loading',
+            'Port of Discharge',
+            'Transaction Value',
+            'Status',
+            'Contact Name',
+            'Contact Phone',
+            'Contact Email',
+            'Message'
+        ];
+
+        $csvData .= implode(',', array_map([$this, 'escapeCsvValue'], $headers)) . "\n";
+
+        // CSV Data rows
+        foreach ($quotations as $quotation) {
+            $row = [
+                $quotation->created_at->format('Y-m-d'),
+                $quotation->id,
+                $quotation->givenBy->name ?? 'N/A',
+                $quotation->givenBy->company_name ?? 'N/A',
+                $quotation->receiver->name ?? 'N/A',
+                $quotation->receiver->company_name ?? 'N/A',
+                $quotation->portOfLoading->name ?? 'N/A',
+                $quotation->portOfDischarge->name ?? 'N/A',
+                $quotation->transaction_value ?? 'N/A',
+                $quotation->getStatusLabel(),
+                $quotation->name ?? 'N/A',
+                $quotation->phone ?? 'N/A',
+                $quotation->email ?? 'N/A',
+                $quotation->message ?? 'N/A'
+            ];
+
+            $csvData .= implode(',', array_map([$this, 'escapeCsvValue'], $row)) . "\n";
+        }
+
+        return $csvData;
+    }
+
+    /**
      * Generate filename for CSV export
      */
     public function generateFilename(User $member): string
     {
         return 'successful_sales_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . now()->format('Y_m_d_H_i_s') . '.csv';
+    }
+
+    /**
+     * Generate filename for all members CSV export
+     */
+    public function generateAllMembersFilename(?string $dateFrom = null, ?string $dateTo = null): string
+    {
+        $filename = 'all_members_successful_sales_report_' . now()->format('Y_m_d_H_i_s');
+        
+        if ($dateFrom && $dateTo) {
+            $filename .= '_' . $dateFrom . '_to_' . $dateTo;
+        } elseif ($dateFrom) {
+            $filename .= '_from_' . $dateFrom;
+        } elseif ($dateTo) {
+            $filename .= '_until_' . $dateTo;
+        }
+        
+        return $filename . '.csv';
     }
 
     /**

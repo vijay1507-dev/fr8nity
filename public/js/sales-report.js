@@ -13,6 +13,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const dateFromInput = document.getElementById('date_from');
     const dateToInput = document.getElementById('date_to');
 
+    // Flatpickr instances
+    let fromDatePicker, toDatePicker;
+
     // Check if all required DOM elements exist
     const requiredElements = [
         'member_id', 'exportForm', 'downloadBtn', 'date_from', 'date_to'
@@ -31,27 +34,66 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     /**
-     * Initialize the module with routes
-     */
-    window.SalesReport = {
-        init: function(routeConfig) {
-            console.log('SalesReport initializing with routes:', routeConfig);
-            routes = routeConfig;
-            console.log('Routes initialized:', routes);
-            
-            // Verify all required routes are present
-            if (!routes.members || !routes.export) {
-                console.error('Missing required routes:', {
-                    members: !!routes.members,
-                    export: !!routes.export
-                });
-            } else {
-                console.log('All routes successfully initialized');
-                // Initialize the page with members
-                initializePage();
-            }
-        }
-    };
+    * Initialize Flatpickr date pickers
+    */
+            function initializeFlatpickr() {
+               // Initialize From Date picker
+               fromDatePicker = flatpickr(dateFromInput, {
+                   dateFormat: 'Y-m-d',
+                   allowInput: false,
+                   clickOpens: true,
+                   placeholder: 'Select start date',
+                   maxDate: 'today',
+                   disableMobile: true,
+                   onChange: function(selectedDates, dateStr) {
+                       // Update To Date picker min date
+                       if (toDatePicker) {
+                           toDatePicker.set('minDate', dateStr);
+                       }
+                   }
+               });
+
+               // Initialize To Date picker
+               toDatePicker = flatpickr(dateToInput, {
+                   dateFormat: 'Y-m-d',
+                   allowInput: false,
+                   clickOpens: true,
+                   placeholder: 'Select end date',
+                   maxDate: 'today',
+                   disableMobile: true,
+                   onChange: function(selectedDates, dateStr) {
+                       // Update From Date picker max date
+                       if (fromDatePicker) {
+                           fromDatePicker.set('maxDate', dateStr);
+                       }
+                   }
+               });
+
+               console.log('Flatpickr date pickers initialized');
+           }
+
+           /**
+            * Initialize the module with routes
+            */
+           window.SalesReport = {
+               init: function(routeConfig) {
+                   console.log('SalesReport initializing with routes:', routeConfig);
+                   routes = routeConfig;
+                   console.log('Routes initialized:', routes);
+                   
+                   // Verify all required routes are present
+                   if (!routes.members || !routes.export) {
+                       console.error('Missing required routes:', {
+                           members: !!routes.members,
+                           export: !!routes.export
+                       });
+                   } else {
+                       console.log('All routes successfully initialized');
+                       // Initialize the page with members and date pickers
+                       initializePage();
+                   }
+               }
+           };
 
     /**
      * Function to show no records message
@@ -82,17 +124,22 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 5000);
     }
 
-    /**
-     * Load members when page loads
-     */
-    function initializePage() {
-        // Check if routes are initialized
-        if (!routes.members) {
-            console.error('Routes not initialized. Please wait for initialization.');
-            return;
-        }
-        loadMembers();
-    }
+               /**
+            * Load members when page loads
+            */
+           function initializePage() {
+               // Check if routes are initialized
+               if (!routes.members) {
+                   console.error('Routes not initialized. Please wait for initialization.');
+                   return;
+               }
+               
+               // Initialize date pickers
+               initializeFlatpickr();
+               
+               // Load members
+               loadMembers();
+           }
 
     /**
      * Load members from API
@@ -107,17 +154,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
         memberSelect.innerHTML = '<option value="">Loading members...</option>';
         
-        fetch(routes.members)
-            .then(response => response.json())
-            .then(data => {
-                memberSelect.innerHTML = '<option value="">Choose a member...</option>';
-                data.forEach(member => {
-                    const option = document.createElement('option');
-                    option.value = member.id;
-                    option.textContent = member.display_name;
-                    memberSelect.appendChild(option);
-                });
-            })
+                 fetch(routes.members)
+             .then(response => response.json())
+             .then(data => {
+                 memberSelect.innerHTML = '<option value="" disabled selected>Choose a member</option>';
+                 
+                 // Add "All Members" option at the top
+                 const allMembersOption = document.createElement('option');
+                 allMembersOption.value = 'all';
+                 allMembersOption.textContent = 'All Members';
+                 memberSelect.appendChild(allMembersOption);
+                 
+                 // Add separator
+                 const separatorOption = document.createElement('option');
+                 separatorOption.disabled = true;
+                 separatorOption.textContent = '────────── Individual Members ──────────';
+                 memberSelect.appendChild(separatorOption);
+                 
+                 // Add individual members
+                 data.forEach(member => {
+                     const option = document.createElement('option');
+                     option.value = member.id;
+                     option.textContent = member.display_name;
+                     memberSelect.appendChild(option);
+                 });
+             })
             .catch(error => {
                 console.error('Error loading members:', error);
                 memberSelect.innerHTML = '<option value="">Error loading members</option>';
@@ -151,13 +212,21 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         
-        // Validate member selection
-        if (!memberSelect.value) {
-            memberSelect.classList.add('is-invalid');
-            return;
-        } else {
-            memberSelect.classList.remove('is-invalid');
-        }
+                 // Validate member selection
+         if (!memberSelect.value) {
+             memberSelect.classList.add('is-invalid');
+             return;
+         } else {
+             memberSelect.classList.remove('is-invalid');
+         }
+
+         // Show confirmation for "All Members" selection
+         if (memberSelect.value === 'all') {
+             const confirmMessage = 'You are about to export a report for ALL members. This may take longer and generate a larger file. Do you want to continue?';
+             if (!confirm(confirmMessage)) {
+                 return;
+             }
+         }
 
         performExport();
     });
@@ -210,13 +279,23 @@ document.addEventListener('DOMContentLoaded', function() {
             a.style.display = 'none';
             a.href = url;
             
-            // Get filename from Content-Disposition header or create default
-            let selectedMemberText = 'unknown_member';
-            if (memberSelect.selectedIndex >= 0 && memberSelect.options[memberSelect.selectedIndex]) {
-                selectedMemberText = memberSelect.options[memberSelect.selectedIndex].text;
-            }
-            const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '_');
-            a.download = `sales_report_${selectedMemberText.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}_${timestamp}.csv`;
+                         // Get filename from Content-Disposition header or create default
+             let selectedMemberText = 'unknown_member';
+             if (memberSelect.selectedIndex >= 0 && memberSelect.options[memberSelect.selectedIndex]) {
+                 selectedMemberText = memberSelect.options[memberSelect.selectedIndex].text;
+             }
+             
+             // Handle "All Members" filename
+             let filename;
+             if (memberSelect.value === 'all') {
+                 const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '_');
+                 filename = `all_members_sales_report_${timestamp}.csv`;
+             } else {
+                 const timestamp = new Date().toISOString().slice(0, 19).replace(/[:-]/g, '_');
+                 filename = `sales_report_${selectedMemberText.replace(/[^a-zA-Z0-9]/g, '_').toLowerCase()}_${timestamp}.csv`;
+             }
+             
+             a.download = filename;
             
             console.log('Download filename:', a.download);
             
@@ -230,6 +309,10 @@ document.addEventListener('DOMContentLoaded', function() {
             // Reset form and clear validation
             exportForm.reset();
             memberSelect.classList.remove('is-invalid');
+            
+            // Clear date pickers
+            if (fromDatePicker) fromDatePicker.clear();
+            if (toDatePicker) toDatePicker.clear();
         })
         .catch(error => {
             console.error('Error:', error);

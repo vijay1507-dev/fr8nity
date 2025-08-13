@@ -135,11 +135,13 @@ class MemberQuotationController extends Controller
                 ->addColumn('company_name', function ($quotation) {
                     return $quotation->receiver ? $quotation->receiver->company_name : '-';
                 })
-                ->addColumn('port_of_loading', function ($quotation) {
-                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
+                ->addColumn('transaction_value', function ($quotation) {
+                    return $quotation->transaction_value
+                        ? '$' . number_format($quotation->transaction_value, 2)
+                        : '-';
                 })
-                ->addColumn('port_of_discharge', function ($quotation) {
-                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
+                ->addColumn('status', function ($quotation) {
+                    return $quotation->getStatusLabel();
                 })
                 ->addColumn('created_at', function ($quotation) {
                     return $quotation->created_at->format('d M Y H:i');

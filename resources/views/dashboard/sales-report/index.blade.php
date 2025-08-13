@@ -8,7 +8,7 @@
                 <div class="card-header">
                     <h4 class="card-title mb-0">Sales Report - Giver & Receiver Report</h4>
                 </div>
-                <div class="card-body">
+                <div class="card-body col-md-8 mx-auto">
                     @if(session('success'))
                         <div class="alert alert-success">
                             {{ session('success') }}
@@ -21,16 +21,16 @@
                         </div>
                     @endif
 
-                    <div class="alert alert-info mb-3">
-                        <i class="bi bi-info-circle me-2"></i>
-                        <strong>Note:</strong> This report will only include successful transactions. Pending or failed transactions are excluded.
-                    </div>
+                                         <div class="alert alert-info mb-3">
+                         <i class="bi bi-info-circle me-2"></i>
+                         <strong>Note:</strong> This report will only include successful transactions. Pending or failed transactions are excluded.
+                     </div>
                     
                     <form id="exportForm" action="{{ route('sales-report.export') }}" method="POST">
                         @csrf
                         
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <!-- Member Selection -->
                                 <div class="mb-3">
                                     <label for="member_id" class="form-label">Select Member <span class="text-danger">*</span></label>
@@ -43,18 +43,18 @@
                                 </div>
                             </div>
                             
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <!-- Date Range Selection -->
                                 <div class="mb-3">
                                     <label class="form-label">Date Range (Optional)</label>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <label for="date_from" class="form-label">From Date</label>
-                                            <input type="date" class="form-control" id="date_from" name="date_from">
+                                            <input type="text" class="form-control flatpickr-input" id="date_from" name="date_from" placeholder="Select date" readonly>
                                         </div>
                                         <div class="col-md-6">
                                             <label for="date_to" class="form-label">To Date</label>
-                                            <input type="date" class="form-control" id="date_to" name="date_to">
+                                            <input type="text" class="form-control flatpickr-input" id="date_to" name="date_to" placeholder="Select date" readonly>
                                         </div>
                                     </div>
                                     <small class="form-text text-muted">

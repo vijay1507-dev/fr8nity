@@ -9,7 +9,7 @@
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
                         <h4 class="page-title">Quotation Details</h4>
-                        <a href="{{ url()->previous() }}" class="btn btn-secondary shadow-sm d-flex align-items-center gap-2">
+                        <a href="{{ route('admin.quotations.index') }}" class="btn btn-secondary shadow-sm d-flex align-items-center gap-2">
                             <span class="d-none d-md-inline">Back</span>
                         </a>
                     </div>
@@ -40,6 +40,22 @@
                                             <td>{{ $quotation->alternate_email }}</td>
                                         </tr>
                                     @endif
+                                    <tr>
+                                        <td><strong>Port of Loading:</strong></td>
+                                        <td>{{ $quotation->portOfLoading ? $quotation->portOfLoading->name : '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Port of Discharge:</strong></td>
+                                        <td>{{ $quotation->portOfDischarge ? $quotation->portOfDischarge->name : '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Transaction Value:</strong></td>
+                                        <td>{{ $quotation->transaction_value ? '$' . number_format($quotation->transaction_value, 2) : '-' }}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Quotation Status:</strong></td>
+                                        <td>{{ $quotation->getStatusLabel() }}</td>
+                                    </tr>
                                 </table>
                             </div>
                             <div class="col-md-6">
