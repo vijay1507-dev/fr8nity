@@ -39,23 +39,7 @@
                                             <td><strong>Alternate Email:</strong></td>
                                             <td>{{ $quotation->alternate_email }}</td>
                                         </tr>
-                                    @endif
-                                    <tr>
-                                        <td><strong>Port of Loading:</strong></td>
-                                        <td>{{ $quotation->portOfLoading ? $quotation->portOfLoading->name : '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Port of Discharge:</strong></td>
-                                        <td>{{ $quotation->portOfDischarge ? $quotation->portOfDischarge->name : '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Transaction Value:</strong></td>
-                                        <td>{{ $quotation->transaction_value ? '$' . number_format($quotation->transaction_value, 2) : '-' }}</td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Quotation Status:</strong></td>
-                                        <td>{{ $quotation->getStatusLabel() }}</td>
-                                    </tr>
+                                    @endif                                   
                                 </table>
                             </div>
                             <div class="col-md-6">
@@ -106,6 +90,18 @@
                                             <td><strong>Port of Discharge:</strong></td>
                                             <td>{{ $quotation->portOfDischarge->name }}</td>
                                         </tr>
+                                    @endif
+                                    @if ($quotation->transaction_value)
+                                    <tr>
+                                        <td><strong>Transaction Value:</strong></td>
+                                        <td>{{ $quotation->transaction_value ? '$' . number_format($quotation->transaction_value, 2) : '-' }}</td>
+                                    </tr>
+                                    @endif
+                                    @if ($quotation->status)
+                                    <tr>
+                                        <td><strong>Quotation Status:</strong></td>
+                                        <td>{{ $quotation->getStatusLabel() }}</td>
+                                    </tr>
                                     @endif
                                 </table>
                             </div>
