@@ -41,7 +41,7 @@ class MemberController extends Controller
                     return $row->membership_expires_at ? $row->membership_expires_at->format('d-m-Y') : 'N/A';
                 })
                 ->addColumn('created_at', function($row) {
-                    return $row->created_at->format('d-m-Y');
+                    return $row->created_at->format('d M Y H:i');
                 })
                 ->addColumn('action', function($row) {
                     $viewBtn = '<a href="' . route('members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
@@ -334,43 +334,22 @@ class MemberController extends Controller
      */
     public function directory(Request $request)
     {
-        $query = User::where('role', User::MEMBER)
-            ->where('status', 'approved')
-            ->where('is_active', true)
-            ->with(['membershipTier', 'region', 'country', 'city']);
+        $query = User::approvedActiveMembers()
+            ->with(['membershipTier', 'region', 'country', 'city'])
+            ->filterForDirectory($request->only(['company_name', 'country', 'city', 'specialization']));
 
-        // Filter by company name
-        if ($request->filled('company_name')) {
-            $query->where(function($q) use ($request) {
-                $q->where('company_name', 'like', '%' . $request->company_name . '%')
-                  ->orWhere('name', 'like', '%' . $request->company_name . '%');
-            });
+        $members = $query->paginate(10)->withQueryString();
+
+        if ($request->ajax()) {
+            $html = view('website.sections.member-cards', [
+                'members' => $members->items(),
+            ])->render();
+
+            return response()->json([
+                'html' => $html,
+                'next_page_url' => $members->nextPageUrl(),
+            ]);
         }
-
-        // Filter by country
-        if ($request->filled('country')) {
-            $query->whereHas('country', function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->country . '%');
-            });
-        }
-
-        // Filter by city
-        if ($request->filled('city')) {
-            $query->whereHas('city', function($q) use ($request) {
-                $q->where('name', 'like', '%' . $request->city . '%');
-            });
-        }
-
-        // Filter by specialization
-        if ($request->filled('specialization')) {
-            $specialization = $request->specialization;
-            $query->where(function($q) use ($specialization) {
-                $q->where('specializations', 'like', '%' . $specialization . '%')
-                  ->orWhere('specializations', 'like', '%"' . $specialization . '"%');
-            });
-        }
-
-        $members = $query->get();
 
         return view('website.member-directory', compact('members'));
     }

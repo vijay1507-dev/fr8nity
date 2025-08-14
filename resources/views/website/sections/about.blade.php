@@ -5,7 +5,7 @@
             <div class="blacklight radies_20">
                 <div class="row align-items-center justify-content-center p-3">
                     <div class="col-12 col-md-6 text-center mb-4 mb-md-0">
-                        <img src="{{asset('images/ourStory.png')}}" alt="Our Story"
+                        <img src="{{asset('images/our_story.jpg')}}" alt="Our Story"
                             class="img-fluid rounded-4 shadow object-fit-cover w-100"
                             style="height: 100%; max-height: 450px; object-position: center;" />
                     </div>

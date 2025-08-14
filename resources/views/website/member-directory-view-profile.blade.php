@@ -151,29 +151,29 @@
 
                         <form class="bg-dark text-white p-md-4 p-3 radies_20" method="POST" action="{{ route('member.quotations.store') }}" enctype="multipart/form-data">
                             @csrf
-                            <input type="hidden" name="member_id" value="{{ $member->id }}">
-                            
+                            <input type="hidden" name="receiver_id" value="{{ $member->id }}">
+                            <input type="hidden" name="given_by_id" value="{{ auth()->user()->id }}">
                             <h4 class="text-center w-100">Obtain quotation from this member</h4>
                             <div class="mb-3">
                                 <label for="name" class="form-label">Name*</label>
-                                <input type="text" class="form-control" id="name" name="name"
-                                    placeholder="Enter your name" value="{{ old('name') }}">
+                                <input type="text" class="form-control bg-light" id="name" name="name" style="background-color: #b9b9b9 !important;"
+                                    placeholder="Enter your name" value="{{ auth()->user()->name }}" readonly>
                                 @error('name')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="phone" class="form-label">Phone*</label>
-                                <input type="tel" class="form-control" id="phone" name="phone"
-                                    placeholder="Enter your phone number" value="{{ old('phone') }}">
+                                <input type="tel" class="form-control bg-light" id="phone" name="phone" style="background-color: #b9b9b9 !important;"
+                                    placeholder="Enter your phone number" value="{{ auth()->user()->whatsapp_phone }}" readonly>
                                 @error('phone')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email*</label>
-                                <input type="email" class="form-control" id="email" name="email"
-                                    placeholder="Enter your email" value="{{ old('email') }}">
+                                <input type="email" class="form-control bg-light" id="email" name="email" style="background-color: #b9b9b9 !important;"
+                                    placeholder="Enter your email" value="{{ auth()->user()->email }}" readonly>
                                 @error('email')
                                     <span class="text-danger">{{ $message }}</span>
                                 @enderror

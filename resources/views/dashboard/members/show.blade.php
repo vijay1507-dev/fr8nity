@@ -201,48 +201,49 @@
                         <h5 class="card-title mb-0">Membership Details</h5>
                     </div>
                     <div class="card-body">
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="mb-4">
-                                <label class="form-label text-muted mb-1">Current Tier</label>
+                        <div class="d-flex row">
+                            <div class="mb-4 col-6">
+                               <span class="info-label d-block">Current Tier</span>
                                 <div class="d-flex align-items-center">
-                                    <h4 class="mb-0 membership-tier-name">
-                                        {{ optional($member->membershipTier)->name ?? 'No Tier' }}</h4>
+                               <span class="info-value">
+                                        {{ optional($member->membershipTier)->name ?? 'No Tier' }}</span>
                                 </div>
                             </div>
-                            <div class="mb-4">
-                                <label class="form-label text-muted mb-2">CREDIT Protection</label>
-                                <p class="mb-0">{{ optional($member->membershipTier)->credit_protection ?? 'No credit protection available' }}</p>
+                            <div class="mb-4 col-6">
+                                 <span class="info-label d-block">CREDIT Protection</span>
+                              <span class="info-value">{{ optional($member->membershipTier)->credit_protection ?? 'No credit protection available' }}</span>
                             </div>
                         </div>
                         
-                        <div class="d-flex justify-content-between align-items-center">
-                            <div class="mb-4">
-                                <label class="form-label text-muted mb-2">Reward Points</label>
-                                <h4 class="mb-0 text-primary">{{ $totalPoints ?? 0 }} pts</h4>
+                        <div class="d-flex row">
+                            <div class="mb-4 col-6">
+                                   <span class="info-label d-block ">Reward Points</span>
+                                   <span class="info-value text-primary">{{ $totalPoints ?? 0 }} pts</span>
                             </div>
                             @if($member->membership_number)
-                                <div class="mb-4">
-                                    <label class="form-label text-muted mb-2">Membership No.</label>
-                                    <p class="mb-0">{{ $member->membership_number }}</p>
+                                <div class="mb-4 col-6">
+                                   <span class="info-label d-block">Membership No.</span>
+                                  <span class="info-value">{{ $member->membership_number }}</span>
                                 </div>
                             @endif
                         </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                        <div class="mb-4">
+                        <div class="d-flex row">
+                        <div class="mb-4 col-6">
                             <label class="form-label text-muted mb-2">Member Since</label>
                             <p class="mb-0">{{ $member->created_at->format('F j, Y') }}</p>
                         </div>
                         @if($member->membership_expires_at)
-                            <div class="mb-4">
-                                <label class="form-label text-muted mb-2">Valid Till</label>
-                                <p class="mb-0">{{ $member->membership_expires_at->format('F j, Y') }}</p>
+                            <div class="mb-4 col-6">
+                               <span class="info-label d-block">Valid Till</span>
+                                   <span class="info-value">{{ $member->membership_expires_at->format('F j, Y') }}</span>
                             </div>
                             @endif
                         </div>
                         @if ($member->membershipTier)
                             <div>
-                                <label class="form-label text-muted mb-2">Tier Benefits</label>
-                                <ul class="list-unstyled mb-0">
+                                 <span class="info-label d-block">Tier Benefits</span>
+                                 
+                                <ul class="list-unstyled mb-0 mt-2">
                                     @foreach ($member->membershipTier->benefits as $benefit)
                                         <li class="mb-2 d-flex align-items-center">
                                             <i class="bi bi-check-circle-fill text-success me-2"></i>
@@ -253,8 +254,14 @@
                             </div>
                         @endif
 
-                        <div class="mt-4">
-                            <label class="form-label text-muted mb-2">About Company</label>
+                       
+                       
+                    </div>
+                </div>
+                   <div class="col-12">
+                           <div class="mt-4 card bg-white p-3">
+
+                            <span class="info-label d-block">About Company</span>
                             @if($member->company_description)
                                 <div class="company-description">
                                     {!! $member->company_description !!}
@@ -262,13 +269,23 @@
                             @else
                                 <p class="text-muted mb-0">Nothing about company</p>
                             @endif
+                      
+
+
+
+
+                           </div>
                         </div>
-                        @if($member->certificate_document)
-                        <div class="mt-4">
-                            <label class="form-label text-muted mb-2">E-certificate</label>
+
+                                <div class="col-12">
+
+
+ @if($member->certificate_document)
+                      <div class="mt-4 card bg-white p-3">
+                          <span class="info-label d-block">E-certificate</span>
                             <div class="e-certificate-section">
                                 <div class="gradient_rounded radies_20">
-                                    <div class="p-3 py-4 radies_20 text-center h-100 d-flex flex-column justify-content-center align-items-start">
+                                    <div class=" h-100 d-flex flex-column ">
                                         <a href="{{ Storage::url($member->certificate_document) }}" 
                                            class="e-certificate-btn" 
                                            target="_blank"
@@ -276,7 +293,7 @@
                                             <i class="bi bi-download me-2"></i>Download & Preview
                                         </a>
                                         @if($member->certificate_uploaded_at)
-                                        <small class="text-muted mt-3">
+                                        <small class="text-muted mt-1">
                                             Last updated: {{ $member->certificate_uploaded_at->format('M d, Y') }}
                                         </small>
                                         @endif
@@ -285,8 +302,13 @@
                             </div>
                         </div>
                         @endif
-                    </div>
-                </div>
+
+
+
+
+
+                           
+                        </div>
             </div>
         </div>
         <!-- Back Button -->

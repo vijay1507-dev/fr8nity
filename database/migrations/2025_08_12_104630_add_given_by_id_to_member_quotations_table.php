@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('ports', function (Blueprint $table) {
-            $table->id();
-            $table->unsignedBigInteger('country_id');
-            $table->string('name');
-            $table->timestamps();
+        Schema::table('member_quotations', function (Blueprint $table) {
+            $table->unsignedBigInteger('given_by_id')->after('receiver_id')->nullable();
         });
     }
 
@@ -24,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('ports');
+        Schema::table('member_quotations', function (Blueprint $table) {
+            $table->dropColumn('given_by_id');
+        });
     }
 };

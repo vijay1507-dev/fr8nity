@@ -6,6 +6,7 @@ namespace App\Models;
 use App\Notifications\ResetPasswordNotification;
 use App\Notifications\TwoFactorCodeNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -89,6 +90,55 @@ class User extends Authenticatable
             'certificate_uploaded_at' => 'datetime',
             'is_active' => 'boolean',
         ];
+    }
+
+    /**
+     * Scope: only approved and active members
+     */
+    public function scopeApprovedActiveMembers(Builder $query): Builder
+    {
+        return $query->where('role', self::MEMBER)
+            ->where('status', 'approved')
+            ->where('is_active', true);
+    }
+
+    /**
+     * Scope: apply directory filters (company/city/country/specialization)
+     */
+    public function scopeFilterForDirectory(Builder $query, array $filters): Builder
+    {
+        $query->when(!empty($filters['company_name']), function (Builder $q) use ($filters) {
+            $term = $filters['company_name'];
+            $q->where(function (Builder $inner) use ($term) {
+                $inner->where('company_name', 'like', "%{$term}%")
+                    ->orWhere('name', 'like', "%{$term}%");
+            });
+        });
+
+        $query->when(!empty($filters['country']), function (Builder $q) use ($filters) {
+            $q->whereHas('country', function (Builder $rel) use ($filters) {
+                $rel->where('name', 'like', "%{$filters['country']}%");
+            });
+        });
+
+        $query->when(!empty($filters['city']), function (Builder $q) use ($filters) {
+            $q->whereHas('city', function (Builder $rel) use ($filters) {
+                $rel->where('name', 'like', "%{$filters['city']}%");
+            });
+        });
+
+        $query->when(!empty($filters['specialization']), function (Builder $q) use ($filters) {
+            $termRaw = trim((string) $filters['specialization']);
+            $termLower = strtolower($termRaw);
+
+            $q->where(function (Builder $inner) use ($termRaw, $termLower) {
+                $inner->whereJsonContains('specializations', $termRaw)
+                    ->orWhereRaw('LOWER(specializations) LIKE ?', ['%"' . $termLower . '"%'])
+                    ->orWhereRaw('LOWER(specializations) LIKE ?', ['%' . $termLower . '%']);
+            });
+        });
+
+        return $query;
     }
 
     /**
@@ -208,5 +258,21 @@ class User extends Authenticatable
     public function getReferralLink()
     {
         return url('/register?ref=' . $this->generateReferralCode());
+    }
+
+    /**
+     * Get quotations given by the user
+     */
+    public function givenQuotations()
+    {
+        return $this->hasMany(MemberQuotation::class, 'given_by_id');
+    }
+
+    /**
+     * Get quotations received by the user
+     */
+    public function receivedQuotations()
+    {
+        return $this->hasMany(MemberQuotation::class, 'receiver_id');
     }
 }

@@ -120,7 +120,7 @@
     @else
   <!-- memder dashboard -->
     <div class="dashboard-header d-flex justify-content-between">
-      <div>   <h5>Welcome Back Emma</h5></div>
+      <div>   <h5>Welcome Back, <span style="color: rgba(181, 131, 32, 1);">{{ucfirst(Auth::user()->name)}}</span></h5></div>
  
 @php
       $startAt = Auth::user()->membership_start_at;
@@ -128,9 +128,9 @@
     @endphp
 <div class="d-flex membership align-items-center justify-content-center bg-white px-3 ">
   @if($startAt && $expiresAt)
-  <h6 class="fw-semibold mb-0">Membership Period : </h6><span class="fs-6 "> {{ optional($startAt)->format('j/n/Y') ?? 'N/A' }}
-      TO
-      {{ optional($expiresAt)->format('j/n/Y') ?? 'N/A' }}</span></div>
+  <h6 class="fw-semibold mb-0">Membership Period : </h6><span class="fs-6 ps-1" style="color: rgba(181, 131, 32, 1);"> {{ optional($startAt)->format('d M Y') ?? 'N/A' }}
+      <span style="color: #000">-</span>
+      {{ optional($expiresAt)->format('d M Y') ?? 'N/A' }}</span></div>
        @else
       <h6 class="fw-semibold mb-0">Membership Period : </h6>><span class="fs-6"> N/A</span>
     @endif
@@ -153,7 +153,7 @@
    <button type="button" class="monthbtn p-2  ms-2 px-3 active"> Last 1 year</button>
     <button type="button" class="monthbtn p-2 ms-2 px-3 ">Lifetime</button>
       <button type="button" class="tooltip-btn p-1 ms-2 " data-bs-toggle="tooltip" data-bs-placement="top"
-      data-bs-title="Tooltip on top">!</button>
+      data-bs-title="You can filter the data by selecting the time period">!</button>
   </div>
   </div>   
     </div>
@@ -163,19 +163,20 @@
       <div class="col-12 col-lg-4">
         <div class="dashboard-card  p-0 h-100 d-flex flex-column">
           <div class="row flex-grow-1">
-            <div class="col-6 p-4">
-              <img src="{{asset('images/dashboardIcon1.svg')}}" alt="ransaction Value Give">
-              <h2 class="mb-0 mt-3">$11,123</h2>
-              <p class="pt-2">Transaction Value Give</p>
+            <h6 class="text-center pt-3">Total Given Quotations / Transactions</h6>
+            <div class="col-6 p-4 text-center">
+              <img src="{{asset('images/dashboardIcon1.svg')}}" alt="Transaction Value Given">
+              <h2 class="mb-0 mt-3">${{ number_format(auth()->user()->givenQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->sum('transaction_value'), 2) }}</h2>
+              <p class="pt-2">Transaction Value Given</p>
             </div>
-            <div class="col-6 p-3 py-4  border-l">
-            <img src="{{asset('images/dashboardIcon2.svg')}}" alt="Enquiries Given (Freight Member)">
-              <h2 class="mb-0 mt-3">$11,123</h2>
+            <div class="col-6 p-3 py-4 text-center border-l">
+            <img src="{{asset('images/dashboardIcon2.svg')}}" alt="Given Quotations">
+              <h2 class="mb-0 mt-3">{{ auth()->user()->givenQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->count() }}</h2>
               <p class="pt-2">Enquiries Given (Freight Member)</p>
             </div>
           </div>
           <div class="text-center pb-3">
-            <button class="view-btn   ">View</button>
+            <button class="view-btn" onclick="window.location.href='{{ route('member.quotations.given') }}'">View</button>
           </div>
         </div>
       </div>
@@ -184,34 +185,36 @@
       <div class="col-12 col-lg-4">
         <div class="dashboard-card  p-0 h-100 d-flex flex-column">
           <div class="row flex-grow-1">
-            <div class="col-6 p-4">
+            <h6 class="text-center pt-3">Total Received Quotations / Transactions</h6>
+            <div class="col-6 p-4 text-center">
            <img src="{{asset('images/dashboardIcon3.svg')}}" alt="Transaction Value Received">
-              <h2 class="mb-0 mt-3">$11,123</h2>
+              <h2 class="mb-0 mt-3">${{ number_format(auth()->user()->receivedQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->sum('transaction_value'), 2) }}</h2>
               <p class="pt-2">Transaction Value Received</p>
             </div>
-            <div class="col-6 p-3 py-4 border-l">
-            <img src="{{asset('images/dashboardIcon4.svg')}}" alt="Enquiries Given (Freight Member)">
-              <h2 class="mb-0 mt-3">11</h2>
-              <p class="pt-2">Enquiries Given (Freight Member)</p>
+            <div class="col-6 p-3 py-4 text-center border-l">
+            <img src="{{asset('images/dashboardIcon4.svg')}}" alt="Received Quotations">
+              <h2 class="mb-0 mt-3">{{ auth()->user()->receivedQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->count() }}</h2>
+              <p class="pt-2">Enquiries Received (Freight Member)</p>
             </div>
           </div>
           <div class="text-center pb-3">
-            <button class="view-btn ">View</button>
+            <button class="view-btn" onclick="window.location.href='{{ route('member.quotations.received') }}'">View</button>
           </div>
         </div>
       </div>
 <div class="col-12 col-lg-2 ">
      <div class="dashboard-card  p-0 h-100 d-flex flex-column">
           <div class="row flex-grow-1">
-            <div class="col-12 p-4">
-         <img src="{{asset('images/dashboardIcon5.svg')}}" alt="Members referred to">
-              <h2 class="mb-0 mt-3">11</h2>
+            <h6 class="text-center pt-3">Total Members referred</h6>
+            <div class="col-12 text-center p-4">
+              <img src="{{asset('images/dashboardIcon5.svg')}}" alt="Members referred to">
+              <h2 class="mb-0 mt-3">{{ auth()->user()->referrals()->count() }}</h2>
               <p class="pt-2">Members referred to</p>
             </div>
        
           </div>
           <div class="text-center pb-3">
-            <button class="view-btn ">View</button>
+            <button class="view-btn" onclick="window.location.href='{{ route('referrals.index') }}'">View</button>
           </div>
         </div>
 </div>
@@ -219,15 +222,16 @@
 <div class="col-12 col-lg-2 ">
      <div class="dashboard-card  p-0 h-100 d-flex flex-column">
           <div class="row flex-grow-1">
-            <div class="col-12 p-4">
+            <h6 class="text-center pt-3">Events attended till date</h6>
+            <div class="col-12 text-center p-4">
               <img src="{{asset('images/dashboardIcon6.svg')}}" alt="Events attended till date">
-              <h2 class="mb-0 mt-3">11</h2>
+              <h2 class="mb-0 mt-3">N/A</h2>
               <p class="pt-2">Events attended till date</p>
             </div>
        
           </div>
           <div class="text-center pb-3">
-            <button class="view-btn  ">View</button>
+            <button class="view-btn">View</button>
           </div>
         </div>
 </div>

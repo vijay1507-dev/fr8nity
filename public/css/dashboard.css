@@ -1070,3 +1070,7 @@ div .select2-container--default .select2-selection--single .select2-selection__a
   -webkit-animation: blink-animation 1s steps(5, start) infinite;
   color: rgb(221, 12, 12) !important;
 }
+
+.sidebar-item{
+  font-weight:700;
+}

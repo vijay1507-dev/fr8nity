@@ -34,7 +34,7 @@
                                 <td>
                                     <div>{{ $referral->referred->company_name }}</div>
                                 </td>
-                                <td>{{ $referral->registered_at->format('M d, Y H:i') }}</td>
+                                <td>{{ $referral->registered_at->format('d M Y H:i') }}</td>
                                 <td>
                                     <span class="badge bg-{{ $referral->referred->status === 'approved' ? 'success' : 'warning' }}">
                                         {{ ucfirst($referral->referred->status) }}

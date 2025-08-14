@@ -43,7 +43,7 @@ class ShipmentController extends Controller
                     return \Carbon\Carbon::parse($row->cargo_ready_date)->format('F j, Y');
                 })
                 ->addColumn('created_at', function($row) {
-                    return $row->created_at->format('d-m-Y');
+                    return $row->created_at->format('d M Y H:i');
                 })
                 ->addColumn('action', function($row) {
                     $viewBtn = '<a href="' . route('shipments.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';

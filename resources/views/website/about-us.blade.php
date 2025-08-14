@@ -35,7 +35,7 @@
             <div class="col-12 col-md-6 text-center mb-4 mb-md-0 px-md-4">
                 <div class="gradient_rounded radies_20">
                     <div class="blacklight radies_20 p-3">
-                            <img src="{{asset('images/ourStory.png')}}" alt="Our Story"
+                            <img src="{{asset('images/ourStory.png')}}" alt="about the fr8nity"
                     class="img-fluid rounded-4 shadow object-fit-cover w-100 radies_20"
                     style="height: 100%; max-height: 450px; object-position: center;" />
                     </div>    
@@ -147,7 +147,7 @@
             <div class="col-12 col-md-6 text-center mb-4 mb-md-0 px-md-4">
                 <div class="gradient_rounded radies_20">
                     <div class="blacklight radies_20 p-3">
-                            <img src="{{asset('images/ourStory.png')}}" alt="Our Story"
+                            <img src="{{asset('images/ourStory.png')}}" alt="A new kind of network"
                     class="img-fluid rounded-4 shadow object-fit-cover w-100 radies_20"
                     style="height: 100%; max-height: 450px; object-position: center;" />
                     </div>    

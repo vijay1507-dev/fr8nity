@@ -12,6 +12,7 @@ use App\Http\Controllers\ReferralController;
 use App\Http\Controllers\TradeMemberController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\SettingsController;
+use App\Http\Controllers\SalesReportController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
@@ -118,8 +119,11 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     
     // Member Quotation routes
     Route::prefix('quotations')->group(function () {
-        Route::get('/', [MemberQuotationController::class, 'index'])->name('member.quotations.index');
+        Route::get('/given', [MemberQuotationController::class, 'givenQuotations'])->name('member.quotations.given');
+        Route::get('/received', [MemberQuotationController::class, 'receivedQuotations'])->name('member.quotations.received');
         Route::get('/{quotation}', [MemberQuotationController::class, 'show'])->name('member.quotations.show');
+        Route::patch('/{quotation}/close', [MemberQuotationController::class, 'close'])->name('member.quotations.close');
+        Route::patch('/{quotation}/success', [MemberQuotationController::class, 'success'])->name('member.quotations.success');
     });
     // Member management routes - requires admin access
     Route::middleware('admin')->prefix('members')->group(function () {
@@ -141,6 +145,13 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         // Site settings
         Route::get('/settings/site', [SettingsController::class, 'siteIndex'])->name('settings.site.index');
         Route::put('/settings/site', [SettingsController::class, 'siteUpdate'])->name('settings.site.update');
+    });
+
+    // Sales Report routes
+    Route::middleware('admin')->prefix('sales-report')->group(function () {
+        Route::get('/', [SalesReportController::class, 'index'])->name('sales-report.index');
+        Route::post('/export', [SalesReportController::class, 'export'])->name('sales-report.export');
+        Route::get('/members', [SalesReportController::class, 'getMembers'])->name('sales-report.members');
     });
     // Admin Quotations routes
     Route::middleware('admin')->prefix('admin')->group(function () {

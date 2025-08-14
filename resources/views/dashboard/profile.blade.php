@@ -176,47 +176,47 @@
                             <h5 class="card-title mb-0">Membership Details</h5>
                         </div>
                         <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="mb-4">
-                                    <label class="form-label text-muted mb-1">Current Tier</label>
+                            <div class="d-flex row">
+                                <div class="col-6 mb-4">
+                                    <span class="info-label d-block">Current Tier</span>
                                     <div class="d-flex align-items-center">
-                                        <h4 class="mb-0 membership-tier-name">
-                                            {{ optional(auth()->user()->membershipTier)->name ?? 'No Tier' }}</h4>
+                                        <span class="info-value">
+                                            {{ optional(auth()->user()->membershipTier)->name ?? 'No Tier' }}</span>
                                     </div>
                                 </div>
-                                <div class="mb-4">
-                                    <label class="form-label text-muted mb-2">CREDIT Protection</label>
-                                    <p class="mb-0">{{ optional(auth()->user()->membershipTier)->credit_protection ?? 'No credit protection available' }}</p>
+                                <div class="col-6 mb-4">
+                                    <span class="info-label d-block">CREDIT Protection</span>
+                                  <span class="info-value">{{ optional(auth()->user()->membershipTier)->credit_protection ?? 'No credit protection available' }}</span>
                                 </div>
                                 
                             </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div class="mb-4">
-                                    <label class="form-label text-muted mb-2">Reward Points</label>
-                                    <h4 class="mb-0 text-primary">{{ $totalPoints ?? 0 }} pts</h4>
+                            <div class="d-flex row ">
+                                <div class="col-6 mb-4">
+                                   <span class="info-label d-block ">Reward Points</span>
+                                   <span class="info-value text-primary">{{ $totalPoints ?? 0 }} pts</span>
                                 </div>
                                 @if(auth()->user()->membership_number)
-                                    <div class="mb-4">
-                                        <label class="form-label text-muted mb-2">Membership No.</label>
-                                        <p class="mb-0">{{ auth()->user()->membership_number }}</p>
+                                    <div class= " col-6 mb-4">
+                                      <span class="info-label d-block">Membership No.</span>
+                                          <span class="info-value">{{ auth()->user()->membership_number }}</span>
                                     </div>
                                 @endif
                             </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                            <div class="mb-4">
-                                <label class="form-label text-muted mb-2">Member Since</label>
-                                <p class="mb-0">{{ auth()->user()->created_at->format('F j, Y') }}</p>
+                            <div class="d-flex row">
+                            <div class="col-6 mb-4">
+                               <span class="info-label d-block">Member Since</span>
+                               <span class="info-value">{{ auth()->user()->created_at->format('F j, Y') }}</span>
                             </div>
                             @if(auth()->user()->membership_expires_at)
-                                <div class="mb-4">
-                                    <label class="form-label text-muted mb-2">Valid Till</label>
-                                    <p class="mb-0">{{ auth()->user()->membership_expires_at->format('F j, Y') }}</p>
+                                <div class=" col-6 mb-4">
+                                   <span class="info-label d-block">Valid Till</span>
+                                   <span class="info-value">{{ auth()->user()->membership_expires_at->format('F j, Y') }}</span>
                                 </div>
                                 @endif
                             </div>
                             @if (auth()->user()->membershipTier)
                                 <div>
-                                    <label class="form-label text-muted mb-2">Tier Benefits</label>
+                                   <span class="info-label">Tier Benefits</span>
                                     <ul class="list-unstyled mb-0">
                                         @foreach (auth()->user()->membershipTier->benefits as $benefit)
                                             <li class="mb-2 d-flex align-items-center">
@@ -224,26 +224,37 @@
                                                 {{ $benefit->title }}
                                             </li>
                                         @endforeach
+					@if(auth()->user()->membershipTier->benefits->isEmpty())
+                                            <li class="text-muted">No benefits available for this tier.</li>
+                                        @endif
                                     </ul>
                                 </div>
                             @endif
 
-                            <div class="mt-4">
-                                <label class="form-label text-muted mb-2">About Company</label>
+                        
+                         
+                        </div>
+                    </div>
+                     <div class="col-12">
+                           <div class="mt-4 card bg-white p-3">
+                               <span class="info-label">About Company</span>
                                 @if(auth()->user()->company_description)
                                     <div class="company-description">
                                         {!! auth()->user()->company_description !!}
                                     </div>
                                 @else
-                                    <p class="text-muted mb-0">Nothing about company</p>
+                                 <span class="info-value">Nothing about company</span>
                                 @endif
                             </div>
-                            @if(auth()->user()->certificate_document)
-                            <div class="mt-4">
-                                <label class="form-label text-muted mb-2">E-certificate</label>
+                     </div>
+
+                       <div class="col-12">
+                           @if(auth()->user()->certificate_document)
+                            <div class="mt-4 card bg-white p-3">
+                                <span class="info-label">E-certificate</span>
                                 <div class="e-certificate-section">
-                                    <div class="gradient_rounded radies_20">
-                                        <div class="p-3 py-4 radies_20 text-center h-100 d-flex flex-column justify-content-center align-items-start">
+                                   
+                                        <div class="  h-100 d-flex flex-column ">
                                             <a href="{{ Storage::url(auth()->user()->certificate_document) }}" 
                                                class="e-certificate-btn" 
                                                target="_blank"
@@ -251,17 +262,16 @@
                                                 <i class="bi bi-download me-2"></i>Download & Preview
                                             </a>
                                             @if(auth()->user()->certificate_uploaded_at)
-                                            <small class="text-muted mt-3">
+                                            <small class="text-muted mt-1">
                                                 Last updated: {{ auth()->user()->certificate_uploaded_at->format('M d, Y') }}
                                             </small>
                                             @endif
                                         </div>
-                                    </div>
+                                 
                                 </div>
                             </div>
                             @endif
-                        </div>
-                    </div>
+                       </div>
                 </div>
             </div>
             <!-- Back Button -->

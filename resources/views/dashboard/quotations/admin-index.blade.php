@@ -14,12 +14,13 @@
                     <tr>
                         <th>No</th>
                         <th>Member (Receiver)</th>
+                        <th>Company Name</th>
                         <th>Sender Name</th>
                         <th>Sender Email</th>
                         <th>Phone</th>
-                        <th>Port of Loading</th>
-                        <th>Port of Discharge</th>
-                        <th>Specifications</th>
+                        <th>Transaction Value</th>
+                        <th>Quotation Status</th>
+                        <th>Created At</th>
                         <th>Action</th>
                     </tr>
                 </thead>
@@ -41,12 +42,13 @@
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'member', name: 'member.company_name'},
+                {data: 'company_name', name: 'company_name'},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
                 {data: 'phone', name: 'phone'},
-                {data: 'port_of_loading', name: 'port_of_loading'},
-                {data: 'port_of_discharge', name: 'port_of_discharge'},
-                {data: 'specifications', name: 'specifications'},
+                {data: 'transaction_value', name: 'transaction_value'},
+                {data: 'status', name: 'status'},
+                {data: 'created_at', name: 'created_at'},
                 {
                     data: 'action', 
                     name: 'action', 

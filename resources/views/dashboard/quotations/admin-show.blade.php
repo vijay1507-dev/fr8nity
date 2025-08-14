@@ -4,22 +4,24 @@
 
 @section('content')
     <div class="container-fluid">
-        <div class="col-12">
-            <div class="card-header d-flex justify-content-between align-items-center">
-                <h4 class="page-title">Quotation Details</h4>
-                <a href="{{ url()->previous() }}" class="btn btn-secondary shadow-sm d-flex align-items-center gap-2">
-                    <span class="d-none d-md-inline">Back</span>
-                </a>
-            </div>
-        </div>
         <div class="row">
             <div class="col-12">
                 <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h4 class="page-title">Quotation Details</h4>
+                        <a href="{{ route('admin.quotations.index') }}" class="btn btn-secondary shadow-sm d-flex align-items-center gap-2">
+                            <span class="d-none d-md-inline">Back</span>
+                        </a>
+                    </div>
                     <div class="card-body">
                         <div class="row">
                             <div class="col-md-6">
                                 <h5 class="mb-3">Sender Information</h5>
                                 <table class="table table-sm table-borderless">
+                                    <tr>
+                                        <td width="150"><strong>Company Name:</strong></td>
+                                        <td>{{ $quotation->givenBy->company_name }}</td>
+                                    </tr>
                                     <tr>
                                         <td width="180"><strong>Name:</strong></td>
                                         <td>{{ $quotation->name }}</td>
@@ -37,27 +39,27 @@
                                             <td><strong>Alternate Email:</strong></td>
                                             <td>{{ $quotation->alternate_email }}</td>
                                         </tr>
-                                    @endif
+                                    @endif                                   
                                 </table>
                             </div>
                             <div class="col-md-6">
-                                <h5 class="mb-3">Receiver (Member) Information</h5>
+                                <h5 class="mb-3">Receiver Information</h5>
                                 <table class="table table-sm table-borderless">
                                     <tr>
                                         <td width="180"><strong>Company:</strong></td>
-                                        <td>{{ optional($quotation->member)->company_name }}</td>
+                                        <td>{{ optional($quotation->receiver)->company_name }}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Contact Person:</strong></td>
-                                        <td>{{ optional($quotation->member)->name }}</td>
+                                        <td>{{ optional($quotation->receiver)->name }}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Email:</strong></td>
-                                        <td>{{ optional($quotation->member)->email }}</td>
+                                        <td>{{ optional($quotation->receiver)->email }}</td>
                                     </tr>
                                     <tr>
                                         <td><strong>Phone:</strong></td>
-                                        <td>{{ optional($quotation->member)->company_telephone }}</td>
+                                        <td>{{ optional($quotation->receiver)->company_telephone }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -88,6 +90,18 @@
                                             <td><strong>Port of Discharge:</strong></td>
                                             <td>{{ $quotation->portOfDischarge->name }}</td>
                                         </tr>
+                                    @endif
+                                    @if ($quotation->transaction_value)
+                                    <tr>
+                                        <td><strong>Transaction Value:</strong></td>
+                                        <td>{{ $quotation->transaction_value ? '$' . number_format($quotation->transaction_value, 2) : '-' }}</td>
+                                    </tr>
+                                    @endif
+                                    @if ($quotation->status)
+                                    <tr>
+                                        <td><strong>Quotation Status:</strong></td>
+                                        <td>{{ $quotation->getStatusLabel() }}</td>
+                                    </tr>
                                     @endif
                                 </table>
                             </div>

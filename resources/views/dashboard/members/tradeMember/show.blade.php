@@ -6,7 +6,7 @@
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="card-title mb-0">Trade Member Details</h4>
             <div>
-                <a href="{{ route('trade-members.edit', $tradeMember) }}" class="btn btn-primary">Edit</a>
+                <a href="{{ route('trade-members.edit', $tradeMember) }}" class="btn btn-outline-secondary">Edit</a>
                 <a href="{{ route('trade-members.index') }}" class="btn btn-secondary">Back to List</a>
             </div>
         </div>
