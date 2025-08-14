@@ -42,7 +42,7 @@ class MemberQuotationController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $url = route('member.quotations.show', $row);
-                    return '<a href="'.$url.'" class="btn btn-sm btn-info">View</a>';
+                    return '<div class="d-inline-flex align-items-center flex-nowrap"><a href="'.$url.'" class="btn btn-sm btn-info">View</a></div>';
                 })
                 ->make(true);
         }
@@ -75,7 +75,7 @@ class MemberQuotationController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $url = route('member.quotations.show', $row);
-                    return '<a href="'.$url.'" class="btn btn-sm btn-info">View</a>';
+                    return '<div class="d-inline-flex align-items-center flex-nowrap"><a href="'.$url.'" class="btn btn-sm btn-info">View</a></div>';
                 })
                 ->make(true);
         }
@@ -168,7 +168,7 @@ class MemberQuotationController extends Controller
                 })
                 ->addColumn('action', function ($row) {
                     $url = route('admin.quotations.show', $row);
-                    return '<a href="'.$url.'" class="btn btn-sm btn-info">View</a>';
+                    return '<div class="d-inline-flex align-items-center flex-nowrap"><a href="'.$url.'" class="btn btn-sm btn-info">View</a></div>';
                 })
                 ->make(true);
         }

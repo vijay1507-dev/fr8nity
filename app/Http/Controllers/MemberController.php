@@ -44,14 +44,16 @@ class MemberController extends Controller
                     return $row->created_at->format('d M Y H:i');
                 })
                 ->addColumn('action', function($row) {
-                    $viewBtn = '<a href="' . route('members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
-                    $editBtn = '<a href="' . route('members.edit', $row) . '" class="btn btn-sm btn-outline-success">Edit</a>';
-                    $deleteBtn = '<form action="' . route('members.destroy', $row) . '" method="POST" style="display:inline-block;">
-                                    ' . csrf_field() . '
-                                    ' . method_field('DELETE') . '
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Are you sure you want to delete this member?\')">Delete</button>
-                                  </form>';
-                    return $viewBtn . ' ' . $editBtn . ' ' . $deleteBtn;
+                    $buttons = '<div class="d-inline-flex align-items-center gap-2 flex-nowrap">';
+                    $buttons .= '<a href="' . route('members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
+                    $buttons .= '<a href="' . route('members.edit', $row) . '" class="btn btn-sm btn-outline-success">Edit</a>';
+                    $buttons .= '<form action="' . route('members.destroy', $row) . '" method="POST" class="d-inline m-0 p-0">'
+                                  . csrf_field()
+                                  . method_field('DELETE') .
+                                  '<button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Are you sure you want to delete this member?\')">Delete</button>' .
+                                  '</form>';
+                    $buttons .= '</div>';
+                    return $buttons;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
