@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\MemberQuotation;
+use App\Models\User;
 use App\Notifications\QuotationNotification;
+use App\Notifications\QuotationStatusNotification;
+use Illuminate\Support\Facades\Notification;
 use App\Services\MemberQuotationService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -98,6 +101,14 @@ class MemberQuotationController extends Controller
 
         $quotation->update(['status' => MemberQuotation::STATUS_CLOSED_UNSUCCESSFUL]);
 
+        // Notify SA, sender (external email), and receiver
+        $admins = User::where('role', User::SUPER_ADMIN)->get();
+        Notification::send($admins, new QuotationStatusNotification($quotation, 'admin'));
+        Notification::route('mail', $quotation->email)
+            ->notify(new QuotationStatusNotification($quotation, 'sender'));
+        if ($quotation->receiver) {
+            $quotation->receiver->notify(new QuotationStatusNotification($quotation, 'receiver'));
+        }
         return back()->with('success', 'Enquiry closed unsuccessfully.');
     }
 
@@ -115,6 +126,15 @@ class MemberQuotationController extends Controller
             'transaction_value' => $validated['transaction_value'],
             'status' => MemberQuotation::STATUS_CLOSED_SUCCESSFUL,
         ]);
+
+        // Notify SA, sender (external email), and receiver
+        $admins = User::where('role', User::SUPER_ADMIN)->get();
+        Notification::send($admins, new QuotationStatusNotification($quotation, 'admin'));
+        Notification::route('mail', $quotation->email)
+            ->notify(new QuotationStatusNotification($quotation, 'sender'));
+        if ($quotation->receiver) {
+            $quotation->receiver->notify(new QuotationStatusNotification($quotation, 'receiver'));
+        }
 
         return back()->with('success', 'Quotation marked successful.');
     }
