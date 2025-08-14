@@ -74,7 +74,7 @@
           <button id="loadMoreBtn" class="btn btnbg fe-semibold">Load More</button>
         </div>
       @endif
-      @if(method_exists($members, 'total') && $members->total() > 30)
+      @if(method_exists($members, 'total') && $members->total() > 10)
         <button id="goTopBtn" 
                 class="btn btn-primary position-fixed" 
                 style="right: 20px; bottom: 20px; display: none; z-index: 1050; border-radius: 50%; width: 48px; height: 48px; box-shadow: 0 2px 10px rgba(0,0,0,0.3);">
