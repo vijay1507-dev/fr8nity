@@ -98,6 +98,7 @@ class MemberQuotationController extends Controller
         $members = User::where('role', User::MEMBER)
             ->where('status', 'approved')
             ->where('is_active', true)
+            ->where('id', '!=', Auth::id())
             ->orderBy('company_name')
             ->get();
 
