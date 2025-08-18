@@ -8,7 +8,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
-                    <h4 class="page-title">Quotation Details</h4>
+                    <h4 class="page-title">{{ $quotation->given_by_id === Auth::id() ? 'Given' : 'Received' }} Quotations</h4>
                     <a href="{{ $quotation->given_by_id === Auth::id() ? route('member.quotations.given') : route('member.quotations.received') }}" class="btn btn-secondary shadow-sm d-flex align-items-center gap-2">
                         <span class="d-none d-md-inline">Back</span>
                     </a>
@@ -16,7 +16,7 @@
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-6">
-                            <h5 class="mb-3">{{ $quotation->given_by_id === Auth::id() ? 'Receiver' : 'Sender' }} Information</h5>
+                            <h5 class="mb-3">{{ $quotation->given_by_id === Auth::id() ? 'Submitted to' : 'Received from' }} :</h5>
                             <table class="table table-sm table-borderless">
                                 <tr>
                                     <td width="150"><strong>Company Name:</strong></td>
@@ -43,7 +43,7 @@
                             </table>
                         </div>
                         <div class="col-md-6">
-                            <h5 class="mb-3">Quotation Details</h5>
+                            <h5 class="mb-3">Enquiry Details</h5>
                             <table class="table table-sm table-borderless">
                                 <tr>
                                     <td width="150"><strong>Date:</strong></td>

@@ -367,7 +367,7 @@ class MemberController extends Controller
                 ->where('id', $id)
                 ->with(['membershipTier', 'region', 'country', 'city'])
                 ->firstOrFail();
-            $ports = Port::all();
+            $ports = Port::orderBy('name', 'asc')->get();
             return view('website.member-directory-view-profile', compact('member', 'ports'));
         } catch (\Exception $e) {
             abort(404, 'Member not found');
