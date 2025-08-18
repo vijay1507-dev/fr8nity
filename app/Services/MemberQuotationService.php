@@ -17,14 +17,10 @@ class MemberQuotationService
             $path = $document->store('quotation-documents', 'public');
             $validatedData['uploaded_document'] = $path;
         }
-
         $quotation = MemberQuotation::create($validatedData);
-
-        Notification::route('mail', config('mail.super_admin_email'))
-            ->notify(new QuotationNotification($quotation, true));
-
+        $admins = User::where('role', User::SUPER_ADMIN)->get();
+        Notification::send($admins, new QuotationNotification($quotation, true));
         $quotation->receiver->notify(new QuotationNotification($quotation));
-
         Notification::route('mail', $quotation->email)
             ->notify(new QuotationNotification($quotation, false, true));
 

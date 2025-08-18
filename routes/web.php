@@ -121,6 +121,7 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::prefix('quotations')->group(function () {
         Route::get('/given', [MemberQuotationController::class, 'givenQuotations'])->name('member.quotations.given');
         Route::get('/received', [MemberQuotationController::class, 'receivedQuotations'])->name('member.quotations.received');
+        Route::get('/create', [MemberQuotationController::class, 'create'])->name('member.quotations.create');
         Route::get('/{quotation}', [MemberQuotationController::class, 'show'])->name('member.quotations.show');
         Route::patch('/{quotation}/close', [MemberQuotationController::class, 'close'])->name('member.quotations.close');
         Route::patch('/{quotation}/success', [MemberQuotationController::class, 'success'])->name('member.quotations.success');

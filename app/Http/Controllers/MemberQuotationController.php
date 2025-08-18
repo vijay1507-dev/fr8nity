@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\MemberQuotation;
 use App\Models\User;
+use App\Models\Port;
 use App\Notifications\QuotationNotification;
 use App\Notifications\QuotationStatusNotification;
 use Illuminate\Support\Facades\Notification;
@@ -67,6 +68,11 @@ class MemberQuotationController extends Controller
                 ->addColumn('port_of_discharge', function ($quotation) {
                     return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
                 })
+                ->addColumn('transaction_value', function ($quotation) {
+                    return $quotation->transaction_value
+                        ? '$' . number_format($quotation->transaction_value, 2)
+                        : '-';
+                })
                 ->addColumn('status', function ($quotation) {
                     return $quotation->getStatusLabel();
                 })
@@ -81,6 +87,21 @@ class MemberQuotationController extends Controller
         }
 
         return view('dashboard.quotations.received');
+    }
+
+    public function create()
+    {
+        // Get ports for the form dropdowns
+        $ports = Port::orderBy('name')->get();
+        
+        // Get members for the form dropdown
+        $members = User::where('role', User::MEMBER)
+            ->where('status', 'approved')
+            ->where('is_active', true)
+            ->orderBy('company_name')
+            ->get();
+
+        return view('dashboard.quotations.create', compact('ports', 'members'));
     }
 
     public function show(MemberQuotation $quotation)
@@ -194,29 +215,58 @@ class MemberQuotationController extends Controller
 
     public function store(Request $request)
     {   
-        $validated = $request->validate([
-            'receiver_id' => 'required|exists:users,id',
-            'given_by_id' => 'required|exists:users,id',
-            'name' => 'required|string|max:255',
-            'phone' => 'required|string|max:20',
-            'email' => 'required|email|max:255',
-            'alternate_email' => 'nullable|email|max:255',
-            'document' => 'nullable|file|max:10240', // 10MB max
-            'port_of_loading_id' => 'nullable|exists:cities,id',
-            'port_of_discharge_id' => 'nullable|exists:cities,id',
-            'specifications' => 'nullable|array',
-            'specifications.*' => 'string|in:Air,FCL,LCL,Land,Multimodal,Project Cargo',
-            'message' => 'required|string',
-        ], [
-            'name.required' => 'Please enter your name.',
-            'phone.required' => 'Phone number is required.',
-            'email.required' => 'Email is required.',
-            'email.email' => 'Please enter a valid email address.',
-            'message.required' => 'Message is required.',
+        if ($request->is_offline_enquiry == 1) {
+            $givenBy = User::find($request->given_by_id);
+        
+            if ($givenBy) {
+                $request->merge([
+                    'name'   => $givenBy->name,
+                    'phone'  => $givenBy->whatsapp_phone,
+                    'email'  => $givenBy->email,
+                    'status' => MemberQuotation::STATUS_CLOSED_SUCCESSFUL,
+                ]);
+            }
+        }
+        
+        // base rules
+        $rules = [
+            'receiver_id'         => 'required|exists:users,id',
+            'given_by_id'         => 'required|exists:users,id',
+            'name'                => 'required|string|max:255',
+            'phone'               => 'required|string|max:20',
+            'email'               => 'required|email|max:255',
+            'alternate_email'     => 'nullable|email|max:255',
+            'document'            => 'nullable|file|max:10240', 
+            'port_of_loading_id'  => 'nullable|exists:ports,id',
+            'port_of_discharge_id'=> 'nullable|exists:ports,id',
+            'specifications'      => 'nullable|array',
+            'specifications.*'    => 'string|in:Air,FCL,LCL,Land,Multimodal,Project Cargo',
+            'message'             => 'required|string',
+        ];
+        
+        // if offline enquiry, require transaction_value
+        if ($request->is_offline_enquiry == 1) {
+            $rules['transaction_value'] = 'required|numeric|min:0';
+            // status already merged into request, so validation can allow it
+            $rules['status'] = 'nullable';
+        }
+        
+        $validated = $request->validate($rules, [
+            'name.required'              => 'Please enter your name.',
+            'phone.required'             => 'Phone number is required.',
+            'email.required'             => 'Email is required.',
+            'email.email'                => 'Please enter a valid email address.',
+            'message.required'           => 'Message is required.',
+            'transaction_value.required' => 'Transaction value is required.',
+            'transaction_value.numeric'  => 'Transaction value must be a number.',
+            'transaction_value.min'      => 'Transaction value must be greater than or equal to 0.',
         ]);
-
-        $quotation = $this->memberQuotationService->createAndNotify($validated, $request->file('document'));
-
+        
+        $this->memberQuotationService->createAndNotify($validated, $request->file('document'));
+        
+        if($request->is_offline_enquiry == 1){
+            return redirect()->route('member.quotations.received')->with('success', 'Enquiry Added successfully');
+        }
         return redirect()->back()->with('success', 'Quotation request submitted successfully');
     }
 }
