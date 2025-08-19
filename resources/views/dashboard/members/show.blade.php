@@ -76,13 +76,13 @@
             <div class="col-12 col-lg-8">
                 <div class="card">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h5 class="card-title mb-0">Member Information</h5>
+                        <p class="mb-0 fs-5">Member Information</p>
                     </div>
                     <div class="card-body p-0">
                         <!-- Contact Information -->
                         <div class="info-section">
                             <div class="info-header">
-                                <h6 class="text-uppercase mb-0"><i class="bi bi-person me-2"></i>Contact Information</h6>
+                                <p class="text-uppercase mb-0 fs-6"><i class="bi bi-person me-2"></i>Contact Information</p>
                             </div>
                             <div class="info-body">
                                 <div class="info-grid">
@@ -101,7 +101,7 @@
                         <!-- Company Information -->
                         <div class="info-section">
                             <div class="info-header">
-                                <h6 class="text-uppercase mb-0"><i class="bi bi-building me-2"></i>Company Information</h6>
+                                <p class="text-uppercase mb-0 fs-6"><i class="bi bi-building me-2"></i>Company Information</p>
                             </div>
                             <div class="info-body">
                                 <div class="info-grid">
@@ -168,7 +168,7 @@
                         <!-- Network Information -->
                         <div class="info-section">
                             <div class="info-header">
-                                <h6 class="text-uppercase mb-0"><i class="bi bi-globe me-2"></i>Network Information</h6>
+                                <p class="text-uppercase mb-0 fs-6"><i class="bi bi-globe me-2"></i>Network Information</p>
                             </div>
                             <div class="info-body">
                                 <div class="info-grid">
@@ -198,7 +198,7 @@
             <div class="col-12 col-lg-4">
                 <div class="card">
                     <div class="card-header">
-                        <h5 class="card-title mb-0">Membership Details</h5>
+                        <p class="mb-0 fs-5">Membership Details</p>
                     </div>
                     <div class="card-body">
                         <div class="d-flex row">
