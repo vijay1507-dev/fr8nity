@@ -15,7 +15,10 @@ class DashboardController extends Controller
     }
     public function index()
     {
-        return view('dashboard.dashboard');
+        if (Auth::user()->role === User::MEMBER) {
+            return view('dashboard.member-dashboard');
+        }
+        return view('dashboard.admin-dashboard');
     }
 
     public function profile()
