@@ -22,9 +22,9 @@
                         <span style="color: #000">-</span>
                         {{ optional($expiresAt)->format('d M Y') ?? 'N/A' }}</span>
             </div>
-                @else
-                <h6 class="fw-semibold mb-0">Membership Period : </h6><span class="fs-6"> N/A</span>
-                @endif
+        @else
+            <h6 class="fw-semibold mb-0">Membership Period : </h6><span class="fs-6"> N/A</span>
+            @endif
         </div>
 
         <div class="container rounded  bg-white ">
@@ -138,7 +138,7 @@
             </div>
             <div class="row g-3 pt-3 align-items-stretch">
                 <!-- Membership Chart -->
-                <div class="col-lg-7 d-flex">
+                <div class="col-lg-6 d-flex">
                     <div class="chart-card w-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <h1 class="chart-title">Membership Leadership Board</h1>
@@ -153,7 +153,7 @@
                 </div>
 
                 <!-- Trade Surplus/Deficit Chart -->
-                <div class="col-lg-5 d-flex">
+                <div class="col-lg-6 d-flex">
                     <div class="chart-card w-100">
                         <div class="d-flex justify-content-between align-items-center">
                             <h1 class="chart-title">Trade Surplus/Deficit </h1>
@@ -175,144 +175,29 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-    <script src="./js/admin.js"></script>
     <script>
         // Initialize all tooltips
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
+    <script>
+        // Membership Chart (Bar)
+        const membershipCtx = document.getElementById('membershipChart').getContext('2d');
 
-
-        const chartConfig = {
-            type: 'line',
+        new Chart(membershipCtx, {
+            type: 'bar',
             data: {
-                labels: ["Feb", "Mar", "Apr", "May", "Jun", "Jul"],
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
                 datasets: [{
-                    data: [2, 3, 15, 25, 28, 28],
-                    backgroundColor: 'rgba(181, 131, 32, 1)',
+                    label: 'Membership Growth',
+                    data: [8, 12, 9, 11, 18, 9, 11, 6],
+                    backgroundColor: 'rgba(181, 131, 32, 0.7)',
                     borderColor: 'rgba(181, 131, 32, 1)',
-                    borderWidth: 2,
-                    fill: true,
-                    tension: 0.4,
-                    pointBackgroundColor: 'rgba(181, 131, 32, 1)',
-                    pointRadius: 4
+                    borderWidth: 1
                 }]
             },
             options: {
                 responsive: true,
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
-                },
-                scales: {
-                    y: {
-                        beginAtZero: true,
-                        max: 30,
-                        ticks: {
-                            stepSize: 5
-                        }
-                    }
-                }
-            }
-        };
-
-        // Initialize both charts
-        new Chart(document.getElementById('membershipChart1'), chartConfig);
-        new Chart(document.getElementById('membershipChart2'), chartConfig);
-    </script>
-
-
-
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const ctx = document.getElementById('memberGrowthChart').getContext('2d');
-
-            const data = {
-                labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul'],
-                datasets: [{
-                    label: 'Total Members',
-                    data: [3, 5, 18, 25, 28, 28],
-                    borderColor: 'rgba(181, 131, 32, 1)',
-                    backgroundColor: 'rgba(181, 131, 32, 1)',
-                    tension: 0.4,
-                    fill: true,
-                    pointRadius: 4,
-                    pointBackgroundColor: 'rgba(181, 131, 32, 1)',
-                    pointBorderColor: '#fff',
-                    pointBorderWidth: 2,
-                }]
-            };
-
-            const config = {
-                type: 'line',
-                data: data,
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                color: '#f0f0f0',
-                                drawBorder: false,
-                            },
-                            ticks: {
-                                stepSize: 5,
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                font: {
-                                    size: 12
-                                }
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    }
-                }
-            };
-
-            new Chart(ctx, config);
-        });
-    </script>
-
-    <!-- new -->
-    <script>
-        // Membership Chart
-        const ctx = document.getElementById('membershipChart').getContext('2d');
-        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-        gradient.addColorStop(0, 'rgba(181, 131, 32, 0.15)');
-        gradient.addColorStop(1, 'rgba(181, 131, 32, 0)');
-
-        new Chart(ctx, {
-            type: 'line',
-            data: {
-                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug'],
-                datasets: [{
-                    data: [8, 12, 9, 11, 18, 9, 11, 6],
-                    backgroundColor: gradient,
-                    borderColor: 'rgba(181, 131, 32, 1)',
-                    borderWidth: 2,
-                    pointBackgroundColor: 'rgba(181, 131, 32, 1)',
-                    pointRadius: 5,
-                    pointHoverRadius: 6,
-                    fill: true,
-                    tension: 0.4
-                }]
-            },
-            options: {
                 maintainAspectRatio: false,
                 plugins: {
                     legend: {
@@ -327,13 +212,12 @@
                 scales: {
                     x: {
                         grid: {
-                            display: false,
-                            drawTicks: false,
-                            drawBorder: false
+                            display: false
                         },
                         ticks: {
-                            color: (context) => context.tick.label === 'May' ? 'rgba(181, 131, 32, 1)' : '#555',
-                            font: context => {
+                            color: (context) =>
+                                context.tick.label === 'May' ? 'rgba(181, 131, 32, 1)' : '#555',
+                            font: (context) => {
                                 const label = context.tick.label;
                                 return {
                                     weight: label === 'May' ? '600' : '400'
