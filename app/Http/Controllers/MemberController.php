@@ -28,7 +28,7 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::query()->where('role', User::MEMBER)->with('membershipTier');
+            $data = User::query()->where('role', User::MEMBER)->with('membershipTier')->latest();
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -339,7 +339,8 @@ class MemberController extends Controller
     {
         $query = User::approvedActiveMembers()
             ->with(['membershipTier', 'region', 'country', 'city'])
-            ->filterForDirectory($request->only(['company_name', 'country', 'city', 'specialization']));
+            ->filterForDirectory($request->only(['company_name', 'country', 'city', 'specialization']))
+            ->latest();
 
         $members = $query->paginate(10)->withQueryString();
 

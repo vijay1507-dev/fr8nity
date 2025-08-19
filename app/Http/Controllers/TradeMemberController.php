@@ -19,7 +19,7 @@ class TradeMemberController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = TradeMember::query();
+            $data = TradeMember::query()->latest();
 
             return DataTables::of($data)
                 ->addIndexColumn()

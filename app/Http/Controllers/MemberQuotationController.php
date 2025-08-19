@@ -21,7 +21,8 @@ class MemberQuotationController extends Controller
     public function givenQuotations(Request $request)
     {
         $quotations = MemberQuotation::with(['portOfLoading', 'portOfDischarge', 'receiver'])
-            ->where('given_by_id', Auth::id());
+            ->where('given_by_id', Auth::id())
+            ->latest();
 
         if ($request->ajax()) {
             return DataTables::of($quotations)
@@ -54,7 +55,8 @@ class MemberQuotationController extends Controller
     public function receivedQuotations(Request $request)
     {
         $quotations = MemberQuotation::with(['portOfLoading', 'portOfDischarge', 'givenBy'])
-            ->where('receiver_id', Auth::id());
+            ->where('receiver_id', Auth::id())
+            ->latest();
 
         if ($request->ajax()) {
             return DataTables::of($quotations)
@@ -166,7 +168,8 @@ class MemberQuotationController extends Controller
     {
         $this->authorizeAdmin();
 
-        $quotations = MemberQuotation::with(['receiver', 'portOfLoading', 'portOfDischarge']);
+        $quotations = MemberQuotation::with(['receiver', 'portOfLoading', 'portOfDischarge'])
+            ->latest();
 
         if ($request->ajax()) {
             return \Yajra\DataTables\Facades\DataTables::of($quotations)

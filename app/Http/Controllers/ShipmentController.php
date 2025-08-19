@@ -21,7 +21,7 @@ class ShipmentController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = Shipment::query()->with(['pickupCountry', 'pickupCity', 'destinationCountry', 'destinationCity']);
+            $data = Shipment::query()->with(['pickupCountry', 'pickupCity', 'destinationCountry', 'destinationCity'])->latest();
 
             return DataTables::of($data)
                 ->addIndexColumn()
