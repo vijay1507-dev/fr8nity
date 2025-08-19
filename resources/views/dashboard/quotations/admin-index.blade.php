@@ -13,11 +13,12 @@
                 <thead>
                     <tr>
                         <th>No</th>
-                        <th>Member (Receiver)</th>
-                        <th>Company Name</th>
                         <th>Sender Name</th>
-                        <th>Sender Email</th>
-                        <th>Phone</th>
+                        <th>Company Name</th>
+                        <th>Email</th>
+                        <th>Receiver Name</th>
+                        <th>Company Name</th>
+                        <th>Email</th>
                         <th>Transaction Value</th>
                         <th>Quotation Status</th>
                         <th>Created At</th>
@@ -43,11 +44,12 @@
             ajax: "{{ route('admin.quotations.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
+                {data: 'name', name: 'name'},
+                {data: 'sender_company_name', name: 'sender_company_name'},
+                {data: 'sender_email', name: 'sender_email'},
                 {data: 'member', name: 'member.company_name'},
                 {data: 'company_name', name: 'company_name'},
-                {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},
-                {data: 'phone', name: 'phone'},
                 {data: 'transaction_value', name: 'transaction_value'},
                 {data: 'status', name: 'status'},
                 {data: 'created_at', name: 'created_at'},

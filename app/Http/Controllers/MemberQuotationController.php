@@ -177,6 +177,15 @@ class MemberQuotationController extends Controller
                 ->addColumn('company_name', function ($quotation) {
                     return $quotation->receiver ? $quotation->receiver->company_name : '-';
                 })
+                ->addColumn('sender_company_name', function ($quotation) {
+                    return $quotation->givenBy ? $quotation->givenBy->company_name : '-';
+                })
+                ->addColumn('sender_email', function ($quotation) {
+                    return $quotation->givenBy ? $quotation->givenBy->email : '-';
+                })
+                ->addColumn('email', function ($quotation) {
+                    return $quotation->receiver ? $quotation->receiver->email : '-';
+                })
                 ->addColumn('transaction_value', function ($quotation) {
                     return $quotation->transaction_value
                         ? '$' . number_format($quotation->transaction_value, 2)
