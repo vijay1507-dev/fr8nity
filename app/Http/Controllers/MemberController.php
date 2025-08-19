@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Services\MemberApprovalService;
 use App\Services\MembershipNumberService;
+use App\Rules\UniqueCompanyInCountry;
 use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
@@ -96,7 +97,7 @@ class MemberController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'designation' => ['required', 'string', 'max:255'],
             'whatsapp_phone' => ['required'],
-            'company_name' => ['required', 'string', 'max:255'],
+            'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry],
             'company_description' => ['nullable', 'string', 'max:2000'],
             'company_telephone' => ['required'],
             'company_address' => ['required', 'string'],
@@ -230,7 +231,7 @@ class MemberController extends Controller
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $member->id],
                 'designation' => ['required', 'string', 'max:255'],
                 'whatsapp_phone' => ['required'],
-                'company_name' => ['required', 'string', 'max:255'],
+                'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry],
                 'company_logo' => ['nullable', 'image', 'max:2048'],
                 'company_description' => ['nullable', 'string', 'max:2000'],
                 'company_telephone' => ['required'],
