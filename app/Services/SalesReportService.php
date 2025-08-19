@@ -27,6 +27,28 @@ class SalesReportService
     }
 
     /**
+     * Get all quotations for a member within date range (both given and received)
+     */
+    public function getAllQuotations(int $memberId, ?string $dateFrom = null, ?string $dateTo = null): Collection
+    {
+        $query = MemberQuotation::with(['receiver', 'givenBy', 'portOfLoading', 'portOfDischarge'])
+            ->where(function ($q) use ($memberId) {
+                $q->where('receiver_id', $memberId)
+                  ->orWhere('given_by_id', $memberId);
+            });
+
+        // Apply date filters if provided
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        return $query->orderBy('created_at', 'desc')->get();
+    }
+
+    /**
      * Get successful quotations for a member within date range
      */
     public function getSuccessfulQuotations(int $memberId, ?string $dateFrom = null, ?string $dateTo = null): Collection
@@ -126,6 +148,61 @@ class SalesReportService
     }
 
     /**
+     * Generate CSV data for all quotations (including all statuses)
+     */
+    public function generateAllQuotationsCsvData(Collection $quotations, ?User $member = null): string
+    {
+        // CSV Headers
+        $headers = [
+            'Date',
+            'Role',
+            'Giver Name',
+            'Giver Company',
+            'Receiver Name',
+            'Receiver Company',
+            'Port of Loading',
+            'Port of Discharge',
+            'Transaction Value',
+            'Status',
+            'Contact Name',
+            'Contact Phone',
+            'Contact Email',
+            'Message'
+        ];
+
+        $csvData = implode(',', array_map([$this, 'escapeCsvValue'], $headers)) . "\n";
+
+        // CSV Data rows
+        foreach ($quotations as $quotation) {
+            // Determine role based on whether we have a specific member or all members
+            $role = $member ? 
+                ($quotation->receiver_id == $member->id ? 'Receiver' : 'Giver') : 
+                'Both';
+            
+            $row = [
+                $quotation->created_at->format('Y-m-d'),
+                $role,
+                $quotation->givenBy->name ?? 'N/A',
+                $quotation->givenBy->company_name ?? 'N/A',
+                $quotation->receiver->name ?? 'N/A',
+                $quotation->receiver->company_name ?? 'N/A',
+                $quotation->portOfLoading->name ?? 'N/A',
+                $quotation->portOfDischarge->name ?? 'N/A',
+                $quotation->transaction_value ?? 'N/A',
+                $quotation->getStatusLabel(),
+                $quotation->name ?? 'N/A',
+                $quotation->phone ?? 'N/A',
+                $quotation->email ?? 'N/A',
+                $quotation->message ?? 'N/A'
+            ];
+
+            $csvData .= implode(',', array_map([$this, 'escapeCsvValue'], $row)) . "\n";
+        }
+
+        return $csvData;
+    }
+
+    /**
      * Generate CSV data for all members with proper header
      */
     public function generateAllMembersCsvData(Collection $quotations, ?string $dateFrom = null, ?string $dateTo = null): string
@@ -196,6 +273,14 @@ class SalesReportService
     }
 
     /**
+     * Generate filename for all quotations CSV export
+     */
+    public function generateAllQuotationsFilename(User $member): string
+    {
+        return 'all_quotations_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . now()->format('Y_m_d_H_i_s') . '.csv';
+    }
+
+    /**
      * Generate filename for all members CSV export
      */
     public function generateAllMembersFilename(?string $dateFrom = null, ?string $dateTo = null): string
@@ -253,6 +338,26 @@ class SalesReportService
     public function hasQuotations(Collection $quotations): bool
     {
         return $quotations->isNotEmpty();
+    }
+
+    /**
+     * Get quotation statistics for a member
+     */
+    public function getQuotationStats(int $memberId, ?string $dateFrom = null, ?string $dateTo = null): array
+    {
+        $quotations = $this->getAllQuotations($memberId, $dateFrom, $dateTo);
+        
+        $stats = [
+            'total_quotations' => $quotations->count(),
+            'given_quotations' => $quotations->where('given_by_id', $memberId)->count(),
+            'received_quotations' => $quotations->where('receiver_id', $memberId)->count(),
+            'successful_quotations' => $quotations->where('status', MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->count(),
+            'unsuccessful_quotations' => $quotations->where('status', MemberQuotation::STATUS_CLOSED_UNSUCCESSFUL)->count(),
+            'total_value' => $quotations->where('status', MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->sum('transaction_value'),
+            'pending_quotations' => $quotations->whereNotIn('status', [MemberQuotation::STATUS_CLOSED_SUCCESSFUL, MemberQuotation::STATUS_CLOSED_UNSUCCESSFUL])->count()
+        ];
+
+        return $stats;
     }
 
     /**

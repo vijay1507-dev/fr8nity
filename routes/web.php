@@ -147,7 +147,12 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::get('/settings/site', [SettingsController::class, 'siteIndex'])->name('settings.site.index');
         Route::put('/settings/site', [SettingsController::class, 'siteUpdate'])->name('settings.site.update');
     });
-
+    // Member Sales Report routes
+    Route::prefix('member-sales-report')->group(function () {
+        Route::get('/', [SalesReportController::class, 'memberIndex'])->name('member.sales-report.index');
+        Route::post('/export', [SalesReportController::class, 'memberExport'])->name('member.sales-report.export');
+        Route::post('/stats', [SalesReportController::class, 'getMemberQuotationStats'])->name('member.sales-report.stats');
+    });
     // Sales Report routes
     Route::middleware('admin')->prefix('sales-report')->group(function () {
         Route::get('/', [SalesReportController::class, 'index'])->name('sales-report.index');

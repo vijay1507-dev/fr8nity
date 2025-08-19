@@ -14,15 +14,14 @@ class SalesReportController extends Controller
 
     public function __construct(SalesReportService $salesReportService)
     {
-        $this->salesReportService = $salesReportService;
-        
-        // Ensure only super admin can access
-        $this->middleware(function ($request, $next) {
-            if (!Auth::check() || Auth::user()->role !== \App\Models\User::SUPER_ADMIN) {
-                abort(403, 'Unauthorized');
-            }
-            return $next($request);
-        });
+        $this->salesReportService = $salesReportService;        
+        // // Ensure only super admin can access
+        // $this->middleware(function ($request, $next) {
+        //     if (!Auth::check() || Auth::user()->role !== \App\Models\User::SUPER_ADMIN) {
+        //         abort(403, 'Unauthorized');
+        //     }
+        //     return $next($request);
+        // });
     }
 
     /**
@@ -31,6 +30,14 @@ class SalesReportController extends Controller
     public function index()
     {
         return view('dashboard.sales-report.index');
+    }
+
+    /**
+     * Display the member sales report index page
+     */
+    public function memberIndex()
+    {
+        return view('dashboard.sales-report.member-index');
     }
 
     /**
@@ -105,6 +112,68 @@ class SalesReportController extends Controller
             // Generate filename for specific member
             $filename = $this->salesReportService->generateFilename($member);
         }
+
+        // Return CSV response
+        return response($csvData, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    /**
+     * Get quotation statistics for member sales report preview
+     */
+    public function getMemberQuotationStats(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'required|date',
+            'date_to' => 'required|date|after_or_equal:date_from',
+        ]);
+
+        $dateFrom = $request->date_from;
+        $dateTo = $request->date_to;
+        $memberId = Auth::id();
+
+        $stats = $this->salesReportService->getQuotationStats($memberId, $dateFrom, $dateTo);
+        
+        return response()->json([
+            'success' => true,
+            'stats' => $stats
+        ]);
+    }
+
+    /**
+     * Export member sales report as CSV
+     */
+    public function memberExport(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'required|date',
+            'date_to' => 'required|date|after_or_equal:date_from',
+        ]);
+
+        $dateFrom = $request->date_from;
+        $dateTo = $request->date_to;
+        $memberId = Auth::id();
+       
+        // Get ALL quotations for the authenticated member (not just successful ones)
+        $quotations = $this->salesReportService->getAllQuotations($memberId, $dateFrom, $dateTo);
+
+        // Check if any records found
+        if (!$this->salesReportService->hasQuotations($quotations)) {
+            return redirect()
+                ->back()
+                ->with('error', 'No records found for the selected date range. Please try different criteria.');
+        }
+
+        // Get member details
+        $member = $this->salesReportService->getMember($memberId);
+
+        // Generate CSV content for all quotations
+        $csvData = $this->salesReportService->generateAllQuotationsCsvData($quotations, $member);
+
+        // Generate filename
+        $filename = $this->salesReportService->generateAllQuotationsFilename($member);
 
         // Return CSV response
         return response($csvData, 200, [
