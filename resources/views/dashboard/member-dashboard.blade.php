@@ -33,10 +33,10 @@
                     <div class="d-flex gap-2">
                         <div class="d-flex membership align-items-center justify-content-center px-3 py-1 ">
                             <h6 class="fw-semibold mb-0">Accumulated Points to Date:</h6><span
-                                class="fs-6">N/A</span>
+                                class="fs-6">{{ number_format($totalPoints ?? 0) }}</span>
                         </div>
                         <div class="d-flex membership align-items-center justify-content-center px-3 py-1">
-                            <h6 class="fw-semibold mb-0">Redeemped Points:</h6><span class="fs-6">N/A</span>
+                            <h6 class="fw-semibold mb-0">Redeemed Points:</h6><span class="fs-6">N/A</span>
                         </div>
                     </div>
                     <div>
@@ -156,61 +156,44 @@
                 <div class="col-lg-6 d-flex">
                     <div class="chart-card w-100">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h1 class="chart-title">Membership Leadership Board</h1>
                             <div>
-                                <img src="{{ asset('images/graphicondashboard.svg') }}"
-                                    alt="Membership Leadership Board">
+                                <h1 class="chart-title">Membership Leadership Board</h1>
+                                
+                            </div>
+                            <div class="d-flex gap-3">
+                                <label for="yearFilter" class="small text-muted mb-0">Filter by Year:</label>
+                                <select id="yearFilter" class="form-select form-select-sm" style="width: auto;" onchange="filterByYear(this.value)">
+                                    @foreach(\App\Helpers\Helper::getAvailableYears() as $year)
+                                        <option value="{{ $year }}" {{ $currentYear == $year ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
 
                         <!-- Leaderboard Wrapper -->
                         <div class="leaderboard-wrapper p-3" style="max-height: 400px; overflow-y: auto;">
-                            <ul class="list-unstyled mb-0">
-                                @php
-                                    // Example dummy data - top leader for each month
-                                    $leaders = [
-                                        ['name' => 'John Doe', 'points' => 1200, 'month' => 'January 2025', 'img' => 'https://i.pravatar.cc/50?img=1'],
-                                        ['name' => 'Jane Smith', 'points' => 1100, 'month' => 'February 2025', 'img' => 'https://i.pravatar.cc/50?img=2'],
-                                        ['name' => 'Michael Lee', 'points' => 980, 'month' => 'March 2025', 'img' => 'https://i.pravatar.cc/50?img=3'],
-                                        ['name' => 'Sophia Brown', 'points' => 1050, 'month' => 'April 2025', 'img' => 'https://i.pravatar.cc/50?img=4'],
-                                        ['name' => 'David Wilson', 'points' => 1150, 'month' => 'May 2025', 'img' => 'https://i.pravatar.cc/50?img=5'],
-                                        ['name' => 'Emily Davis', 'points' => 950, 'month' => 'June 2025', 'img' => 'https://i.pravatar.cc/50?img=6'],
-                                        ['name' => 'Chris Martin', 'points' => 1250, 'month' => 'July 2025', 'img' => 'https://i.pravatar.cc/50?img=7'],
-                                        ['name' => 'Olivia Taylor', 'points' => 1080, 'month' => 'August 2025', 'img' => 'https://i.pravatar.cc/50?img=8'],
-                                        ['name' => 'Daniel Thomas', 'points' => 990, 'month' => 'September 2025', 'img' => 'https://i.pravatar.cc/50?img=9'],
-                                        ['name' => 'Sophia Johnson', 'points' => 1020, 'month' => 'October 2025', 'img' => 'https://i.pravatar.cc/50?img=10'],
-                                        ['name' => 'James Anderson', 'points' => 1180, 'month' => 'November 2025', 'img' => 'https://i.pravatar.cc/50?img=11'],
-                                        ['name' => 'Isabella White', 'points' => 1120, 'month' => 'December 2025', 'img' => 'https://i.pravatar.cc/50?img=12'],
-                                    ];
-                        
-                                    // Convert month name to numeric value for sorting
-                                    $monthOrder = [
-                                        'January' => 1, 'February' => 2, 'March' => 3, 'April' => 4,
-                                        'May' => 5, 'June' => 6, 'July' => 7, 'August' => 8,
-                                        'September' => 9, 'October' => 10, 'November' => 11, 'December' => 12,
-                                    ];
-                        
-                                    // Sort leaders in descending order of month
-                                    usort($leaders, function ($a, $b) use ($monthOrder) {
-                                        $monthA = explode(' ', $a['month'])[0];
-                                        $monthB = explode(' ', $b['month'])[0];
-                                        return $monthOrder[$monthB] <=> $monthOrder[$monthA]; // Descending
-                                    });
-                                @endphp
-                        
-                                @foreach ($leaders as $leader)
-                                <li class="d-flex align-items-center mb-3 p-2 rounded leaderboard-item">
-                                    <img src="{{ $leader['img'] }}" class="rounded-circle me-3" width="50" height="50" alt="{{ $leader['name'] }}">
-                                    <div class="flex-grow-1">
-                                        <div class="text-muted small">{{ $leader['month'] }}</div>
-                                        <span class="fw-semibold d-block">{{ $leader['name'] }}</span>
-                                        <div class="text-muted small">{{ $leader['points'] }} pts</div>
-                                    </div>
-                                    <span class="badge bg-warning text-dark">Top Leader</span>
-                                </li>
-                                
-                                @endforeach
-                            </ul>
+                            @if(count($leadershipBoard ?? []) > 0)
+                                <ul class="list-unstyled mb-0">
+                                    @foreach($leadershipBoard as $leader)
+                                    <li class="d-flex align-items-center mb-3 p-2 rounded leaderboard-item">
+                                        <img src="{{ $leader['company_logo'] }}" class="rounded-circle me-3" width="50" height="50" alt="{{ $leader['company_name'] }}">
+                                        <div class="flex-grow-1">
+                                            <div class="text-muted small">{{ $leader['month'] }}</div>
+                                            <span class="fw-semibold d-block">{{ $leader['company_name'] }}</span>
+                                            <div class="text-muted small">{{ $leader['points'] }} pts</div>
+                                        </div>
+                                        <span class="badge bg-warning text-dark">Top Leader</span>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            @else
+                                <div class="text-center text-muted py-4">
+                                    <p>No leaderboard data available yet.</p>
+                                    <p class="small">Start earning points to appear on the leaderboard!</p>
+                                </div>
+                            @endif
                         </div>
                         
                     </div>
@@ -221,9 +204,19 @@
                 <div class="col-lg-6 d-flex">
                     <div class="chart-card w-100">
                         <div class="d-flex justify-content-between align-items-center">
-                            <h1 class="chart-title">Trade Surplus/Deficit </h1>
-                            <div> <img src="{{ asset('images/graphicondashboard.svg') }}"
-                                    alt="Membership Leadership Board"></div>
+                            <div>
+                                <h1 class="chart-title">Trade Surplus/Deficit </h1>
+                            </div>
+                            <div class="d-flex gap-3">
+                                <label for="chartYearFilter" class="small text-muted mb-0">Filter by Year:</label>
+                                <select id="chartYearFilter" class="form-select form-select-sm" style="width: auto;">
+                                    @for($year = date('Y'); $year >= 2020; $year--)
+                                        <option value="{{ $year }}" {{ $year == date('Y') ? 'selected' : '' }}>
+                                            {{ $year }}
+                                        </option>
+                                    @endfor
+                                </select>
+                            </div>
                         </div>
                         <div class="chart-wrapper">
                             <canvas id="tradeChart"></canvas>
@@ -244,6 +237,88 @@
         // Initialize all tooltips
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
+    </script>
+    
+    <script>
+        // Year filter function with AJAX
+        function filterByYear(year) {
+            // Show loading state
+            const leaderboardWrapper = document.querySelector('.leaderboard-wrapper');
+            const originalContent = leaderboardWrapper.innerHTML;
+            leaderboardWrapper.innerHTML = `
+                <div class="text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-2 text-muted">Loading leadership board data...</p>
+                </div>
+            `;
+            
+            // Make AJAX request
+            fetch('{{ route("dashboard.leadership-board") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ year: year })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateLeaderboard(data.data);
+                    // Update URL without page reload
+                    const currentUrl = new URL(window.location);
+                    currentUrl.searchParams.set('year', year);
+                    window.history.pushState({}, '', currentUrl.toString());
+                } else {
+                    throw new Error('Failed to load data');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                leaderboardWrapper.innerHTML = `
+                    <div class="text-center text-danger py-4">
+                        <p>Error loading leadership board data.</p>
+                        <button class="btn btn-sm btn-outline-primary" onclick="filterByYear(${year})">Retry</button>
+                    </p>
+                </div>
+                `;
+            });
+        }
+        
+        // Function to update the leaderboard content
+        function updateLeaderboard(data) {
+            const leaderboardWrapper = document.querySelector('.leaderboard-wrapper');
+            
+            if (data.length > 0) {
+                let html = '<ul class="list-unstyled mb-0">';
+                
+                data.forEach(leader => {
+                    html += `
+                        <li class="d-flex align-items-center mb-3 p-2 rounded leaderboard-item">
+                            <img src="${leader.company_logo}" class="rounded-circle me-3" width="50" height="50" alt="${leader.company_name}">
+                            <div class="flex-grow-1">
+                                <div class="text-muted small">${leader.month}</div>
+                                <span class="fw-semibold d-block">${leader.company_name}</span>
+                                <div class="text-muted small">${leader.points} pts</div>
+                            </div>
+                            <span class="badge bg-warning text-dark">Top Leader</span>
+                        </li>
+                    `;
+                });
+                
+                html += '</ul>';
+                leaderboardWrapper.innerHTML = html;
+            } else {
+                leaderboardWrapper.innerHTML = `
+                    <div class="text-center text-muted py-4">
+                        <p>No leaderboard data available for this year.</p>
+                        <p class="small">Try selecting a different year.</p>
+                    </div>
+                `;
+            }
+        }
     </script>
     
     <script>
@@ -378,57 +453,150 @@
     
     <script>
         // Trade Surplus/Deficit Chart
-        new Chart(document.getElementById('tradeChart').getContext('2d'), {
-            type: 'line',
-            data: {
-                labels: ['Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                datasets: [{
-                        data: [5, 30, 25, 28, 40],
+        let tradeChart;
+        
+        // Function to initialize the chart
+        function initializeTradeChart() {
+            const ctx = document.getElementById('tradeChart').getContext('2d');
+            tradeChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Transaction Value Given',
+                        data: [],
                         borderColor: 'rgba(181, 131, 32, 1)',
-                        backgroundColor: 'rgba(181, 131, 32, 0.1)',
+                        backgroundColor: 'rgba(181, 131, 32, 1)',
                         borderWidth: 2,
                         fill: false,
-                        tension: 0.5
+                        tension: 0.5,
+                        pointBackgroundColor: 'rgba(181, 131, 32, 1)',
+                        pointBorderColor: '#000',
+                        pointBorderWidth: 1,
+                        pointRadius: 4
                     },
                     {
-                        data: [3, 25, 20, 22, 35],
+                        label: 'Transaction Value Received',
+                        data: [],
                         borderColor: '#000',
+                        backgroundColor: '#000',
                         borderDash: [5, 5],
                         borderWidth: 2,
                         fill: false,
-                        tension: 0.5
-                    }
-                ]
-            },
-            options: {
-                maintainAspectRatio: false,
-                plugins: {
-                    legend: {
-                        display: false
-                    }
+                        tension: 0.5,
+                        pointBackgroundColor: '#000',
+                        pointBorderColor: '#000',
+                        pointBorderWidth: 1,
+                        pointRadius: 4
+                    }]
                 },
-                scales: {
-                    x: {
-                        grid: {
+                options: {
+                    maintainAspectRatio: false,
+                    responsive: true,
+                    plugins: {
+                        legend: {
                             display: false
                         },
-                        ticks: {
-                            color: '#000'
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.parsed.y !== null) {
+                                        label += '$' + context.parsed.y.toLocaleString();
+                                    }
+                                    return label;
+                                }
+                            }
                         }
                     },
-                    y: {
-                        beginAtZero: true,
-                        ticks: {
-                            stepSize: 10,
-                            color: '#000'
+                    scales: {
+                        x: {
+                            grid: {
+                                display: false
+                            },
+                            ticks: {
+                                color: '#000'
+                            }
                         },
-                        grid: {
-                            color: '#eee'
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                color: '#000',
+                                callback: function(value) {
+                                    return '$' + value.toLocaleString();
+                                }
+                            },
+                            grid: {
+                                color: '#eee'
+                            }
                         }
                     }
                 }
+            });
+        }
+        
+        // Function to update chart data
+        function updateChartData() {
+            const selectedYear = document.getElementById('chartYearFilter').value;
+            
+            // Show loading state
+            if (tradeChart) {
+                tradeChart.data.labels = ['Loading...', '', '', '', ''];
+                tradeChart.data.datasets[0].data = [0, 0, 0, 0, 0];
+                tradeChart.data.datasets[1].data = [0, 0, 0, 0, 0];
+                tradeChart.update();
             }
+            
+            fetch('{{ route("dashboard.chart-data") }}', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify({ year: selectedYear })
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (tradeChart) {
+                    tradeChart.data.labels = data.labels;
+                    tradeChart.data.datasets[0].data = data.given_data;
+                    tradeChart.data.datasets[1].data = data.received_data;
+                    tradeChart.update();
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching chart data:', error);
+                // Show error state
+                if (tradeChart) {
+                    tradeChart.data.labels = ['Error loading data'];
+                    tradeChart.data.datasets[0].data = [0];
+                    tradeChart.data.datasets[1].data = [0];
+                    tradeChart.update();
+                }
+            });
+        }
+        
+        // Initialize chart when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeTradeChart();
+            updateChartData(); // Load current year data by default
+            
+            // Add event listener for year filter
+            document.getElementById('chartYearFilter').addEventListener('change', function() {
+                updateChartData();
+            });
         });
+        
     </script>
 
 @endsection
