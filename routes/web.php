@@ -107,6 +107,7 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Protected routes (require login)
 Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/filtered-data', [DashboardController::class, 'getFilteredData'])->name('dashboard.filtered-data');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
     Route::post('/update-profile', [DashboardController::class, 'updateProfile'])->name('profile.update');

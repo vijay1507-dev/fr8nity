@@ -40,9 +40,9 @@
                         </div>
                     </div>
                     <div>
-                        <button type="button" class="monthbtn  p-2 px-3 ms-2">Last 6 months</button>
-                        <button type="button" class="monthbtn p-2  ms-2 px-3 active"> Last 1 year</button>
-                        <button type="button" class="monthbtn p-2 ms-2 px-3 ">Lifetime</button>
+                        <button type="button" class="monthbtn p-2 px-3 ms-2" data-period="3">Last 3 months</button>
+                        <button type="button" class="monthbtn p-2 px-3 ms-2" data-period="6">Last 6 months</button>
+                        <button type="button" class="monthbtn p-2 ms-2 px-3 active" data-period="12"> Last 1 year</button>
                         <button type="button" class="tooltip-btn p-1 ms-2 " data-bs-toggle="tooltip"
                             data-bs-placement="top"
                             data-bs-title="You can filter the data by selecting the time period">!</button>
@@ -58,21 +58,21 @@
                             <h6 class="text-center pt-3">Total Given Quotations / Transactions</h6>
                             <div class="col-4 p-4 text-center">
                                 <img src="{{ asset('images/dashboardIcon1.svg') }}" alt="Transaction Value Given">
-                                <h2 class="mb-0 mt-3">
+                                <h2 class="mb-0 mt-3" data-target="given-transaction-value">
                                     ${{ number_format(auth()->user()->givenQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->sum('transaction_value'), 2) }}
                                 </h2>
                                 <p class="pt-2">Transaction Value Given</p>
                             </div>
                             <div class="col-4 p-3 py-4 text-center border-l">
                                 <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Given Quotations">
-                                <h2 class="mb-0 mt-3">
+                                <h2 class="mb-0 mt-3" data-target="given-successful-count">
                                     {{ auth()->user()->givenQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->count() }}
                                 </h2>
                                 <p class="pt-2">Enquiries Given (Successful)</p>
                             </div>
                             <div class="col-4 p-3 py-4 text-center border-l">
                                 <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Given Quotations">
-                                <h2 class="mb-0 mt-3">
+                                <h2 class="mb-0 mt-3" data-target="given-unsuccessful-count">
                                     {{ auth()->user()->givenQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_UNSUCCESSFUL)->count() }}
                                 </h2>
                                 <p class="pt-2">Enquiries Given (Unsuccessful)</p>
@@ -92,7 +92,7 @@
                             <h6 class="text-center pt-3">Total Members referred</h6>
                             <div class="col-12 text-center p-4">
                                 <img src="{{ asset('images/dashboardIcon5.svg') }}" alt="Members referred to">
-                                <h2 class="mb-0 mt-3">{{ auth()->user()->referrals()->count() }}</h2>
+                                <h2 class="mb-0 mt-3" data-target="referrals-count">{{ auth()->user()->referrals()->count() }}</h2>
                                 <p class="pt-2">Members referred to</p>
                             </div>
                         </div>
@@ -109,21 +109,21 @@
                             <h6 class="text-center pt-3">Total Received Quotations / Transactions</h6>
                             <div class="col-4 p-4 text-center">
                                 <img src="{{ asset('images/dashboardIcon3.svg') }}" alt="Transaction Value Received">
-                                <h2 class="mb-0 mt-3">
+                                <h2 class="mb-0 mt-3" data-target="received-transaction-value">
                                     ${{ number_format(auth()->user()->receivedQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->sum('transaction_value'), 2) }}
                                 </h2>
                                 <p class="pt-2">Transaction Value Received</p>
                             </div>
                             <div class="col-4 p-3 py-4 text-center border-l">
                                 <img src="{{ asset('images/dashboardIcon4.svg') }}" alt="Received Quotations">
-                                <h2 class="mb-0 mt-3">
+                                <h2 class="mb-0 mt-3" data-target="received-successful-count">
                                     {{ auth()->user()->receivedQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL)->count() }}
                                 </h2>
                                 <p class="pt-2">Enquiries Received (Successful)</p>
                             </div>
                             <div class="col-4 p-3 py-4 text-center border-l">
                                 <img src="{{ asset('images/dashboardIcon4.svg') }}" alt="Received Quotations">
-                                <h2 class="mb-0 mt-3">
+                                <h2 class="mb-0 mt-3" data-target="received-unsuccessful-count">
                                     {{ auth()->user()->receivedQuotations()->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_UNSUCCESSFUL)->count() }}
                                 </h2>
                                 <p class="pt-2">Enquiries Received (Unsuccessful)</p>
@@ -245,6 +245,137 @@
         const tooltipTriggerList = document.querySelectorAll('[data-bs-toggle="tooltip"]');
         const tooltipList = [...tooltipTriggerList].map(tooltipTriggerEl => new bootstrap.Tooltip(tooltipTriggerEl));
     </script>
+    
+    <script>
+        // Dashboard Filter Functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterButtons = document.querySelectorAll('.monthbtn');
+            let currentPeriod = 12; 
+            let originalValues = {}; 
+            
+            // Store original values when page loads
+            function storeOriginalValues() {
+                document.querySelectorAll('[data-target]').forEach(element => {
+                    const target = element.getAttribute('data-target');
+                    originalValues[target] = element.textContent;
+                });
+            }
+            
+            // Store original values on page load
+            storeOriginalValues();
+            
+            // Add click event listeners to filter buttons
+            filterButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const period = parseInt(this.getAttribute('data-period'));
+                    
+                    // Update active state
+                    filterButtons.forEach(btn => btn.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Only make AJAX request if period changed
+                    if (period !== currentPeriod) {
+                        currentPeriod = period;
+                        updateDashboardData(period);
+                    }
+                });
+            });
+            
+            // Function to update dashboard data via AJAX
+            function updateDashboardData(period) {
+                // Show loading state
+                showLoadingState();
+                
+                fetch('{{ route("dashboard.filtered-data") }}', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    },
+                    body: JSON.stringify({ period: period })
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    updateDashboardValues(data);
+                    hideLoadingState();
+                })
+                .catch(error => {
+                    console.error('Error fetching dashboard data:', error);
+                    hideLoadingState();
+                    alert('Failed to update dashboard data. Please try again.');
+                });
+            }
+            
+            // Function to update dashboard values
+            function updateDashboardValues(data) {
+                // Simple function to update values
+                const updateValue = (selector, newValue) => {
+                    const element = document.querySelector(selector);
+                    if (element) {
+                        if (selector.includes('transaction-value')) {
+                            element.textContent = '$' + parseFloat(newValue).toFixed(2);
+                        } else {
+                            element.textContent = newValue;
+                        }
+                    }
+                };
+                
+                // Update Given Quotations
+                updateValue('[data-target="given-transaction-value"]', data.given_quotations.transaction_value);
+                updateValue('[data-target="given-successful-count"]', data.given_quotations.successful_count);
+                updateValue('[data-target="given-unsuccessful-count"]', data.given_quotations.unsuccessful_count);
+                
+                // Update Received Quotations
+                updateValue('[data-target="received-transaction-value"]', data.received_quotations.transaction_value);
+                updateValue('[data-target="received-successful-count"]', data.received_quotations.successful_count);
+                updateValue('[data-target="received-unsuccessful-count"]', data.received_quotations.unsuccessful_count);
+                
+                // Update Referrals
+                updateValue('[data-target="referrals-count"]', data.referrals.count);
+            }
+            
+            // Function to show loading state
+            function showLoadingState() {
+                // Show "Updating..." in place of values
+                document.querySelectorAll('[data-target]').forEach(element => {
+                    element.textContent = 'Updating...';
+                    element.style.color = '#6c757d';
+                    element.style.fontStyle = 'italic';
+                    element.style.fontSize = '14px';
+                });
+                
+                // Disable filter buttons during loading
+                document.querySelectorAll('.monthbtn').forEach(btn => {
+                    btn.disabled = true;
+                    btn.style.opacity = '0.6';
+                    btn.style.cursor = 'not-allowed';
+                });
+            }
+            
+            // Function to hide loading state
+            function hideLoadingState() {
+                // Restore original styling
+                document.querySelectorAll('[data-target]').forEach(element => {
+                    element.style.color = '';
+                    element.style.fontStyle = '';
+                    element.style.fontSize = '';
+                });
+                
+                // Re-enable filter buttons
+                document.querySelectorAll('.monthbtn').forEach(btn => {
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                    btn.style.cursor = 'pointer';
+                });
+            }
+        });
+    </script>
+    
     <script>
         // Trade Surplus/Deficit Chart
         new Chart(document.getElementById('tradeChart').getContext('2d'), {

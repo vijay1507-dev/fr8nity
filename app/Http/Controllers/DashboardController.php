@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\Rules\Password;
 use App\Services\UserProfileService;
+use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
@@ -21,6 +22,58 @@ class DashboardController extends Controller
         return view('dashboard.admin-dashboard');
     }
 
+    public function getFilteredData(Request $request)
+    {
+        $request->validate([
+            'period' => 'required|in:3,6,12'
+        ]);
+        $user   = Auth::user();
+        $period = (int) $request->period;
+
+        // Calculate the start date
+        $startDate = Carbon::now()->subMonths($period);
+
+        // --- GIVEN QUOTATIONS ---
+        $givenSuccessful = $user->givenQuotations()
+            ->where('created_at', '>=', $startDate)
+            ->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL);
+            
+        $givenUnsuccessful = $user->givenQuotations()
+            ->where('created_at', '>=', $startDate)
+            ->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_UNSUCCESSFUL);
+
+        // --- RECEIVED QUOTATIONS ---
+        $receivedSuccessful = $user->receivedQuotations()
+            ->where('created_at', '>=', $startDate)
+            ->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_SUCCESSFUL);
+
+        $receivedUnsuccessful = $user->receivedQuotations()
+            ->where('created_at', '>=', $startDate)
+            ->where('status', \App\Models\MemberQuotation::STATUS_CLOSED_UNSUCCESSFUL);
+
+        // --- REFERRALS ---
+        $referrals = $user->referrals()
+            ->where('created_at', '>=', $startDate);
+
+        // --- Build data ---
+        $data = [
+            'given_quotations' => [
+                'transaction_value'   => $givenSuccessful->sum('transaction_value'),
+                'successful_count'    => $givenSuccessful->count(),
+                'unsuccessful_count'  => $givenUnsuccessful->count(),
+            ],
+            'received_quotations' => [
+                'transaction_value'   => $receivedSuccessful->sum('transaction_value'),
+                'successful_count'    => $receivedSuccessful->count(),
+                'unsuccessful_count'  => $receivedUnsuccessful->count(),
+            ],
+            'referrals' => [
+                'count' => $referrals->count(),
+            ],
+        ];
+
+        return response()->json($data);
+    }
     public function profile()
     {
         $user = \Illuminate\Support\Facades\Auth::user();

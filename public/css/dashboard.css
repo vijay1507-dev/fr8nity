@@ -644,6 +644,14 @@ table.listing_time td label {
   color: #fff;
 }
 
+.monthbtn:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border-color: #dee2e6;
+}
+
 .rounded_10 {
   border-radius: 10px;
   overflow: hidden !important;
