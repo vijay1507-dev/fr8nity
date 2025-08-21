@@ -95,6 +95,12 @@
                             <p class="mb-0 submenufont">Site Settings</p>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('membership-tiers.index') }}" class="sidebar-link">
+                            <i class="nav-icon fas fa-layer-group"></i>
+                            <p class="mb-0 submenufont">Membership Tiers</p>
+                        </a>
+                    </li>
                 </ul>
             </li>
                          @endif
