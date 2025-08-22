@@ -8,6 +8,13 @@ use App\Models\User;
 
 class UniqueCompanyInCountry implements ValidationRule
 {
+    protected $excludeUserId;
+
+    public function __construct($excludeUserId = null)
+    {
+        $this->excludeUserId = $excludeUserId;
+    }
+
     /**
      * Run the validation rule.
      *
@@ -22,9 +29,17 @@ class UniqueCompanyInCountry implements ValidationRule
         if (!$countryId) {
             return;
         }
-        $existingCompany = User::where('company_name', $value)
-            ->where('country_id', $countryId)
-            ->first();
+        
+        $query = User::where('company_name', $value)
+            ->where('country_id', $countryId);
+            
+        // Exclude the current user if editing
+        if ($this->excludeUserId) {
+            $query->where('id', '!=', $this->excludeUserId);
+        }
+        
+        $existingCompany = $query->first();
+        
         if ($existingCompany) {
             $fail('A company with this name already exists in the selected country.');
         }

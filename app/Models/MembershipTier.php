@@ -46,6 +46,14 @@ class MembershipTier extends Model
     }
 
     /**
+     * Get membership logs for this tier
+     */
+    public function membershipLogs(): HasMany
+    {
+        return $this->hasMany(\App\Models\MembershipLog::class);
+    }
+
+    /**
      * Get the next available order number
      */
     public static function getNextOrder(): int

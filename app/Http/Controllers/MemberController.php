@@ -12,6 +12,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Services\MemberApprovalService;
 use App\Services\MembershipNumberService;
+use App\Services\MembershipLogService;
 use App\Rules\UniqueCompanyInCountry;
 use Illuminate\Support\Facades\Storage;
 
@@ -20,6 +21,7 @@ class MemberController extends Controller
     public function __construct(
         private readonly MemberApprovalService $memberApprovalService,
         private readonly MembershipNumberService $membershipNumberService,
+        private readonly MembershipLogService $membershipLogService,
     ) {
     }
     /**
@@ -97,7 +99,7 @@ class MemberController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'designation' => ['required', 'string', 'max:255'],
             'whatsapp_phone' => ['required'],
-            'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry],
+            'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry()],
             'company_description' => ['nullable', 'string', 'max:2000'],
             'company_telephone' => ['required'],
             'company_address' => ['required', 'string'],
@@ -225,13 +227,20 @@ class MemberController extends Controller
             }
 
         } else {
+            // Capture old member data for logging
+            $oldMemberData = [
+                'membership_tier' => $member->membership_tier,
+                'membership_number' => $member->membership_number,
+                'membership_expires_at' => $member->membership_expires_at,
+                'membership_start_at' => $member->membership_start_at,
+            ];
             // Admin validation rules - all fields required
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $member->id],
                 'designation' => ['required', 'string', 'max:255'],
                 'whatsapp_phone' => ['required'],
-                'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry],
+                'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry($member->id)],
                 'company_logo' => ['nullable', 'image', 'max:2048'],
                 'company_description' => ['nullable', 'string', 'max:2000'],
                 'company_telephone' => ['required'],
@@ -291,6 +300,8 @@ class MemberController extends Controller
                 'network_name' => $request->network_name,
                 'membership_number' => $membershipNumber,
                 'membership_tier' => $request->membership_tier,
+                'membership_start_at' => now(),
+                'membership_expires_at' => now()->addYear(),
                 'certificate_document' => $certificatePath,
                 'certificate_uploaded_at' => now(),
             ];
@@ -308,6 +319,35 @@ class MemberController extends Controller
         }
 
         $member->update($updateData);
+
+        // Log membership changes if admin updated membership-related fields
+        if (Auth::user()->role != User::MEMBER) {
+            $newMemberData = [
+                'membership_tier' => $request->membership_tier,
+                'membership_number' => $membershipNumber ?? $member->membership_number,
+                'membership_expires_at' => $member->membership_expires_at,
+                'membership_start_at' => $member->membership_start_at,
+            ];
+
+            // Check if membership-related fields changed
+            $hasChanges = false;
+            foreach ($oldMemberData as $key => $oldValue) {
+                if ($oldValue != $newMemberData[$key]) {
+                    $hasChanges = true;
+                    break;
+                }
+            }
+
+            if ($hasChanges) {
+                $this->membershipLogService->logMembershipUpdate(
+                    $member,
+                    $oldMemberData,
+                    $newMemberData,
+                    $request->input('membership_change_reason'),
+                    ['updated_by_admin' => true]
+                );
+            }
+        }
 
         if(Auth::user()->role == User::MEMBER){
             return redirect()->route('profile')->with('success', 'Profile updated successfully!');

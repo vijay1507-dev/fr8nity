@@ -250,6 +250,14 @@ class User extends Authenticatable
         return $this->belongsTo(MembershipTier::class,'membership_tier');
     }
 
+    /**
+     * Get membership logs for this user
+     */
+    public function membershipLogs()
+    {
+        return $this->hasMany(\App\Models\MembershipLog::class)->orderBy('created_at', 'desc');
+    }
+
     public function referrals()
     {
         return $this->hasMany(Referral::class, 'referrer_id');
