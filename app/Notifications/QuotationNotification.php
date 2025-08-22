@@ -7,6 +7,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\HtmlString;
 
 class QuotationNotification extends Notification implements ShouldQueue
@@ -59,7 +60,6 @@ class QuotationNotification extends Notification implements ShouldQueue
     protected function buildAdminEmail(): MailMessage
     {
         $content = $this->getAdminContent();
-
         return (new MailMessage)
             ->view('emails.layouts.master', [
                 'content' => new HtmlString($this->buildEmailContent($content)),
@@ -115,8 +115,8 @@ class QuotationNotification extends Notification implements ShouldQueue
                 [
                     'title' => 'Member Information',
                     'data' => [
-                        ['Name', $this->quotation->member->name],
-                        ['Email', $this->quotation->member->email],
+                        ['Name', $this->quotation->receiver->name],
+                        ['Email', $this->quotation->receiver->email],
                     ]
                 ],
                 !empty($this->quotation->specifications) ? [
@@ -145,7 +145,7 @@ class QuotationNotification extends Notification implements ShouldQueue
         return [
             'title' => 'New Quotation Request',
             'intro' => [
-                'Dear ' . $this->quotation->member->name . ',',
+                'Dear ' . $this->quotation->receiver->name . ',',
                 'You have received a new quotation request with the following details:'
             ],
             'tables' => [
@@ -188,7 +188,7 @@ class QuotationNotification extends Notification implements ShouldQueue
             'title' => 'Quotation Request Confirmation',
             'intro' => [
                 'Dear ' . $this->quotation->name . ',',
-                'Thank you for submitting your quotation request. We have received your request and it has been forwarded to ' . $this->quotation->member->name . '.',
+                'Thank you for submitting your quotation request. We have received your request and it has been forwarded to ' . $this->quotation->receiver->name . '.',
                 'Here is a summary of your request:'
             ],
             'tables' => array_filter([

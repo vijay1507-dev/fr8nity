@@ -13,6 +13,8 @@ use App\Http\Controllers\TradeMemberController;
 use App\Http\Controllers\ShipmentController;
 use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SalesReportController;
+use App\Http\Controllers\MembershipTierController;
+use App\Http\Controllers\MembershipBenefitController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
@@ -107,6 +109,9 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // Protected routes (require login)
 Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::post('/dashboard/filtered-data', [DashboardController::class, 'getFilteredData'])->name('dashboard.filtered-data');
+    Route::post('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
+    Route::post('/dashboard/leadership-board', [DashboardController::class, 'getLeadershipBoardAjax'])->name('dashboard.leadership-board');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
     Route::post('/update-profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
@@ -121,6 +126,7 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::prefix('quotations')->group(function () {
         Route::get('/given', [MemberQuotationController::class, 'givenQuotations'])->name('member.quotations.given');
         Route::get('/received', [MemberQuotationController::class, 'receivedQuotations'])->name('member.quotations.received');
+        Route::get('/create', [MemberQuotationController::class, 'create'])->name('member.quotations.create');
         Route::get('/{quotation}', [MemberQuotationController::class, 'show'])->name('member.quotations.show');
         Route::patch('/{quotation}/close', [MemberQuotationController::class, 'close'])->name('member.quotations.close');
         Route::patch('/{quotation}/success', [MemberQuotationController::class, 'success'])->name('member.quotations.success');
@@ -145,8 +151,38 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         // Site settings
         Route::get('/settings/site', [SettingsController::class, 'siteIndex'])->name('settings.site.index');
         Route::put('/settings/site', [SettingsController::class, 'siteUpdate'])->name('settings.site.update');
-    });
 
+        // Membership Tier Management
+        Route::prefix('membership-tiers')->name('membership-tiers.')->group(function () {
+            Route::get('/', [MembershipTierController::class, 'index'])->name('index');
+            Route::get('/create', [MembershipTierController::class, 'create'])->name('create');
+            Route::post('/', [MembershipTierController::class, 'store'])->name('store');
+            Route::get('/{membershipTier}', [MembershipTierController::class, 'show'])->name('show');
+            Route::get('/{membershipTier}/edit', [MembershipTierController::class, 'edit'])->name('edit');
+            Route::put('/{membershipTier}', [MembershipTierController::class, 'update'])->name('update');
+            Route::delete('/{membershipTier}', [MembershipTierController::class, 'destroy'])->name('destroy');
+            Route::patch('/{membershipTier}/toggle-status', [MembershipTierController::class, 'toggleStatus'])->name('toggle-status');
+            Route::patch('/{membershipTier}/toggle-visibility', [MembershipTierController::class, 'toggleVisibility'])->name('toggle-visibility');
+            Route::get('/benefits/list', [MembershipTierController::class, 'getBenefits'])->name('benefits.list');
+        });
+
+        // Membership Benefits Management
+        Route::prefix('membership-benefits')->name('membership-benefits.')->group(function () {
+            Route::get('/', [MembershipBenefitController::class, 'index'])->name('index');
+            Route::get('/create', [MembershipBenefitController::class, 'create'])->name('create');
+            Route::post('/', [MembershipBenefitController::class, 'store'])->name('store');
+            Route::get('/{membershipBenefit}/edit', [MembershipBenefitController::class, 'edit'])->name('edit');
+            Route::put('/{membershipBenefit}', [MembershipBenefitController::class, 'update'])->name('update');
+            Route::delete('/{membershipBenefit}', [MembershipBenefitController::class, 'destroy'])->name('destroy');
+            Route::patch('/{membershipBenefit}/toggle-status', [MembershipBenefitController::class, 'toggleStatus'])->name('toggle-status');
+        });
+    });
+    // Member Sales Report routes
+    Route::prefix('member-sales-report')->group(function () {
+        Route::get('/', [SalesReportController::class, 'memberIndex'])->name('member.sales-report.index');
+        Route::post('/export', [SalesReportController::class, 'memberExport'])->name('member.sales-report.export');
+        Route::post('/stats', [SalesReportController::class, 'getMemberQuotationStats'])->name('member.sales-report.stats');
+    });
     // Sales Report routes
     Route::middleware('admin')->prefix('sales-report')->group(function () {
         Route::get('/', [SalesReportController::class, 'index'])->name('sales-report.index');

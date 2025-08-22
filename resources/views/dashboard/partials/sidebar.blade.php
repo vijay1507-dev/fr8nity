@@ -56,28 +56,17 @@
                     class="bi bi-briefcase" viewBox="0 0 16 16">
                     <path d="M6.5 0a.5.5 0 0 0-.5.5V2h-1A1.5 1.5 0 0 0 3.5 3.5V4H2a2 2 0 0 0-2 2v1h16V6a2 2 0 0 0-2-2h-1.5v-.5A1.5 1.5 0 0 0 9.5 2h-1V.5a.5.5 0 0 0-.5-.5h-1zM8 2h1.5v1H6.5V2H8zM0 8v6a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8H0z" />
                 </svg>
-                    Trade Member Enquiry
+                    Trade Members
                 </a>
                 <ul id="trade-member" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item ">
-                       <a href="{{ route('trade-members.index') }}" class="sidebar-link submenufont ">All Enquiries</a>
+                       <a href="{{ route('trade-members.index') }}" class="sidebar-link submenufont ">Member Enquiry</a>
                    </li>
-                </ul>
-            </li>
-             <li class="sidebar-item">
-                 <a href="#" class="sidebar-link collapsed" data-bs-target="#shipments" data-bs-toggle="collapse"
-                     aria-expanded="false">
-                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-truck" viewBox="0 0 16 16">
-                         <path d="M0 3.5A1.5 1.5 0 0 1 1.5 2h9A1.5 1.5 0 0 1 12 3.5V5h1.02a1.5 1.5 0 0 1 1.17.563l1.481 1.85a1.5 1.5 0 0 1 .329.938V10.5a1.5 1.5 0 0 1-1.5 1.5H14a2 2 0 1 1-4 0H5a2 2 0 1 1-3.998-.085A1.5 1.5 0 0 1 0 10.5zm1.294 7.456A2 2 0 0 1 4.732 11h5.536a2 2 0 0 1 .732-.732V3.5a.5.5 0 0 0-.5-.5h-9a.5.5 0 0 0-.5.5v7a.5.5 0 0 0 .294.456M12 10a2 2 0 0 1 1.732 1h.768a.5.5 0 0 0 .5-.5V8.35a.5.5 0 0 0-.11-.312l-1.48-1.85A.5.5 0 0 0 13.02 6H12zm-9 1a1 1 0 1 0 0 2 1 1 0 0 0 0-2m9 0a1 1 0 1 0 0 2 1 1 0 0 0 0-2"/>
-                     </svg>
-                     Shipment Enquiry
-                 </a>
-                 <ul id="shipments" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
-                                         <li class="sidebar-item">
-                        <a href="{{ route('shipments.index') }}" class="sidebar-link submenufont">All Enquiries</a>
+                   <li class="sidebar-item">
+                        <a href="{{ route('shipments.index') }}" class="sidebar-link submenufont">Shipment Enquiry</a>
                     </li>
                 </ul>
-            </li>            
+            </li>
              <li class="sidebar-item">
                  <a href="#" class="sidebar-link collapsed" data-bs-target="#settings" data-bs-toggle="collapse"
                      aria-expanded="false"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
@@ -106,25 +95,16 @@
                             <p class="mb-0 submenufont">Site Settings</p>
                         </a>
                     </li>
-                </ul>
-            </li>
-                         @endif
-            @if(auth()->user()->role == \App\Models\User::SUPER_ADMIN)
-            <li class="sidebar-item">
-                <a href="#" class="sidebar-link collapsed" data-bs-target="#sales-report" data-bs-toggle="collapse"
-                    aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
-                        <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
-                    </svg>
-                    Sales Report
-                </a>
-                <ul id="sales-report" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
                     <li class="sidebar-item">
-                        <a href="{{ route('sales-report.index') }}" class="sidebar-link submenufont">Giver & Receiver Report</a>
+                        <a href="{{ route('membership-tiers.index') }}" class="sidebar-link">
+                            <i class="nav-icon fas fa-layer-group"></i>
+                            <p class="mb-0 submenufont">Membership Tiers</p>
+                        </a>
                     </li>
                 </ul>
             </li>
-            @endif                         
+                         @endif
+           
            <li class="sidebar-item">
                 <a href="{{ route('members.directory') }}" class="sidebar-link">
                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-globe" viewBox="0 0 16 16">
@@ -184,6 +164,26 @@
                 </a>
             </li>
             @endif
+            <li class="sidebar-item">
+                <a href="#" class="sidebar-link collapsed" data-bs-target="#sales-report" data-bs-toggle="collapse"
+                    aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-graph-up" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07"/>
+                    </svg>
+                    Sales Report
+                </a>
+                <ul id="sales-report" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    @if(auth()->user()->role == \App\Models\User::SUPER_ADMIN)
+                        <li class="sidebar-item">
+                            <a href="{{ route('sales-report.index') }}" class="sidebar-link submenufont">Giver & Receiver Report</a>
+                        </li>
+                        @else
+                        <li class="sidebar-item">
+                            <a href="{{ route('member.sales-report.index') }}" class="sidebar-link submenufont">Generate Report</a>
+                        </li>
+                    @endif
+                </ul>
+            </li>
             <li class="sidebar-item">
                 <a href="{{ route('profile') }}" class="sidebar-link">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-circle" viewBox="0 0 16 16">

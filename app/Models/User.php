@@ -103,6 +103,30 @@ class User extends Authenticatable
     }
 
     /**
+     * Scope: for leadership board queries
+     */
+    public function scopeForLeadershipBoard(Builder $query, int $year): Builder
+    {
+        return $query->select([
+                'users.id',
+                'users.name', 
+                'users.company_logo',
+                'users.company_name'
+            ])
+            ->selectRaw('DATE_FORMAT(rp.created_at, "%Y-%m") as reward_month')
+            ->selectRaw('SUM(rp.points) as monthly_points')
+            ->leftJoin('reward_points as rp', 'users.id', '=', 'rp.user_id')
+            ->where('role', self::MEMBER)
+            ->where('is_active', true)
+            ->whereNotNull('rp.created_at')
+            ->whereYear('rp.created_at', $year)
+            ->groupBy('users.id', 'users.name', 'users.company_logo', 'users.company_name', 'reward_month')
+            ->having('monthly_points', '>', 0)
+            ->orderBy('reward_month', 'desc')
+            ->orderBy('monthly_points', 'desc');
+    }
+
+    /**
      * Scope: apply directory filters (company/city/country/specialization)
      */
     public function scopeFilterForDirectory(Builder $query, array $filters): Builder
@@ -224,6 +248,14 @@ class User extends Authenticatable
     public function membershipTier(): BelongsTo
     {
         return $this->belongsTo(MembershipTier::class,'membership_tier');
+    }
+
+    /**
+     * Get membership logs for this user
+     */
+    public function membershipLogs()
+    {
+        return $this->hasMany(\App\Models\MembershipLog::class)->orderBy('created_at', 'desc');
     }
 
     public function referrals()

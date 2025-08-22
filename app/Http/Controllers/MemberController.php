@@ -12,6 +12,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
 use App\Services\MemberApprovalService;
 use App\Services\MembershipNumberService;
+use App\Services\MembershipLogService;
+use App\Rules\UniqueCompanyInCountry;
 use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
@@ -19,6 +21,7 @@ class MemberController extends Controller
     public function __construct(
         private readonly MemberApprovalService $memberApprovalService,
         private readonly MembershipNumberService $membershipNumberService,
+        private readonly MembershipLogService $membershipLogService,
     ) {
     }
     /**
@@ -27,7 +30,7 @@ class MemberController extends Controller
     public function index(Request $request)
     {
         if ($request->ajax()) {
-            $data = User::query()->where('role', User::MEMBER)->with('membershipTier');
+            $data = User::query()->where('role', User::MEMBER)->with('membershipTier')->latest();
 
             return DataTables::of($data)
                 ->addIndexColumn()
@@ -44,14 +47,16 @@ class MemberController extends Controller
                     return $row->created_at->format('d M Y H:i');
                 })
                 ->addColumn('action', function($row) {
-                    $viewBtn = '<a href="' . route('members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
-                    $editBtn = '<a href="' . route('members.edit', $row) . '" class="btn btn-sm btn-outline-success">Edit</a>';
-                    $deleteBtn = '<form action="' . route('members.destroy', $row) . '" method="POST" style="display:inline-block;">
-                                    ' . csrf_field() . '
-                                    ' . method_field('DELETE') . '
-                                    <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Are you sure you want to delete this member?\')">Delete</button>
-                                  </form>';
-                    return $viewBtn . ' ' . $editBtn . ' ' . $deleteBtn;
+                    $buttons = '<div class="d-inline-flex align-items-center gap-2 flex-nowrap">';
+                    $buttons .= '<a href="' . route('members.show', $row) . '" class="btn btn-sm btn-outline-primary">View</a>';
+                    $buttons .= '<a href="' . route('members.edit', $row) . '" class="btn btn-sm btn-outline-success">Edit</a>';
+                    $buttons .= '<form action="' . route('members.destroy', $row) . '" method="POST" class="d-inline m-0 p-0">'
+                                  . csrf_field()
+                                  . method_field('DELETE') .
+                                  '<button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm(\'Are you sure you want to delete this member?\')">Delete</button>' .
+                                  '</form>';
+                    $buttons .= '</div>';
+                    return $buttons;
                 })
                 ->rawColumns(['action'])
                 ->make(true);
@@ -94,7 +99,7 @@ class MemberController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'designation' => ['required', 'string', 'max:255'],
             'whatsapp_phone' => ['required'],
-            'company_name' => ['required', 'string', 'max:255'],
+            'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry()],
             'company_description' => ['nullable', 'string', 'max:2000'],
             'company_telephone' => ['required'],
             'company_address' => ['required', 'string'],
@@ -222,13 +227,20 @@ class MemberController extends Controller
             }
 
         } else {
+            // Capture old member data for logging
+            $oldMemberData = [
+                'membership_tier' => $member->membership_tier,
+                'membership_number' => $member->membership_number,
+                'membership_expires_at' => $member->membership_expires_at,
+                'membership_start_at' => $member->membership_start_at,
+            ];
             // Admin validation rules - all fields required
             $rules = [
                 'name' => ['required', 'string', 'max:255'],
                 'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $member->id],
                 'designation' => ['required', 'string', 'max:255'],
                 'whatsapp_phone' => ['required'],
-                'company_name' => ['required', 'string', 'max:255'],
+                'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry($member->id)],
                 'company_logo' => ['nullable', 'image', 'max:2048'],
                 'company_description' => ['nullable', 'string', 'max:2000'],
                 'company_telephone' => ['required'],
@@ -288,6 +300,8 @@ class MemberController extends Controller
                 'network_name' => $request->network_name,
                 'membership_number' => $membershipNumber,
                 'membership_tier' => $request->membership_tier,
+                'membership_start_at' => now(),
+                'membership_expires_at' => now()->addYear(),
                 'certificate_document' => $certificatePath,
                 'certificate_uploaded_at' => now(),
             ];
@@ -305,6 +319,35 @@ class MemberController extends Controller
         }
 
         $member->update($updateData);
+
+        // Log membership changes if admin updated membership-related fields
+        if (Auth::user()->role != User::MEMBER) {
+            $newMemberData = [
+                'membership_tier' => $request->membership_tier,
+                'membership_number' => $membershipNumber ?? $member->membership_number,
+                'membership_expires_at' => $member->membership_expires_at,
+                'membership_start_at' => $member->membership_start_at,
+            ];
+
+            // Check if membership-related fields changed
+            $hasChanges = false;
+            foreach ($oldMemberData as $key => $oldValue) {
+                if ($oldValue != $newMemberData[$key]) {
+                    $hasChanges = true;
+                    break;
+                }
+            }
+
+            if ($hasChanges) {
+                $this->membershipLogService->logMembershipUpdate(
+                    $member,
+                    $oldMemberData,
+                    $newMemberData,
+                    $request->input('membership_change_reason'),
+                    ['updated_by_admin' => true]
+                );
+            }
+        }
 
         if(Auth::user()->role == User::MEMBER){
             return redirect()->route('profile')->with('success', 'Profile updated successfully!');
@@ -336,7 +379,8 @@ class MemberController extends Controller
     {
         $query = User::approvedActiveMembers()
             ->with(['membershipTier', 'region', 'country', 'city'])
-            ->filterForDirectory($request->only(['company_name', 'country', 'city', 'specialization']));
+            ->filterForDirectory($request->only(['company_name', 'country', 'city', 'specialization']))
+            ->latest();
 
         $members = $query->paginate(10)->withQueryString();
 
@@ -365,7 +409,7 @@ class MemberController extends Controller
                 ->where('id', $id)
                 ->with(['membershipTier', 'region', 'country', 'city'])
                 ->firstOrFail();
-            $ports = Port::all();
+            $ports = Port::orderBy('name', 'asc')->get();
             return view('website.member-directory-view-profile', compact('member', 'ports'));
         } catch (\Exception $e) {
             abort(404, 'Member not found');

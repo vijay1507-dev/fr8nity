@@ -38,6 +38,8 @@
         var table = $('.data-table').DataTable({
             processing: true,
             serverSide: true,
+            scrollX: true,
+            autoWidth: false,
             ajax: "{{ route('shipments.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
@@ -58,6 +60,7 @@
                 },
             ]
         });
+        table.columns.adjust();
     });
 </script>
 @endsection 

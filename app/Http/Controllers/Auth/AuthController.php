@@ -10,13 +10,9 @@ use App\Models\City;
 use App\Models\Region;
 use App\Models\User;
 use App\Models\MembershipTier;
-use App\Models\Referral;
-use App\Notifications\NewRegistrationNotification;
-use App\Notifications\RegistrationConfirmationNotification;
-use App\Notifications\TwoFactorCodeNotification;
-use Illuminate\Support\Str;
 use App\Models\State;
 use App\Rules\ValidReferralCode;
+use App\Rules\UniqueCompanyInCountry;
 use App\Services\RegistrationService;
 
 class AuthController extends Controller
@@ -90,7 +86,7 @@ class AuthController extends Controller
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'designation' => ['required', 'string', 'max:255'],
             'whatsapp_phone' => ['required'],
-            'company_name' => ['required', 'string', 'max:255'],
+            'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry],
             'company_telephone' => ['required'],
             'company_address' => ['required', 'string'],
             'country_id' => ['required', 'exists:countries,id'],

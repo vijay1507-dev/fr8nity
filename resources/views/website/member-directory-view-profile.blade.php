@@ -129,9 +129,8 @@
                                         <h4 class="text-white mb-3">E-certificate</h4>
                                         <a href="{{ Storage::url($member->certificate_document) }}" 
                                            class="e-certificate-btn" 
-                                           target="_blank"
-                                           download>
-                                            <i class="bi bi-download me-2"></i>Download & Preview
+                                           target="_blank">
+                                            <i class="bi bi-eye me-2"></i>Preview
                                         </a>
                                         @if($member->certificate_uploaded_at)
                                         <small class="text-muted mt-3">

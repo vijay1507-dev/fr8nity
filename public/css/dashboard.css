@@ -32,6 +32,52 @@ h4 {
   color: #111;
 }
 
+/* Custom badge colors for leaderboard */
+.bg-bronze {
+  background-color: #cd7f32 !important;
+  color: white !important;
+}
+
+/* Year filter styling */
+#yearFilter {
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.875rem;
+  background-color: white;
+  min-width: 80px;
+}
+
+#yearFilter:focus {
+  border-color: #007bff;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+  outline: none;
+}
+
+.chart-title + .d-flex {
+  margin-top: 8px;
+}
+
+/* Loading spinner styling */
+.spinner-border.text-primary {
+  width: 2rem;
+  height: 2rem;
+}
+
+/* Year filter container styling */
+.d-flex.align-items-center.gap-3 {
+  background-color: #f8f9fa;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: 1px solid #e9ecef;
+}
+
+/* Year filter label styling */
+.d-flex.align-items-center.gap-3 label {
+  font-weight: 500;
+  color: #495057;
+}
+
 /* Layout for admin dashboard skeleton */
 table th,
 table td {
@@ -48,13 +94,17 @@ table td {
   max-width: 230px;
   min-width: 230px;
   background: var(--bs-dark);
-  transition: all 0.35s ease-in-out;
+  transition: width 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   color: rgba(168, 168, 168, 1);
   height: 100vh;
   position: sticky;
   overflow-y: overlay;
   overflow-x: hidden;
   top: 0;
+  will-change: width;
+  transform: translateZ(0);
+  contain: layout style paint;
+  backface-visibility: hidden;
 }
 
 .main {
@@ -62,9 +112,11 @@ table td {
   flex-direction: column;
   min-height: 100vh;
   min-width: 0;
-  transition: all 0.35s ease-in-out;
+  transition: margin-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   width: 100%;
   background: #f7f9fc;
+  will-change: margin-left;
+  transform: translateZ(0);
 }
 
 /* Sidebar Elements Style */
@@ -75,6 +127,7 @@ table td {
   display: flex;
   margin-bottom: 20px;
   padding-left: 30px;
+  transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .sidebar-logo a {
@@ -109,6 +162,7 @@ a.sidebar-link {
   font-family: Plus Jakarta Sans;
   align-items: center;
   gap: 11px;
+  transition: padding 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 a.sidebar-link.active {
 background: rgba(181, 131, 32, 0.5);
@@ -137,7 +191,7 @@ ul.sidebar-nav a svg {
   right: 1.5rem;
   top: 16px;
   transform: rotate(45deg);
-  transition: all .2s ease-out;
+  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .avatar {
@@ -405,7 +459,8 @@ a.page-link.text-primary {
   }
 
   body.collapsed aside#sidebar .sidebar-logo {
-    visibility: hidden;
+    opacity: 0;
+    transition: opacity 0.15s ease-out;
   }
 
   body.collapsed aside#sidebar a.sidebar-link {
@@ -413,11 +468,13 @@ a.page-link.text-primary {
     font-size: 0;
     align-items: center;
     justify-content: center;
+    transition: padding 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   body.collapsed aside#sidebar a.sidebar-link::after {
     top: 14px;
     right: 10px;
+    transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
 }
@@ -430,6 +487,7 @@ a.page-link.text-primary {
     min-width: 200px;
     right: -210px;
     left: auto;
+    transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   body.collapsed aside#sidebar {
@@ -642,6 +700,14 @@ table.listing_time td label {
   background: rgba(181, 131, 32, 1);
   border-color: rgba(181, 131, 32, 1);
   color: #fff;
+}
+
+.monthbtn:disabled {
+    opacity: 0.6 !important;
+    cursor: not-allowed !important;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border-color: #dee2e6;
 }
 
 .rounded_10 {
@@ -1074,3 +1140,44 @@ div .select2-container--default .select2-selection--single .select2-selection__a
 .sidebar-item{
   font-weight:700;
 }
+
+  #chartdiv {
+            width: 100%;
+            height: 500px;
+            background-color: #e9ecef;
+        }
+        .map-dis ul {
+            list-style: none;
+            padding: 0;
+            margin: 10px 0;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .map-dis li {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            font-weight: 500;
+            padding: 5px 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .map-dis li::before {
+            content: '';
+            width: 12px;
+            height: 12px;
+            border-radius: 3px;
+            margin-right: 8px;
+            display: inline-block;
+        }
+        .map-dis li:nth-child(1)::before { background-color: #FF6F61; } 
+        .map-dis li:nth-child(2)::before { background-color: #6B728E; } 
+        .map-dis li:nth-child(3)::before { background-color: #FFB347; } 
+        .map-dis li:nth-child(4)::before { background-color: #4A90E2; } 
+        .map-dis li:nth-child(5)::before { background-color: #8B008B; } 
+        .map-dis li:nth-child(6)::before { background-color: #2ECC71; } 
+        .map-dis li:nth-child(7)::before { background-color: #E74C3C; }
+        
+    
