@@ -43,10 +43,12 @@ Route::prefix('membership')->group(function () {
             $membershipTier = \App\Models\MembershipTier::where('slug', 'summit')->first();
             return view('website.membership.summit', compact('membershipTier'));
         })->name('membership.summit');
+        
+        Route::get('/pinnacle', function () {
+            return view('website.membership.pinnacle');
+        })->name('membership.pinnacle');
     });
-    Route::get('/pinnacle', function () {
-        return view('website.membership.pinnacle');
-    })->name('membership.pinnacle');
+   
     Route::get('/join-member', function () {
         return view('website.membership.join-member');
     })->name('membership.join-member');
