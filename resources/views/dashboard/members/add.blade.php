@@ -181,7 +181,7 @@
                     </div>
 
                     <div class="mb-3 col-12">
-                        <label for="company_description" class="form-label">About Company</label>
+                        <label for="company_description" class="form-label">About Company*</label>
                         <textarea class="form-control @error('company_description') is-invalid @enderror" 
                                   id="company_description" name="company_description" rows="8" 
                                   placeholder="Write about your company, services, experience, and what makes your company unique...">{{ old('company_description') }}</textarea>
