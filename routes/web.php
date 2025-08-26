@@ -77,9 +77,18 @@ Route::prefix('events')->group(function () {
 Route::get('/about-us', function () {
     return view('website.about-us');
 })->name('about-us')->middleware('auth');
-Route::get('/spotlight', function () {
-    return view('website.spotlight');
-})->name('spotlight');
+
+// Spotlight Routes
+Route::prefix('spotlight')->name('spotlight.')->group(function () {
+    Route::get('/event-pulse', function () {
+        return view('website.spotlight.event-pulse');
+    })->name('event-pulse');
+    
+    Route::get('/partner-showcase', function () {
+        return view('website.spotlight.partner-showcase');
+    })->name('partner-showcase');
+});
+
 Route::get('/contact-us', function () {
     return view('website.contact-us');
 })->name('contact-us');

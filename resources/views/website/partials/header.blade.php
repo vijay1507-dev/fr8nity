@@ -72,9 +72,16 @@
           </a>
 
           <div class="navbar-nav d-flex flex-row flex-wrap align-items-center">
-            <li class="nav-item d-flex justify-content-center align-items-center">
-              <a class="nav-link {{ request()->is('spotlight') ? 'active' : '' }}"
-                href="{{route('spotlight')}}">Spotlight</a>
+            <!-- Spotlight Dropdown -->
+            <li class="nav-item dropdown d-flex justify-content-center align-items-center">
+              <a class="nav-link dropdown-toggle {{ request()->is('spotlight*') ? 'active' : '' }}" href="#"
+                id="spotlightDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Spotlight</a>
+              <ul class="dropdown-menu" aria-labelledby="spotlightDropdown">
+                <li><a class="dropdown-item {{ request()->is('spotlight/event-pulse') ? 'active' : '' }}"
+                    href="{{route('spotlight.event-pulse')}}">Event Pulse</a></li>
+                <li><a class="dropdown-item {{ request()->is('spotlight/partner-showcase') ? 'active' : '' }}"
+                    href="{{route('spotlight.partner-showcase')}}">Partner Showcase</a></li>
+              </ul>
             </li>
             <li class="nav-item d-flex justify-content-center align-items-center">
               <a class="nav-link {{ request()->is('contact-us') ? 'active' : '' }}"
