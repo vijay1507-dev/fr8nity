@@ -7,7 +7,7 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="card-title mb-0">Received Quotations</h4>
-            <a href="{{ route('member.quotations.create') }}" class="btn btn-primary">
+            <a href="{{ route('member.quotations.create', ['type' => 'received']) }}" class="btn btn-primary">
                 <i class="bi bi-plus-circle me-2"></i>Add enquiries received offline
             </a>
         </div>

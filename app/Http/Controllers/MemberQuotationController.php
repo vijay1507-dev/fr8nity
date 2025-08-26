@@ -91,8 +91,9 @@ class MemberQuotationController extends Controller
         return view('dashboard.quotations.received');
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $type = $request->get('type', 'received');        
         // Get ports for the form dropdowns
         $ports = Port::orderBy('name')->get();
         
@@ -104,7 +105,7 @@ class MemberQuotationController extends Controller
             ->orderBy('company_name')
             ->get();
 
-        return view('dashboard.quotations.create', compact('ports', 'members'));
+        return view('dashboard.quotations.create', compact('ports', 'members', 'type'));
     }
 
     public function show(MemberQuotation $quotation)
@@ -278,7 +279,12 @@ class MemberQuotationController extends Controller
         $this->memberQuotationService->createAndNotify($validated, $request->file('document'));
         
         if($request->is_offline_enquiry == 1){
-            return redirect()->route('member.quotations.received')->with('success', 'Enquiry Added successfully');
+            // Check if this is a given or received quotation and redirect accordingly
+            if ($request->quotation_type === 'given') {
+                return redirect()->route('member.quotations.given')->with('success', 'Enquiry Added successfully');
+            } else {
+                return redirect()->route('member.quotations.received')->with('success', 'Enquiry Added successfully');
+            }
         }
         return redirect()->back()->with('success', 'Quotation request submitted successfully');
     }

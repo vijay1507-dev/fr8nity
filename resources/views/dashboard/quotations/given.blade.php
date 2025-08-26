@@ -7,6 +7,9 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="card-title mb-0">Given Quotations</h4>
+            <a href="{{ route('member.quotations.create', ['type' => 'given']) }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Add enquiries given offline
+            </a>
         </div>
         <div class="card-body">
             <table class="table table-bordered data-table">
