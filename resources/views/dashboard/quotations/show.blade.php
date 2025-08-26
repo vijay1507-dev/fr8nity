@@ -14,6 +14,17 @@
                     </a>
                 </div>
                 <div class="card-body">
+                    <!-- Reference Number Section -->
+                    @if($quotation->quotation_reference_no)
+                    <div class="row mb-4">
+                        <div class="col-12">
+                            <div class="alert alert-info">
+                                <strong>Reference Number:</strong> {{ $quotation->quotation_reference_no }}
+                            </div>
+                        </div>
+                    </div>
+                    @endif
+                    
                     <div class="row">
                         <div class="col-md-6">
                             <h5 class="mb-3">{{ $quotation->given_by_id === Auth::id() ? 'Submitted to' : 'Received from' }} :</h5>

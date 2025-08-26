@@ -27,6 +27,9 @@ class MemberQuotationController extends Controller
         if ($request->ajax()) {
             return DataTables::of($quotations)
                 ->addIndexColumn()
+                ->addColumn('reference_no', function ($quotation) {
+                    return $quotation->quotation_reference_no ?? '-';
+                })
                 ->addColumn('receiver', function ($quotation) {
                     return $quotation->receiver ? $quotation->receiver->company_name : '-';
                 })
@@ -61,6 +64,9 @@ class MemberQuotationController extends Controller
         if ($request->ajax()) {
             return DataTables::of($quotations)
                 ->addIndexColumn()
+                ->addColumn('reference_no', function ($quotation) {
+                    return $quotation->quotation_reference_no ?? '-';
+                })
                 ->addColumn('given_by', function ($quotation) {
                     return $quotation->givenBy ? $quotation->givenBy->company_name : '-';
                 })
@@ -175,6 +181,9 @@ class MemberQuotationController extends Controller
         if ($request->ajax()) {
             return \Yajra\DataTables\Facades\DataTables::of($quotations)
                 ->addIndexColumn()
+                ->addColumn('reference_no', function ($quotation) {
+                    return $quotation->quotation_reference_no ?? '-';
+                })
                 ->addColumn('member', function ($quotation) {
                     return $quotation->receiver ? $quotation->receiver->company_name : '-';
                 })

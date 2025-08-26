@@ -16,6 +16,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Reference No</th>
                         <th>Given By</th>
                         <th>Name</th>
                         <th>Email</th>
@@ -46,6 +47,7 @@
             ajax: "{{ route('member.quotations.received') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
+                {data: 'reference_no', name: 'reference_no'},
                 {data: 'given_by', name: 'given_by'},
                 {data: 'name', name: 'name'},
                 {data: 'email', name: 'email'},

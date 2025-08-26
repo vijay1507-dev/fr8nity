@@ -35,6 +35,7 @@ class MemberQuotation extends Model
         'message',
         'transaction_value',
         'status',
+        'quotation_reference_no',
     ];
 
     protected $casts = [

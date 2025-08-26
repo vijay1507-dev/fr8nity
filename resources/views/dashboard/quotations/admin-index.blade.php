@@ -13,6 +13,7 @@
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Reference No</th>
                         <th>Sender Name</th>
                         <th>Company Name</th>
                         <th>Email</th>
@@ -44,6 +45,7 @@
             ajax: "{{ route('admin.quotations.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
+                {data: 'reference_no', name: 'reference_no'},
                 {data: 'name', name: 'name'},
                 {data: 'sender_company_name', name: 'sender_company_name'},
                 {data: 'sender_email', name: 'sender_email'},
