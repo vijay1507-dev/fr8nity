@@ -9,9 +9,9 @@
             <!-- Member Profile Header -->
             <div class="col-12 mb-4">
                 <div class="card">
-                    <div class="card-body">
+                    <div class="card-body row">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div class="d-flex align-items-center">
+                            <div class="col-3 d-flex align-items-center">              
                                 <div class="avatar-wrapper me-3">
                                     @if($member->profile_photo)
                                 <img src="{{ Storage::url($member->profile_photo) }}" alt="Profile Photo" class="rounded-circle" width="100" height="100" id="profilePhotoPreview">
@@ -24,7 +24,7 @@
                                     <p class="text-muted mb-0">{{ $member->designation }}</p>
                                 </div>
                             </div>
-                            <div class="d-flex align-items-center">
+                            <div class="col-4 d-flex align-items-center">
                                 <div class="avatar-wrapper me-3">
                                     @if($member->company_logo)
                                 <img src="{{ Storage::url($member->company_logo) }}" alt="Company Logo" class="rounded-circle" width="100" height="100" id="companyLogoPreview">
@@ -32,11 +32,11 @@
                                 <img src="{{ asset('images/default_company.png') }}" alt="Company Logo" class="rounded-circle" width="100" height="100" id="companyLogoPreview">
                               @endif
                                 </div>
-                                <div>
+                                <div class=" me-2">
                                     <h4 class="mb-1">{{ $member->company_name }}</h4>
                                 </div>
                             </div>
-                            <div class="d-flex gap-2">
+                            <div class="col-5 d-flex gap-2 justify-content-end">
                                 <div class="dropdown">
                                     <button
                                         class="btn btn-{{ $member->status === 'approved' ? 'success' : 'warning' }} dropdown-toggle"
@@ -63,9 +63,9 @@
                                     </ul>
                                 </div>
                                 @if($member->status === 'approved')
-                                <a href="{{ route('members.edit', $member) }}" class="btn btn-outline-secondary">Edit Details</a>
+                                <a href="{{ route('members.edit', $member) }}" class="btn  btn-outline-secondary ">Edit Details</a>
                                 @endif
-                                <a href="{{ route('members.index') }}" class="btn btn-outline-secondary">Back to List</a>
+                                <a href="{{ route('members.index') }}" class="btn  btn-outline-secondary">Back to List</a>
                             </div>
                         </div>
                     </div>
