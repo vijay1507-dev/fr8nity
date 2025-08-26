@@ -277,7 +277,19 @@ class MemberController extends Controller
                 $updateData['certificate_document'] = $certificatePath;
                 $updateData['certificate_uploaded_at'] = now();
             }
-            $membershipNumber = $this->membershipNumberService->generateForTierId((int) $request->membership_tier);
+            
+            // Update membership number based on tier change
+            $membershipNumber = $member->membership_number;
+            if ($request->membership_tier != $member->membership_tier) {
+                // Tier changed - update prefix but keep sequence number
+                if ($membershipNumber) {
+                    $membershipNumber = $this->membershipNumberService->updateForTierChange($membershipNumber, (int) $request->membership_tier);
+                } else {
+                    // No existing number - generate new one
+                    $membershipNumber = $this->membershipNumberService->generateForTierId((int) $request->membership_tier);
+                }
+            }
+            
             $updateData = [
                 'name' => $request->name,
                 'email' => $request->email,
