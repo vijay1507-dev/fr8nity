@@ -31,10 +31,10 @@ class MemberQuotationController extends Controller
                     return $quotation->receiver ? $quotation->receiver->company_name : '-';
                 })
                 ->addColumn('port_of_loading', function ($quotation) {
-                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
+                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : '-';
                 })
                 ->addColumn('port_of_discharge', function ($quotation) {
-                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
+                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : '-';
                 })
                 ->addColumn('status', function ($quotation) {
                     return $quotation->getStatusLabel();
@@ -65,10 +65,10 @@ class MemberQuotationController extends Controller
                     return $quotation->givenBy ? $quotation->givenBy->company_name : '-';
                 })
                 ->addColumn('port_of_loading', function ($quotation) {
-                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
+                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : '-';
                 })
                 ->addColumn('port_of_discharge', function ($quotation) {
-                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
+                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : '-';
                 })
                 ->addColumn('transaction_value', function ($quotation) {
                     return $quotation->transaction_value

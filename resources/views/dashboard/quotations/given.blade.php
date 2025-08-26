@@ -18,11 +18,9 @@
                         <th>No</th>
                         <th>Receiver</th>
                         <th>Name</th>
-                        <th>Phone</th>
                         <th>Email</th>
                         <th>Port of Loading</th>
                         <th>Port of Discharge</th>
-                        <th>Specifications</th>
                         <th>Status</th>
                         <th>Created At</th>
                         <th>Action</th>
@@ -49,11 +47,9 @@
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'receiver', name: 'receiver'},
                 {data: 'name', name: 'name'},
-                {data: 'phone', name: 'phone'},
                 {data: 'email', name: 'email'},
                 {data: 'port_of_loading', name: 'port_of_loading'},
                 {data: 'port_of_discharge', name: 'port_of_discharge'},
-                {data: 'specifications', name: 'specifications'},
                 {data: 'status', name: 'status'},
                 {data: 'created_at', name: 'created_at'},
                 {

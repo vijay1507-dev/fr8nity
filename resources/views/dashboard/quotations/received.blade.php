@@ -18,11 +18,9 @@
                         <th>No</th>
                         <th>Given By</th>
                         <th>Name</th>
-                        <th>Phone</th>
                         <th>Email</th>
                         <th>Port of Loading</th>
                         <th>Port of Discharge</th>
-                        <th>Specifications</th>
                         <th>Transaction Value</th>
                         <th>Quotation Status</th>
                         <th>Created At</th>
@@ -50,11 +48,9 @@
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'given_by', name: 'given_by'},
                 {data: 'name', name: 'name'},
-                {data: 'phone', name: 'phone'},
                 {data: 'email', name: 'email'},
                 {data: 'port_of_loading', name: 'port_of_loading'},
                 {data: 'port_of_discharge', name: 'port_of_discharge'},
-                {data: 'specifications', name: 'specifications'},
                 {data: 'transaction_value', name: 'transaction_value'},
                 {data: 'status', name: 'status'},
                 {data: 'created_at', name: 'created_at'},
