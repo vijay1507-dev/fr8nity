@@ -161,8 +161,7 @@ class MemberController extends Controller
         ]);
 
         $this->memberApprovalService->updateStatus($member, $request->status);
-
-        return back()->with('success', 'Member status updated successfully.');
+        return redirect()->route('members.index')->with('success', 'Member status updated successfully.');
     }
 
     /**

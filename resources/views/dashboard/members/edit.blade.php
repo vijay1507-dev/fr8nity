@@ -5,7 +5,36 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="card-title">@if(auth()->user()->role == \App\Models\User::MEMBER) Edit Profile @else Edit Member @endif</h4>
-            <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
+            <div class="d-flex gap-2 align-items-center">
+                @if(auth()->user()->role !== \App\Models\User::MEMBER)
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-{{ $member->status === 'approved' ? 'success' : 'warning' }} dropdown-toggle"
+                            type="button" data-bs-toggle="dropdown">
+                            Status: {{ ucfirst($member->status) }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="dropdown-item">Set as Approved</button>
+                                </form>
+                            </li>
+                            <li>
+                                <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="pending">
+                                    <button type="submit" class="dropdown-item">Set as Pending</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                @endif
+                <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
+            </div>
         </div>
         <div class="card-body">
 
