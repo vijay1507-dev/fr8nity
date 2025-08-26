@@ -254,13 +254,21 @@
                                 <span class="info-label">E-certificate</span>
                                 <div class="e-certificate-section">
                                    
-                                        <div class="  h-100 d-flex flex-column ">
-                                            <a href="{{ Storage::url(auth()->user()->certificate_document) }}" 
-                                               class="e-certificate-btn" 
-                                               target="_blank"
-                                               download>
-                                                <i class="bi bi-download me-2"></i>Download & Preview
-                                            </a>
+                                        <div class="h-100 d-flex flex-column justify-content-center align-items-center">
+                                            <!-- Certificate Image Display - Clickable for Preview -->
+                                            <div class="certificate-preview mb-3" style="border-radius: 10px; padding: 10px; background: rgba(255, 255, 255, 0.1); cursor: pointer;">
+                                                <a href="{{ Storage::url(auth()->user()->certificate_document) }}" 
+                                                   target="_blank"
+                                                   style="text-decoration: none; display: block;">
+                                                    <img src="{{ Storage::url(auth()->user()->certificate_document) }}" 
+                                                         alt="E-Certificate - Click to Preview" 
+                                                         class="img-fluid rounded"
+                                                         style="max-width: 100%; max-height: 200px; object-fit: contain; border-radius: 8px; transition: all 0.3s ease;"
+                                                         onmouseover="this.style.transform='scale(1.05)'"
+                                                         onmouseout="this.style.transform='scale(1)'">
+                                                </a>
+                                            </div>
+                                            
                                             @if(auth()->user()->certificate_uploaded_at)
                                             <small class="text-muted mt-1">
                                                 Last updated: {{ auth()->user()->certificate_uploaded_at->format('M d, Y') }}
