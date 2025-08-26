@@ -86,11 +86,11 @@
 							<form action="{{ route('member.quotations.close', $quotation) }}" method="POST" onsubmit="return confirm('Are you sure you want to close this enquiry as unsuccessful?');">
 								@csrf
 								@method('PATCH')
-								<button type="submit" class="btn btn-outline-danger">Quotation Unsuccess</button>
+								<button type="submit" class="btn btn-outline-danger">Quotation Unsuccessful</button>
 							</form>
 
 							<button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#markSuccessModal">
-								Quotation Success
+								Quotation Successful
 							</button>
 						</div>
 					</div>
@@ -128,8 +128,8 @@
 				@method('PATCH')
 				<div class="modal-body">
 					<div class="mb-3">
-						<label for="transaction_value" class="form-label">Trade value</label>
-						<input type="number" name="transaction_value" id="transaction_value" class="form-control" min="0" step="0.01" required placeholder="Enter trade value">
+						<label for="transaction_value" class="form-label">Transaction value</label>
+						<input type="number" name="transaction_value" id="transaction_value" class="form-control" min="0" step="0.01" required placeholder="Enter transaction value">
 					</div>
 				</div>
 				<div class="modal-footer">

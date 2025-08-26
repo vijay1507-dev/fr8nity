@@ -16,7 +16,7 @@
             @endif
                 @csrf
                 @method('PATCH')
-                @if(auth()->user()->role == \App\Models\User::MEMBER)
+                {{-- @if(auth()->user()->role == \App\Models\User::MEMBER) --}}
                 <div class="row">
                 <div class="col-6 mb-4">
                     <div class="d-flex align-items-center">
@@ -58,7 +58,7 @@
                     </div>
                 </div>
                 </div>
-                @endif
+                {{-- @endif --}}
 
                 @if(auth()->user()->role == \App\Models\User::MEMBER)
                 <div class="alert alert-info mb-4">
