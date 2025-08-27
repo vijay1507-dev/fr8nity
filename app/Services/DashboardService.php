@@ -6,6 +6,8 @@ use App\Models\User;
 use App\Models\MemberQuotation;
 use App\Models\Referral;
 use Carbon\Carbon;
+use App\Models\MembershipLog;
+use App\Models\MembershipTier;
 
 class DashboardService
 {
@@ -243,5 +245,174 @@ class DashboardService
             ->receivedQuotations()
             ->where('created_at', '>=', $startDate)
             ->where('status', $status);
+    }
+
+    /**
+     * Get admin dashboard data for the specified period
+     */
+    public function getAdminDashboardData(int $period = 12): array
+    {
+        $startDate = Carbon::now()->subMonths($period);
+        return [
+            'new_signups' => $this->getNewSignupsCount($startDate),
+            'member_churn' => $this->getMemberChurnData($startDate),
+            'tier_growth' => $this->getTierGrowthData($startDate),
+            'membership_fees' => $this->getMembershipFeesByTier($startDate),
+            'average_revenue' => $this->getAverageRevenuePerMonth(),
+            'country_members' => $this->getCountryWiseMemberCounts(),
+        ];
+    }
+
+    /**
+     * Get new sign-ups count for the period
+     */
+    private function getNewSignupsCount(Carbon $startDate): int
+    {
+        return User::where('role', User::MEMBER)
+            ->where('created_at', '>=', $startDate)
+            ->count();
+    }
+
+    /**
+     * Get member churn data (cancellations and non-renewals)
+     */
+    private function getMemberChurnData(Carbon $startDate): array
+    {
+        // Get cancellations (users who were deactivated in the period)
+        $cancellations = User::where('role', User::MEMBER)
+            ->where('is_active', false)
+            ->where('updated_at', '>=', $startDate)
+            ->where('deleted_at', null) // Only count soft-deleted users
+            ->count();
+
+        // Get non-renewals (expired memberships that weren't renewed in the period)
+        $nonRenewals = User::where('role', User::MEMBER)
+            ->where('membership_expires_at', '<', now())
+            ->where('membership_expires_at', '>=', $startDate)
+            ->where('is_active', true)
+            ->where('deleted_at', null)
+            ->count();
+
+        return [
+            'cancellations' => $cancellations,
+            'non_renewals' => $nonRenewals,
+        ];
+    }
+
+    /**
+     * Get tier growth data (upgrades and downgrades)
+     */
+    private function getTierGrowthData(Carbon $startDate): array
+    {
+        $upgrades = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
+            ->where('status', MembershipLog::STATUS_UPGRADE)
+            ->where('created_at', '>=', $startDate)
+            ->count();
+
+        $downgrades = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
+            ->where('status', MembershipLog::STATUS_DOWNGRADE)
+            ->where('created_at', '>=', $startDate)
+            ->count();
+
+        return [
+            'upgrades' => $upgrades,
+            'downgrades' => $downgrades,
+        ];
+    }
+
+    /**
+     * Get country-wise active member counts for the map
+     */
+    public function getCountryWiseMemberCounts(): array
+    {
+        $countryCounts = User::where('role', User::MEMBER)
+            ->where('is_active', true)
+            ->where('deleted_at', null)
+            ->join('countries', 'users.country_id', '=', 'countries.id')
+            ->selectRaw('countries.code as country_code, COUNT(*) as member_count')
+            ->groupBy('countries.code')
+            ->pluck('member_count', 'country_code')
+            ->toArray();
+
+        return $countryCounts;
+    }
+
+    /**
+     * Get membership fees by tier for the period
+     */
+    private function getMembershipFeesByTier(Carbon $startDate): array
+    {
+        $tiers = MembershipTier::active()->get();
+        $fees = [];
+        $totalTierRevenue = 0;
+
+        // Initialize default tiers with zero values
+        $defaultTiers = ['explorer', 'elevate', 'summit', 'pinnacle'];
+        foreach ($defaultTiers as $tierSlug) {
+            $fees[$tierSlug] = [
+                'name' => ucfirst($tierSlug),
+                'count' => 0,
+                'annual_fee' => 0,
+                'total_revenue' => 0,
+            ];
+        }
+
+        foreach ($tiers as $tier) {
+            // Get total count of active users for this tier (regardless of start date)
+            $memberCount = User::where('role', User::MEMBER)
+                ->where('membership_tier', $tier->id)
+                ->where('is_active', true)
+                ->where('deleted_at', null)
+                ->count();
+
+            if (isset($fees[$tier->slug])) {
+                // Parse annual fee from string format (e.g., "$1,900" -> 1900)
+                $annualFee = $this->parseAnnualFee($tier->annual_fee);
+                $tierRevenue = $annualFee * $memberCount;
+                
+                $fees[$tier->slug] = [
+                    'name' => $tier->name,
+                    'count' => $memberCount,
+                    'annual_fee' => $annualFee,
+                    'total_revenue' => $tierRevenue,
+                ];
+                
+                // Add to total tier revenue
+                $totalTierRevenue += $tierRevenue;
+            }
+        }
+
+        // Add total tier revenue to the fees array
+        $fees['total'] = [
+            'name' => 'Total',
+            'count' => array_sum(array_column($fees, 'count')),
+            'annual_fee' => 0,
+            'total_revenue' => $totalTierRevenue,
+        ];
+
+        return $fees;
+    }
+
+    /**
+     * Parse annual fee from string format to float
+     */
+    private function parseAnnualFee($annualFee): float
+    {
+        if (empty($annualFee)) {
+            return 0;
+        }
+
+        // Remove currency symbols and commas, then convert to float
+        $cleanedFee = preg_replace('/[^0-9.]/', '', $annualFee);
+        
+        return is_numeric($cleanedFee) ? (float) $cleanedFee : 0;
+    }
+
+    /**
+     * Get average revenue per month for the period
+     */
+    private function getAverageRevenuePerMonth(): float
+    {
+        return 0;
     }
 }

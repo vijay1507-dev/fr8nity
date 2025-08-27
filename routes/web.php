@@ -123,6 +123,7 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::post('/dashboard/filtered-data', [DashboardController::class, 'getFilteredData'])->name('dashboard.filtered-data');
     Route::post('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
     Route::post('/dashboard/leadership-board', [DashboardController::class, 'getLeadershipBoardAjax'])->name('dashboard.leadership-board');
+    Route::post('/dashboard/admin-data', [DashboardController::class, 'getAdminDashboardData'])->name('dashboard.admin-data');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
     Route::post('/update-profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
