@@ -35,9 +35,10 @@ class MemberController extends Controller
             // Apply country filter if provided
             if ($request->filled('country')) {
                 $data->whereHas('country', function ($query) use ($request) {
-                    $query->where('code', 'like', '%' . $request->country . '%')
-                          ->orWhere('name', 'like', '%' . $request->country . '%');
+                    $query->where('code', $request->country); // Strict country code match
                 });
+                // Only show active members when country filter is applied
+                $data->where('is_active', true);
             }
 
             return DataTables::of($data)
@@ -70,7 +71,14 @@ class MemberController extends Controller
                 ->make(true);
         }
 
-        return view('dashboard.members.index');
+        // Get country name if country filter is applied
+        $countryName = null;
+        if ($request->filled('country')) {
+            $country = \App\Models\Country::where('code', $request->country)->first();
+            $countryName = $country ? $country->name : $request->country;
+        }
+
+        return view('dashboard.members.index', compact('countryName'));
     }
 
     /**

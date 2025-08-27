@@ -10,7 +10,7 @@
         <div class="card-body">
             @if(request('country'))
                 <div class="alert alert-info mb-3">
-                    <strong>Filtered by Country:</strong> {{ request('country') }}
+                    <strong>Filtered by Country:</strong> {{ $countryName ?? request('country') }}
                     <a href="{{ route('members.index') }}" class="btn btn-sm btn-outline-secondary ms-2">Clear Filter</a>
                 </div>
             @endif
