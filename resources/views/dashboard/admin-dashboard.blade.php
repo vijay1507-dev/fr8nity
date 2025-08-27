@@ -627,7 +627,8 @@
             // Click navigation
             worldSeries.mapPolygons.template.events.on("click", function (ev) {
                 var countryId = ev.target.dataItem.dataContext.id;
-                window.location.href = "/country/" + countryId;
+                // Redirect to admin members page with country code as query parameter
+                window.location.href = "/members?country=" + countryId;
             });
         });
     </script>

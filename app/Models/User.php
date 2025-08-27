@@ -141,7 +141,10 @@ class User extends Authenticatable
 
         $query->when(!empty($filters['country']), function (Builder $q) use ($filters) {
             $q->whereHas('country', function (Builder $rel) use ($filters) {
-                $rel->where('name', 'like', "%{$filters['country']}%");
+                $rel->where(function (Builder $inner) use ($filters) {
+                    $inner->where('name', 'like', "%{$filters['country']}%")
+                          ->orWhere('code', 'like', "%{$filters['country']}%");
+                });
             });
         });
 

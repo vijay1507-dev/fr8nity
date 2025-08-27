@@ -32,6 +32,14 @@ class MemberController extends Controller
         if ($request->ajax()) {
             $data = User::query()->where('role', User::MEMBER)->with('membershipTier')->latest();
 
+            // Apply country filter if provided
+            if ($request->filled('country')) {
+                $data->whereHas('country', function ($query) use ($request) {
+                    $query->where('code', 'like', '%' . $request->country . '%')
+                          ->orWhere('name', 'like', '%' . $request->country . '%');
+                });
+            }
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('current_tier', function($row) {
