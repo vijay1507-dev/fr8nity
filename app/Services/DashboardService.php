@@ -278,18 +278,19 @@ class DashboardService
      */
     private function getMemberChurnData(Carbon $startDate): array
     {
-        // Get cancellations (users who were deactivated in the period)
+        // Get cancellations (users with status 'cancelled' in the period)
         $cancellations = User::where('role', User::MEMBER)
-            ->where('is_active', false)
+            ->where('status', 'cancelled')
             ->where('updated_at', '>=', $startDate)
-            ->where('deleted_at', null) // Only count soft-deleted users
+            ->where('deleted_at', null)
             ->count();
 
         // Get non-renewals (expired memberships that weren't renewed in the period)
+        // This counts members whose membership expired but they weren't cancelled or renewed
         $nonRenewals = User::where('role', User::MEMBER)
-            ->where('membership_expires_at', '<', now())
-            ->where('membership_expires_at', '>=', $startDate)
-            ->where('is_active', true)
+            ->where('status', 'approved') // Only approved members (not cancelled)
+            ->where('membership_expires_at', '<', now()) // Expired
+            ->where('membership_expires_at', '>=', $startDate) // Expired in the period
             ->where('deleted_at', null)
             ->count();
 
@@ -326,7 +327,7 @@ class DashboardService
     public function getCountryWiseMemberCounts(): array
     {
         $countryCounts = User::where('role', User::MEMBER)
-            ->where('is_active', true)
+            ->where('status', 'approved') // Only approved members (not cancelled)
             ->where('deleted_at', null)
             ->join('countries', 'users.country_id', '=', 'countries.id')
             ->selectRaw('countries.code as country_code, COUNT(*) as member_count')
@@ -361,7 +362,7 @@ class DashboardService
             // Get total count of active users for this tier (regardless of start date)
             $memberCount = User::where('role', User::MEMBER)
                 ->where('membership_tier', $tier->id)
-                ->where('is_active', true)
+                ->where('status', 'approved') // Only approved members (not cancelled)
                 ->where('deleted_at', null)
                 ->count();
 

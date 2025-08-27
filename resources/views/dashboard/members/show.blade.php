@@ -39,27 +39,35 @@
                             <div class="col-5 d-flex gap-2 justify-content-end">
                                 <div class="dropdown">
                                     <button
-                                        class="btn btn-{{ $member->status === 'approved' ? 'success' : 'warning' }} dropdown-toggle"
+                                        class="btn btn-{{ $member->status === 'approved' ? 'success' : ($member->status === 'cancelled' ? 'danger' : 'warning') }} dropdown-toggle"
                                         type="button" data-bs-toggle="dropdown">
                                         Status: {{ ucfirst($member->status) }}
                                     </button>
                                     <ul class="dropdown-menu">
+                                        @if($member->status === 'pending')
                                         <li>
                                             <form action="{{ route('members.update-status', $member) }}" method="POST">
                                                 @csrf
                                                 @method('PATCH')
                                                 <input type="hidden" name="status" value="approved">
-                                                <button type="submit" class="dropdown-item">Set as Approved</button>
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="bi bi-check-circle me-2 text-success"></i>Set as Approved
+                                                </button>
                                             </form>
                                         </li>
+                                        @elseif($member->status === 'approved')
                                         <li>
-                                            <form action="{{ route('members.update-status', $member) }}" method="POST">
-                                                @csrf
-                                                @method('PATCH')
-                                                <input type="hidden" name="status" value="pending">
-                                                <button type="submit" class="dropdown-item">Set as Pending</button>
-                                            </form>
+                                            <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#cancelMembershipModal">
+                                                <i class="bi bi-x-circle me-2"></i>Cancel Membership
+                                            </button>
                                         </li>
+                                        @elseif($member->status === 'cancelled')
+                                        <li>
+                                            <button type="button" class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#renewMembershipModal">
+                                                <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
+                                            </button>
+                                        </li>
+                                        @endif
                                     </ul>
                                 </div>
                                 @if($member->status === 'approved')
@@ -324,6 +332,87 @@
                 <i class="bi bi-arrow-left" style="font-size: 15px;"></i>
                 <span class="d-none d-md-inline">Back</span>
             </a>
+        </div>
+    </div>
+
+    <!-- Cancel Membership Modal -->
+    <div class="modal fade" id="cancelMembershipModal" tabindex="-1" aria-labelledby="cancelMembershipModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-danger" id="cancelMembershipModalLabel">
+                        <i class="bi bi-exclamation-triangle me-2"></i>Cancel Membership
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('members.cancel-membership', $member) }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <p class="mb-3">Are you sure you want to cancel this member's membership? This action will:</p>
+                        <ul class="text-danger">
+                            <li>Set their status to cancelled</li>
+                            <li>Deactivate their access to the website</li>
+                            <li>Log the cancellation with reason</li>
+                        </ul>
+                        <div class="mb-3">
+                            <label for="cancellation_reason" class="form-label">Cancellation Reason <span class="text-danger">*</span></label>
+                            <textarea class="form-control @error('cancellation_reason') is-invalid @enderror" 
+                                      id="cancellation_reason" name="cancellation_reason" rows="3" 
+                                      placeholder="Please provide a reason for cancellation..." required></textarea>
+                            @error('cancellation_reason')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="bi bi-x-circle me-2"></i>Cancel Membership
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Renew Membership Modal -->
+    <div class="modal fade" id="renewMembershipModal" tabindex="-1" aria-labelledby="renewMembershipModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title text-success" id="renewMembershipModalLabel">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('members.renew-membership', $member) }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <p class="mb-3">Are you sure you want to renew this member's membership? This action will:</p>
+                        <ul class="text-success">
+                            <li>Set their status back to approved</li>
+                            <li>Reactivate their access to the website</li>
+                            <li>Set a new expiry date (1 year from renewal)</li>
+                            <li>Log the renewal</li>
+                        </ul>
+                        <div class="mb-3">
+                            <label for="renewal_reason" class="form-label">Renewal Reason <span class="text-danger">*</span></label>
+                            <textarea class="form-control @error('renewal_reason') is-invalid @enderror" 
+                                      id="renewal_reason" name="renewal_reason" rows="3" 
+                                      placeholder="Please provide a reason for renewal..." required></textarea>
+                            @error('renewal_reason')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
+                        </button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 

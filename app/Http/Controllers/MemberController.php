@@ -400,6 +400,116 @@ class MemberController extends Controller
     }
 
     /**
+     * Cancel membership for the specified member.
+     */
+    public function cancelMembership(Request $request, User $member)
+    {
+        if ($member->role !== User::MEMBER) {
+            abort(404);
+        }
+
+        $request->validate([
+            'cancellation_reason' => 'required|string|max:1000',
+        ]);
+
+        // Update member status to cancelled and deactivate access
+        $member->update([
+            'status' => User::STATUS_CANCELLED,
+            'cancelled_at' => now(),
+            'cancellation_reason' => $request->cancellation_reason,
+            'cancelled_by' => Auth::id(),
+            'is_active' => false, // Deactivate access to website
+        ]);
+
+        // Log the cancellation with previous membership details
+        \App\Models\MembershipLog::create([
+            'user_id' => $member->id,
+            'action' => \App\Models\MembershipLog::ACTION_CANCELLED,
+            'membership_tier_id' => $member->membership_tier,
+            'previous_tier_name' => $member->membershipTier->name ?? 'N/A',
+            'previous_membership_number' => $member->membership_number,
+            'previous_annual_fee' => $member->membershipTier->annual_fee ?? 'N/A',
+            'previous_annual_fee_currency' => $member->membershipTier->annual_fee_currency ?? 'USD',
+            'previous_expiry_date' => $member->membership_expires_at,
+            'new_tier_name' => 'N/A', // Cancelled, so no new tier
+            'new_membership_number' => 'N/A', // Cancelled, so no new number
+            'new_annual_fee' => 'N/A', // Cancelled, so no new fee
+            'new_annual_fee_currency' => 'N/A',
+            'new_expiry_date' => null, // Cancelled, so no expiry date
+            'status' => \App\Models\MembershipLog::STATUS_CANCELLED,
+            'reason' => $request->cancellation_reason,
+            'changed_by' => Auth::id(),
+            'metadata' => [
+                'cancelled_at' => now()->toISOString(),
+                'previous_is_active' => $member->is_active,
+                'previous_status' => $member->status,
+            ],
+        ]);
+
+        return redirect()->route('members.edit', $member)
+            ->with('success', 'Membership cancelled successfully.');
+    }
+
+    /**
+     * Renew membership for the specified member.
+     */
+    public function renewMembership(Request $request, User $member)
+    {
+        if ($member->role !== User::MEMBER) {
+            abort(404);
+        }
+
+        $request->validate([
+            'renewal_reason' => 'required|string|max:1000',
+        ]);
+
+        // Calculate expiry date automatically (1 year from renewal date)
+        $renewalDate = now();
+        $expiryDate = $renewalDate->copy()->addYear();
+        
+        // Update member status to approved and reactivate access
+        $member->update([
+            'status' => User::STATUS_APPROVED,
+            'membership_start_at' => $renewalDate, 
+            'membership_expires_at' => $expiryDate,
+            'cancelled_at' => null,
+            'cancellation_reason' => null,
+            'cancelled_by' => null,
+            'is_active' => true, // Reactivate access to website
+        ]);
+
+        // Log the renewal with previous membership details
+        \App\Models\MembershipLog::create([
+            'user_id' => $member->id,
+            'action' => \App\Models\MembershipLog::ACTION_RENEWED,
+            'membership_tier_id' => $member->membership_tier,
+            'previous_tier_name' => 'N/A', // Was cancelled, so no previous tier
+            'previous_membership_number' => $member->membership_number,
+            'previous_annual_fee' => 'N/A', // Was cancelled, so no previous fee
+            'previous_annual_fee_currency' => 'N/A',
+            'previous_expiry_date' => $member->membership_expires_at,
+            'new_tier_name' => $member->membershipTier->name ?? 'N/A',
+            'new_membership_number' => $member->membership_number,
+            'new_annual_fee' => $member->membershipTier->annual_fee ?? 'N/A',
+            'new_annual_fee_currency' => $member->membershipTier->annual_fee_currency ?? 'USD',
+            'new_expiry_date' => $expiryDate,
+            'new_membership_start_at' => $renewalDate, // Log the new start date
+            'status' => \App\Models\MembershipLog::STATUS_RENEWED,
+            'reason' => $request->renewal_reason,
+            'changed_by' => Auth::id(),
+            'metadata' => [
+                'renewed_at' => now()->toISOString(),
+                'previous_is_active' => $member->is_active,
+                'previous_status' => $member->status,
+                'renewal_type' => 'same_plan', // Indicates renewal with same plan
+            ],
+        ]);
+
+        return redirect()->route('members.edit', $member)
+            ->with('success', 'Membership renewed successfully.');
+    }
+
+    /**
      * Display the member directory.
      */
     public function directory(Request $request)

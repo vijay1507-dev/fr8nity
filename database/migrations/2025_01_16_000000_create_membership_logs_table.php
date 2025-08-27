@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('membership_logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->foreignId('membership_tier_id')->nullable()->constrained('membership_tiers');
-            $table->enum('action', ['approve', 'update', 'change_tier', 'renewal']);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('membership_tier_id')->nullable();
+            $table->enum('action', ['approve', 'update', 'change_tier', 'renewal', 'cancelled', 'renewed']);
             
             // Previous values
             $table->string('previous_tier_name')->nullable();
@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('previous_annual_fee')->nullable();
             $table->string('previous_annual_fee_currency')->nullable();
             $table->timestamp('previous_expiry_date')->nullable();
+            $table->enum('previous_membership_status', ['active', 'cancelled', 'renewed'])->nullable();
             
             // New values
             $table->string('new_tier_name')->nullable();
@@ -30,12 +31,13 @@ return new class extends Migration
             $table->string('new_annual_fee')->nullable();
             $table->string('new_annual_fee_currency')->nullable();
             $table->timestamp('new_expiry_date')->nullable();
+            $table->enum('new_membership_status', ['active', 'cancelled', 'renewed'])->nullable();
             
             // Status tracking
-            $table->enum('status', ['upgrade', 'downgrade', 'renewal', 'initial'])->nullable();
+            $table->enum('status', ['upgrade', 'downgrade', 'renewal', 'initial', 'cancelled', 'renewed'])->nullable();
             $table->text('reason')->nullable();
             $table->json('metadata')->nullable();
-            $table->foreignId('changed_by')->constrained('users');
+            $table->unsignedBigInteger('changed_by');
             
             $table->timestamps();
             

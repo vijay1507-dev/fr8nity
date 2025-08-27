@@ -153,6 +153,8 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
         Route::patch('/{member}', [MemberController::class, 'update'])->name('members.update');
         Route::delete('/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
+        Route::post('/{member}/cancel-membership', [MemberController::class, 'cancelMembership'])->name('members.cancel-membership');
+        Route::post('/{member}/renew-membership', [MemberController::class, 'renewMembership'])->name('members.renew-membership');
     });
 
     // Settings routes

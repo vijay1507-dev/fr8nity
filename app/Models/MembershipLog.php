@@ -40,12 +40,16 @@ class MembershipLog extends Model
     const ACTION_UPDATE = 'update';
     const ACTION_CHANGE_TIER = 'change_tier';
     const ACTION_RENEWAL = 'renewal';
+    const ACTION_CANCELLED = 'cancelled';
+    const ACTION_RENEWED = 'renewed';
 
     // Status constants
     const STATUS_UPGRADE = 'upgrade';
     const STATUS_DOWNGRADE = 'downgrade';
     const STATUS_RENEWAL = 'renewal';
     const STATUS_INITIAL = 'initial';
+    const STATUS_CANCELLED = 'cancelled';
+    const STATUS_RENEWED = 'renewed';
 
     /**
      * Get the user associated with this log.
@@ -112,6 +116,8 @@ class MembershipLog extends Model
             self::ACTION_UPDATE => 'Profile Update',
             self::ACTION_CHANGE_TIER => 'Tier Change',
             self::ACTION_RENEWAL => 'Membership Renewal',
+            self::ACTION_CANCELLED => 'Membership Cancelled',
+            self::ACTION_RENEWED => 'Membership Renewed',
             default => ucfirst($this->action),
         };
     }
@@ -126,6 +132,8 @@ class MembershipLog extends Model
             self::STATUS_DOWNGRADE => 'Downgrade',
             self::STATUS_RENEWAL => 'Renewal',
             self::STATUS_INITIAL => 'Initial Membership',
+            self::STATUS_CANCELLED => 'Cancelled',
+            self::STATUS_RENEWED => 'Renewed',
             default => ucfirst($this->status ?? 'N/A'),
         };
     }
@@ -140,7 +148,37 @@ class MembershipLog extends Model
             self::STATUS_DOWNGRADE => 'warning',
             self::STATUS_RENEWAL => 'info',
             self::STATUS_INITIAL => 'primary',
+            self::STATUS_CANCELLED => 'danger',
+            self::STATUS_RENEWED => 'success',
             default => 'secondary',
+        };
+    }
+
+    /**
+     * Scope: get cancellation logs
+     */
+    public function scopeCancellations($query)
+    {
+        return $query->where('action', self::ACTION_CANCELLED);
+    }
+
+    /**
+     * Scope: get renewal logs
+     */
+    public function scopeRenewals($query)
+    {
+        return $query->where('action', self::ACTION_RENEWED);
+    }
+
+    /**
+     * Get formatted action label for cancellation/renewal
+     */
+    public function getCancellationActionLabelAttribute(): string
+    {
+        return match($this->action) {
+            self::ACTION_CANCELLED => 'Cancelled',
+            self::ACTION_RENEWED => 'Renewed',
+            default => ucfirst($this->action)
         };
     }
 }
