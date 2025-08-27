@@ -3,53 +3,215 @@
 @section('title', 'Partner Showcase - Spotlight - Fr8nity')
 
 @section('content')
-<section class="inner_mamber" style="background: url({{ asset('images/mamber_inner.webp') }}) no-repeat center / cover;">
-    <div class="container position-relative">
-        <div class="row">
-            <div class="col-12 text-center">
-                <h1 class="display-4 mb-4">Partner Showcase</h1>
-                <p class="lead">Discover our valued partners and their contributions to the freight & logistics industry</p>
+<section class="benefits_sec">
+    <div class="container py-5 pt-5 px-2">
+        <div class="text-center">
+            <h2 class="text-center fw-bold fs-2">Partner Showcase </h2>
+            <div class="underline mb-4 mx-auto">
+                <span class="move delay-0" ></span>
+                <span class="move delay-1" ></span>
             </div>
         </div>
-    </div>
-</section>
-
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-12">
-                <div class="card bg-dark text-white">
-                    <div class="card-body text-center p-5">
-                        <h2 class="mb-4">Coming Soon</h2>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-4">
-                                    <h4 class="text-warning">Partner Categories</h4>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2">Freight Forwarders</li>
-                                        <li class="mb-2">Logistics Providers</li>
-                                        <li class="mb-2">Technology Partners</li>
-                                        <li class="mb-2">Service Providers</li>
-                                    </ul>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-4">
-                                    <h4 class="text-warning">Showcase Features</h4>
-                                    <ul class="list-unstyled">
-                                        <li class="mb-2">Company Profiles</li>
-                                        <li class="mb-2">Success Stories</li>
-                                        <li class="mb-2">Partnership Benefits</li>
-                                        <li class="mb-2">Contact Information</li>
-                                    </ul>
-                                </div>
-                            </div>
+        <div class="row mx-auto align-items-stretch pt-3">
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (3).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Business Opportunity Matching</div>
+                            <div class="card-desc"> Uellock carated connections with trustad partsars and high-vala prospects-> mandied to accelerate your growth.</div>
                         </div>
-                        <p class="mt-4">We are currently preparing to showcase our amazing partners who contribute to the success of the freight industry. Stay tuned for exciting partner profiles and success stories!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (4).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Cooperation Risk Protection</div>
+                            <div class="card-desc"> Trade with confidence, bechad by salegaards designed to protect your inearests and preserve trust.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (5).png') }}" alt="Benefit 3"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Marketing and Promotion Services</div>
+                            <div class="card-desc"> Amplify your presence through strategic, high irepact prorsations within as exclusive global agrwad</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (6).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Reduce Costs and Boost efficiency</div>
+                            <div class="card-desc"> Sirsamine-operations, cat overbeach, sed elevate performance through collaborative network advantaρες</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="row mx-auto align-items-stretch pt-3">
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (3).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Business Opportunity Matching</div>
+                            <div class="card-desc"> Uellock carated connections with trustad partsars and high-vala prospects-> mandied to accelerate your growth.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (4).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Cooperation Risk Protection</div>
+                            <div class="card-desc"> Trade with confidence, bechad by salegaards designed to protect your inearests and preserve trust.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (5).png') }}" alt="Benefit 3"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Marketing and Promotion Services</div>
+                            <div class="card-desc"> Amplify your presence through strategic, high irepact prorsations within as exclusive global agrwad</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (6).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Reduce Costs and Boost efficiency</div>
+                            <div class="card-desc"> Sirsamine-operations, cat overbeach, sed elevate performance through collaborative network advantaρες</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="row mx-auto align-items-stretch pt-3">
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (3).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Business Opportunity Matching</div>
+                            <div class="card-desc"> Uellock carated connections with trustad partsars and high-vala prospects-> mandied to accelerate your growth.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (4).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Cooperation Risk Protection</div>
+                            <div class="card-desc"> Trade with confidence, bechad by salegaards designed to protect your inearests and preserve trust.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (5).png') }}" alt="Benefit 3"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Marketing and Promotion Services</div>
+                            <div class="card-desc"> Amplify your presence through strategic, high irepact prorsations within as exclusive global agrwad</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (6).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Reduce Costs and Boost efficiency</div>
+                            <div class="card-desc"> Sirsamine-operations, cat overbeach, sed elevate performance through collaborative network advantaρες</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+         <div class="row mx-auto align-items-stretch pt-3">
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (3).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Business Opportunity Matching</div>
+                            <div class="card-desc"> Uellock carated connections with trustad partsars and high-vala prospects-> mandied to accelerate your growth.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (4).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Cooperation Risk Protection</div>
+                            <div class="card-desc"> Trade with confidence, bechad by salegaards designed to protect your inearests and preserve trust.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (5).png') }}" alt="Benefit 3"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Marketing and Promotion Services</div>
+                            <div class="card-desc"> Amplify your presence through strategic, high irepact prorsations within as exclusive global agrwad</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-sm-6 col-lg-3 mb-4">
+                <div class="gradient_rounded radies_20 m-2 h-100">
+                    <div class="card blacklight radies_20 p-2 h-100">
+                        <img src="{{ asset('images/Mask group (6).png') }}" alt="Benefit 1"
+                            class="img-fluid mb-3" />
+                        <div class="card-content">
+                            <div class="card-title">Reduce Costs and Boost efficiency</div>
+                            <div class="card-desc"> Sirsamine-operations, cat overbeach, sed elevate performance through collaborative network advantaρες</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</section>
+</section> 
 @endsection

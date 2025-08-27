@@ -96,7 +96,7 @@
           </g>
           </svg>
 
-          <h6 class="textcolor fw-semibold fs-3">Credit Protection:</h6>
+          <h6 class="textcolor fw-semibold fs-3 text-center">Credit Protection:</h6>
           <p class="mb-0 text-center">{{ $membershipTier->credit_protection ?? 'N/A' }} (with self-participation on
           claims)</p>
         </div>

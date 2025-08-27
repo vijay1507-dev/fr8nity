@@ -27,7 +27,7 @@
   </section>
   <section class="blackdark">
     <div class="container py-5 px-2">
-      <div class="text-center">
+      <div class="text-center pb-3">
         <h2 class="text-center fw-bold fs-2">Your Membership at a Glance</h2>
         <div class="underline mb-4 mx-auto">
           <span class="move delay-0"></span>
@@ -93,7 +93,7 @@
                   </g>
                 </svg>
 
-                <h6 class="textcolor fw-semibold fs-3">Credit Protection:</h6>
+                <h6 class="textcolor fw-semibold fs-3 text-center">Credit Protection:</h6>
                 <p class="mb-0 text-center">{{ $membershipTier->credit_protection ?? 'N/A' }} (with self-participation on claims)</p>
               </div>
             </div>
@@ -104,7 +104,7 @@
   </section>
   <section class="freightmember_sec blacklight">
     <div class="container py-5 px-2">
-      <div class="text-center">
+      <div class="text-center pb-3">
         <h2 class="text-center fw-bold fs-2">Explorer Benefits</h2>
         <div class="underline mb-4 mx-auto">
           <span class="move delay-0"></span>
@@ -136,7 +136,7 @@
                       stroke="url(#gradient)" stroke-width="1.5" stroke-linecap="round"></path>
                   </g>
                 </svg>
-                <h6 class="textcolor fw-semibold fs-4">Verified Network Access</h6>
+                <h6 class="textcolor fw-semibold fs-4 text-center">Verified Network Access</h6>
                 <p class="text-center mb-1">Connect with vetted freight partners globally</p>
                 <p class="text-center mb-0">No fluff, no guesswork.</p>
               </div>
@@ -358,10 +358,10 @@
 <section class="  blackdark pb-5">
     <div class="container pt-5 px-4 px-lg-2">
       <div class="row d-flex">
-        <h3 class="fw-bold fs-2 fs-md-4 text-center pb-5">How to Earn RisePoints</h3>
+        <h3 class="fw-bold fs-2 fs-md-4 text-center pb-0 pb-lg-5">How to Earn RisePoints</h3>
         <div class="col-12 col-lg-6 d-flex flex-column h-100">
-          <div class="flex-grow-1">
-       <h3 class="fw-bold fs-3 mt-4 mt-lg-0 text-center">Membership Renewal</h3>
+          <div class="flex-grow-1 pb-4 pb-lg-0">
+       <h3 class="fw-bold fs-3 mt-4 mt-lg-0 text-center mb-4 pb-3 mb-lg-0 pb-lg-0">Membership Renewal</h3>
             <p class="text-center">Your actions within the FR8NITY network don't just build relationships - they also earn you points.</p>
             <div class="row mx-auto">
               <div class="p-0 radies_20 tableborder">
@@ -387,7 +387,7 @@
         <div class="col-12 col-lg-6 d-flex flex-column h-100">
           <div class="flex-grow-1">
             <div class="text-center">
-              <h3 class="fw-bold fs-3 mt-4 mt-lg-0">Referral of Members</h3>
+              <h3 class="fw-bold fs-3 mt-4 mt-lg-0 mb-4 pb-2 mb-lg-0 pb-lg-0">Referral of Members</h3>
             </div>
             <div class="row mx-auto">
               <div class="p-0 radies_20 tableborder mt-2">
@@ -417,7 +417,7 @@
     </div>
     <div class="container pt-5 px-4 px-lg-2">
       <div class="text-center">
-        <h3 class="text-center fw-bold fs-3 mb-4">Business Collaboration (As a Giver)</h3>
+        <h3 class="text-center fw-bold fs-3 mb-4 pb-3">Business Collaboration (As a Giver)</h3>
       </div>
       <div class="row mx-auto">
         <div class="p-0 radies_20 tableborder">
@@ -466,7 +466,7 @@
     </div>
     <div class="container pt-5 px-4 px-lg-2">
       <div class="text-center">
-        <h3 class="text-center fw-bold fs-3 mb-4">Engagement & Participation Online/Conference attendance</h3>
+        <h3 class="text-center fw-bold fs-3 mb-4 pb-3">Engagement & Participation Online/Conference attendance</h3>
       </div>
       <div class="row mx-auto">
         <div class="p-0 radies_20 tableborder">
@@ -515,7 +515,7 @@
 
     <div class="container pt-5 px-4 px-lg-2">
       <div class="text-center">
-        <h3 class="text-center fw-bold fs-3 mb-4">Can you exchange your points with?</h3>
+        <h3 class="text-center fw-bold fs-3 mb-4 pb-3">Can you exchange your points with?</h3>
       </div>
       <div class="row mx-auto">
         <div class="p-0 radies_20 tableborder">

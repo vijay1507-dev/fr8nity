@@ -1,7 +1,7 @@
 <footer class="footer_main py-md-5 py-4">
     <div class="container py-md-3">
         <div class="row gy-4">
-            <div class="col-12 col-md-3 mb-3">
+            <div class="col-12 col-lg-3 mb-3">
                 <div class=" text-start  ps-3 ps-md-0 ps-lg-0">
                     <img src="{{asset('images/logo (3).svg')}}" alt="Company Logo" class="mb-3 img-fluid" />
                     <p class="fs-6">
@@ -29,10 +29,10 @@
             </div>
 
 
-            <div class="col-12 col-md-9 ">
+            <div class="col-12 col-lg-9 ">
                <div class="row gy-4 ps-3  ps-md-0  ps-lg-0">
 
-                    <div class="col-12 col-sm-6 col-md-3 mb-3 ">
+                    <div class="col-12   col-lg-3 mb-3 ">
                         <div class=''>
                             <h5 class="fw-semibold fs-5">Quick Links</h5>
                             <div
@@ -61,7 +61,7 @@
                     </div>
 
 
-                    <div class="col-12 col-sm-6 col-md-3">
+                    <div class="col-12 col-lg-3">
 
                         <h5 class="fw-semibold fs-5 ">Useful Links</h5>
                         <div class='d-flex justify-content-start '>
@@ -87,7 +87,7 @@
                     </div>
 
 
-                    <div class="col-12 col-sm-6 col-md-3">
+                    <div class="col-12  col-lg-3">
                         <h5 class="fw-semibold fs-5 ">Services</h5>
                         <div class='d-flex justify-content-start '>
 
@@ -109,7 +109,7 @@
                     </div>
 
 
-                    <div class="col-12 col-sm-6 col-md-3">
+                    <div class="col-12 col-lg-3">
                         <h5 class="fw-semibold fs-5">Contact Us</h5>
                         <ul class="list-unstyled mt-3">
                             @if(!empty($siteSettings['site_phone']))
