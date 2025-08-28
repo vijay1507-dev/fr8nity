@@ -15,7 +15,9 @@ body {
     margin: 0;
     background-color: #000000;
 }
-
+/* .row{
+    overflow-x: hidden;
+} */
 a {
     cursor: pointer;
     text-decoration: none;
@@ -65,7 +67,7 @@ span.rating img { width: 90px !important; margin-inline: 10px; }
 
 .Benefit_cards ul li { display: flex ; align-items: baseline; }
 .Benefit_cards ul li:before { content: ''; width: 6px; height: 6px; min-width: 6px; min-height: 6px; background: #fff; border-radius: 50%; display: inline-block; margin-right: 8px; }
-.Benefit_cards label{ border-radius: 12px; overflow: hidden; padding: 1px;cursor: pointer; }
+.Benefit_cards label{ border-radius: 12px; overflow: hidden; padding: 1px;cursor: pointer; width: 100%; }
 .Benefit_cards input:checked[type=radio]+label { background: linear-gradient(180deg, rgba(181, 131, 32, 0.4) 0%, rgba(232, 232, 101, 0.4) 40%, rgba(243, 171, 11, 0.4) 100%);}
 .Benefit_cards input:checked[type=radio]+label .bg-dark { background: linear-gradient(167deg, rgba(175, 57, 12, 1) 0%, rgba(81, 54, 29, 1) 50%, rgba(30, 28, 26, 1) 100%) !important; }
 .Benefit_cards .rounded { border-radius: 12px !important; }
@@ -471,3 +473,5 @@ span.rating img { width: 90px !important; margin-inline: 10px; }
 
   .userlogin .text-danger { position: absolute; bottom: -18px; font-size: 11px; }
   .userlogin .col-12{position: relative;}
+  .member-join .iti__selected-flag {height: 33px !important;}
+    .member-join .iti__country-list{width: 395px !important;overflow-x: hidden;}

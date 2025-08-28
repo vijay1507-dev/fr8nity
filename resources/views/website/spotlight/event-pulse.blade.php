@@ -39,20 +39,19 @@
         </div>
 
 
-        <div class="row">
+        <div class="row mx-auto">
             <div class="gradient_rounded radies_20 mb-3">
                 <div class="col-12 radies_20 blacklight">
-                    <div class="row align-items-center  px-5">
+                    <div class="row align-items-center  px-1 px-lg-3  py-2 py-lg-0 ">
 
-                        <div class="col-12 col-md-1 mb-3 mb-md-0">
+                        <div class="col-4 col-lg-2 mx-0 mb-3 mb-lg-0 py-3">
                             <div class="event_img">
                                 <img src="{{ asset('images/our_story.jpg') }}" alt="Event Image" class="img-fluid rounded">
                             </div>
                         </div>
 
 
-                        <div class="col-12 col-md-9">
-                            <h5 class="textcolor fs-4 mb-2">Lorem, ipsum dolor.</h5>
+                        <div class="col-8 ">
                             <p class="fs-6 mb-0">
                                 Lorem ipsum, dolor sit amet consectetur adipisicing elit...
                             </p>
@@ -67,113 +66,6 @@
                 </div>
             </div>
 
- <div class="gradient_rounded radies_20 mb-3">
-                <div class="col-12 radies_20 blacklight">
-                    <div class="row align-items-center  px-5">
-
-                        <div class="col-12 col-md-1 mb-3 mb-md-0">
-                            <div class="event_img">
-                                <img src="{{ asset('images/our_story.jpg') }}" alt="Event Image" class="img-fluid rounded">
-                            </div>
-                        </div>
-
-
-                        <div class="col-12 col-md-9">
-                            <h5 class="textcolor fs-4 mb-2">Lorem, ipsum dolor.</h5>
-                            <p class="fs-6 mb-0">
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit...
-                            </p>
-                        </div>
-
-
-                        <div class="col-12 col-md-2 text-md-end text-center mt-3 mt-md-0">
-                            <button class="btn btnbg fe-semibold">Read More</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-             <div class="gradient_rounded radies_20 mb-3">
-                <div class="col-12 radies_20 blacklight">
-                    <div class="row align-items-center  px-5">
-
-                        <div class="col-12 col-md-1 mb-3 mb-md-0">
-                            <div class="event_img">
-                                <img src="{{ asset('images/our_story.jpg') }}" alt="Event Image" class="img-fluid rounded">
-                            </div>
-                        </div>
-
-
-                        <div class="col-12 col-md-9">
-                            <h5 class="textcolor fs-4 mb-2">Lorem, ipsum dolor.</h5>
-                            <p class="fs-6 mb-0">
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit...
-                            </p>
-                        </div>
-
-
-                        <div class="col-12 col-md-2 text-md-end text-center mt-3 mt-md-0">
-                            <button class="btn btnbg fe-semibold">Read More</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-             <div class="gradient_rounded radies_20 mb-3">
-                <div class="col-12 radies_20 blacklight">
-                    <div class="row align-items-center  px-5">
-
-                        <div class="col-12 col-md-1 mb-3 mb-md-0">
-                            <div class="event_img">
-                                <img src="{{ asset('images/our_story.jpg') }}" alt="Event Image" class="img-fluid rounded">
-                            </div>
-                        </div>
-
-
-                        <div class="col-12 col-md-9">
-                            <h5 class="textcolor fs-4 mb-2">Lorem, ipsum dolor.</h5>
-                            <p class="fs-6 mb-0">
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit...
-                            </p>
-                        </div>
-
-
-                        <div class="col-12 col-md-2 text-md-end text-center mt-3 mt-md-0">
-                            <button class="btn btnbg fe-semibold">Read More</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-             <div class="gradient_rounded radies_20 mb-3">
-                <div class="col-12 radies_20 blacklight">
-                    <div class="row align-items-center  px-5">
-
-                        <div class="col-12 col-md-1 mb-3 mb-md-0">
-                            <div class="event_img">
-                                <img src="{{ asset('images/our_story.jpg') }}" alt="Event Image" class="img-fluid rounded">
-                            </div>
-                        </div>
-
-
-                        <div class="col-12 col-md-9">
-                            <h5 class="textcolor fs-4 mb-2">Lorem, ipsum dolor.</h5>
-                            <p class="fs-6 mb-0">
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit...
-                            </p>
-                        </div>
-
-
-                        <div class="col-12 col-md-2 text-md-end text-center mt-3 mt-md-0">
-                            <button class="btn btnbg fe-semibold">Read More</button>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
 
 
         </div>

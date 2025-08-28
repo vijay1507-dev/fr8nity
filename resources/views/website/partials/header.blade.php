@@ -3,7 +3,7 @@
     <div class="container">
       <!-- small screen logo -->
       <a class="logo d-inline-block d-lg-none" href="/">
-        <img src="{{asset('images/navlogo.svg')}}" alt="Nav Logo" width="60px" />
+        <img src="{{asset('images/navlogo.svg')}}" alt="Nav Logo" width="90px" />
       </a>
 
       <!-- Toggler -->

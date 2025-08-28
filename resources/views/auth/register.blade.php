@@ -10,19 +10,19 @@
         <div class="wrapper userlogin p-0 bg-black">
             <main class="content">
                 <div class="row justify-content-center mx-0 bg-white overflow-hidden">
-                    <div class="col-12 col-md-4 left-img vh-100 d-flex justify-content-center p-4 d-none d-md-block"
+                    <div class="col-12 col-md-4 left-img vh-100 d-flex justify-content-center p-4 d-none d-lg-block"
                         style="background: url(./images/admin-login.webp) no-repeat center / cover">
                         <div class="left-side">
                             <a href="/"><img class="mb-3" src="{{ asset('images/logo.svg') }}" alt="Logo"
                                     width="auto" height="78"></a>
                         </div>
                     </div>
-                    <div class="col-md-8 col-12 bg-black">
+                    <div class="col-lg-8 col-12 bg-black">
                         <div class="custom-card-register  m-0 p-md-4">
                             <form role="form" method="POST" action="{{ route('register.post') }}">
                                 @csrf
                                 <div class="row setup-content mx-0" id="step-1">
-                                    <div class="col-md-12 px-0">
+                                    <div class="col-md-12 px-0 pb-4">
                                         <h3 class="text-white text-center my-3">Become a Member</h3>
                                         <div class="progress-bar-container mb-4">
                                             <div class="progress" style="height: 3px;">
@@ -272,8 +272,8 @@
                                 </div>
 
                                 <!-- Step 2 Content -->
-                                <div class="row setup-content" id="step-2" style="display: none;">
-                                    <div class="col-md-12 px-0">
+                                <div class="row setup-content mx-0" id="step-2" style="display: none;">
+                                    <div class="col-md-12 px-0 mb-3">
                                         <h3 class="text-white text-center mb-3">Choose Your Plan</h3>
                                         <div class="progress-bar-container progress_barmain mb-4">
                                             <div class="progress" style="height: 3px; margin-inline: 50px;">
@@ -285,9 +285,9 @@
                                                 <span class="progress-step active">2</span>
                                             </div>
                                         </div>
-                                        <div class="row mt-3">
+                                        <div class="row mt-3 mx-0">
                                             @foreach($membershipTiers as $tier)
-                                            <div class="col-12 col-md-4">
+                                            <div class="col-12 col-md-4 mb-3">
                                                 <div class="Benefit_cards h-100">
                                                     <input class="form-check-input" name="membership_tier" type="radio"
                                                         value="{{ $tier->id }}" id="Benefit{{ $tier->id }}" 
@@ -307,7 +307,7 @@
                                             @endforeach
                                         </div>
 
-                                        <div class="mt-4 mb-3 w-100">
+                                        <div class="row mt-4 mb-3 mx-0 w-100">
                                             <div class="form-check">
                                                 <input class="form-check-input @error('consent') is-invalid @enderror" type="checkbox" id="consentCheckbox"
                                                     name="consent"  {{ old('consent') ? 'checked' : '' }}>

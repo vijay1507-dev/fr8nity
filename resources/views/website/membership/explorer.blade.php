@@ -7,10 +7,10 @@
 
         <div class="col-12 col-md-6 mb-4 d-flex justify-content-center flex-column text-center text-md-start">
           <div>
-            <h1 class="fw-bold size text_image pt-5 pb-1 pt-lg-0">
+            <h1 class="fw-bold size text_image pt-0 pt-lg-5 pb-1 pt-lg-0">
               Explorer Membership
             </h1>
-            <p class="bannerp fs-6">As an Explorer Member, you’ve entered the network at the perfect pace — with the
+            <p class="bannerp fs-6 px-2 px-md-0">As an Explorer Member, you’ve entered the network at the perfect pace — with the
               flexibility to connect, learn, and grow. Here’s everything you need to know to make the most of your
             membershi</p>
            
