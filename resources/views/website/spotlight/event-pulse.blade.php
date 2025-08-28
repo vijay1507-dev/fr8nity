@@ -59,7 +59,7 @@
 
 
                         <div class="col-12 col-md-2 text-md-end text-center mt-3 mt-md-0">
-                            <button class="btn btnbg fe-semibold">Read More</button>
+                            <a href="{{ route('spotlight.event-pulse.detail') }}" class="btn btnbg fe-semibold">Read More</a>
                         </div>
 
                     </div>

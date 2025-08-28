@@ -15,6 +15,8 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\MembershipTierController;
 use App\Http\Controllers\MembershipBenefitController;
+use App\Http\Controllers\EventPulseController;
+use App\Http\Controllers\PartnerShowcaseController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
@@ -80,13 +82,11 @@ Route::get('/about-us', function () {
 
 // Spotlight Routes
 Route::prefix('spotlight')->name('spotlight.')->group(function () {
-    Route::get('/event-pulse', function () {
-        return view('website.spotlight.event-pulse');
-    })->name('event-pulse');
+    Route::get('/event-pulse', [EventPulseController::class, 'index'])->name('event-pulse');
+    Route::get('/event-pulse/detail', [EventPulseController::class, 'show'])->name('event-pulse.detail');
     
-    Route::get('/partner-showcase', function () {
-        return view('website.spotlight.partner-showcase');
-    })->name('partner-showcase');
+    Route::get('/partner-showcase', [PartnerShowcaseController::class, 'index'])->name('partner-showcase');
+    Route::get('/partner-showcase/detail', [PartnerShowcaseController::class, 'show'])->name('partner-showcase.detail');
 });
 
 Route::get('/contact-us', function () {
