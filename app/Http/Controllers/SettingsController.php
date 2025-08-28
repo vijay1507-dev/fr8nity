@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Services\SettingsService;
+use App\Models\MailTemplate;
 use Illuminate\Http\Request;
 
 class SettingsController extends Controller
@@ -55,5 +56,109 @@ class SettingsController extends Controller
 
         return redirect()->route('settings.site.index')
             ->with('success', 'Site settings updated successfully');
+    }
+
+    // Email Template Management Methods
+    public function emailTemplatesIndex()
+    {
+        $templates = $this->settingsService->getEmailTemplates();
+        return view('dashboard.settings.email-templates.index', compact('templates'));
+    }
+
+    public function emailTemplatesCreate()
+    {
+        return view('dashboard.settings.email-templates.create');
+    }
+
+    public function emailTemplatesStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:mail_templates,name',
+            'subject' => 'required|string|max:255',
+            'body' => 'required|string',
+            'comment' => 'nullable|string',
+            'variables' => 'nullable|string',
+            'is_active' => 'boolean'
+        ]);
+
+        // Parse variables from string to array
+        $variables = [];
+        if ($request->variables) {
+            $variableLines = explode("\n", $request->variables);
+            foreach ($variableLines as $line) {
+                $line = trim($line);
+                if (!empty($line)) {
+                    $variables[] = $line;
+                }
+            }
+        }
+
+        $data = $request->all();
+        $data['variables'] = $variables;
+        $data['is_active'] = $request->has('is_active');
+
+        $this->settingsService->createEmailTemplate($data);
+
+        return redirect()->route('settings.email-templates.index')
+            ->with('success', 'Email template created successfully');
+    }
+
+    public function emailTemplatesShow(MailTemplate $mailTemplate)
+    {
+        return view('dashboard.settings.email-templates.show', compact('mailTemplate'));
+    }
+
+    public function emailTemplatesEdit(MailTemplate $mailTemplate)
+    {
+        return view('dashboard.settings.email-templates.edit', compact('mailTemplate'));
+    }
+
+    public function emailTemplatesUpdate(Request $request, MailTemplate $mailTemplate)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255|unique:mail_templates,name,' . $mailTemplate->id,
+            'subject' => 'required|string|max:255',
+            'body' => 'required|string',
+            'comment' => 'nullable|string',
+            'variables' => 'nullable|string',
+            'is_active' => 'boolean'
+        ]);
+
+        // Parse variables from string to array
+        $variables = [];
+        if ($request->variables) {
+            $variableLines = explode("\n", $request->variables);
+            foreach ($variableLines as $line) {
+                $line = trim($line);
+                if (!empty($line)) {
+                    $variables[] = $line;
+                }
+            }
+        }
+
+        $data = $request->all();
+        $data['variables'] = $variables;
+        $data['is_active'] = $request->has('is_active');
+
+        $this->settingsService->updateEmailTemplate($mailTemplate, $data);
+
+        return redirect()->route('settings.email-templates.index')
+            ->with('success', 'Email template updated successfully');
+    }
+
+    public function emailTemplatesDestroy(MailTemplate $mailTemplate)
+    {
+        $this->settingsService->deleteEmailTemplate($mailTemplate);
+
+        return redirect()->route('settings.email-templates.index')
+            ->with('success', 'Email template deleted successfully');
+    }
+
+    public function emailTemplatesToggleStatus(MailTemplate $mailTemplate)
+    {
+        $this->settingsService->toggleEmailTemplateStatus($mailTemplate);
+
+        return redirect()->route('settings.email-templates.index')
+            ->with('success', 'Email template status updated successfully');
     }
 }

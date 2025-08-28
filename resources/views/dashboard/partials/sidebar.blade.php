@@ -101,6 +101,12 @@
                             <p class="m-0 submenufont">Membership Tiers</p>
                         </a>
                     </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('settings.email-templates.index') }}" class="sidebar-link">
+                            <i class="nav-icon fas fa-envelope"></i>
+                            <p class="m-0 submenufont">Email Templates</p>
+                        </a>
+                    </li>
                 </ul>
             </li>
              <!-- Spotlight Management -->

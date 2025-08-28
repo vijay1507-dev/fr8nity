@@ -169,6 +169,18 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::get('/settings/site', [SettingsController::class, 'siteIndex'])->name('settings.site.index');
         Route::put('/settings/site', [SettingsController::class, 'siteUpdate'])->name('settings.site.update');
 
+        // Email Template settings
+        Route::prefix('settings/email-templates')->name('settings.email-templates.')->group(function () {
+            Route::get('/', [SettingsController::class, 'emailTemplatesIndex'])->name('index');
+            Route::get('/create', [SettingsController::class, 'emailTemplatesCreate'])->name('create');
+            Route::post('/', [SettingsController::class, 'emailTemplatesStore'])->name('store');
+            Route::get('/{mailTemplate}', [SettingsController::class, 'emailTemplatesShow'])->name('show');
+            Route::get('/{mailTemplate}/edit', [SettingsController::class, 'emailTemplatesEdit'])->name('edit');
+            Route::put('/{mailTemplate}', [SettingsController::class, 'emailTemplatesUpdate'])->name('update');
+            Route::delete('/{mailTemplate}', [SettingsController::class, 'emailTemplatesDestroy'])->name('destroy');
+            Route::patch('/{mailTemplate}/toggle-status', [SettingsController::class, 'emailTemplatesToggleStatus'])->name('toggle-status');
+        });
+
         // Membership Tier Management
         Route::prefix('membership-tiers')->name('membership-tiers.')->group(function () {
             Route::get('/', [MembershipTierController::class, 'index'])->name('index');
