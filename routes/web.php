@@ -17,6 +17,9 @@ use App\Http\Controllers\MembershipTierController;
 use App\Http\Controllers\MembershipBenefitController;
 use App\Http\Controllers\EventPulseController;
 use App\Http\Controllers\PartnerShowcaseController;
+use App\Http\Controllers\SpotlightController;
+use App\Http\Controllers\EventPulseAdminController;
+use App\Http\Controllers\PartnerShowcaseAdminController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
@@ -83,10 +86,10 @@ Route::get('/about-us', function () {
 // Spotlight Routes
 Route::prefix('spotlight')->name('spotlight.')->group(function () {
     Route::get('/event-pulse', [EventPulseController::class, 'index'])->name('event-pulse');
-    Route::get('/event-pulse/detail', [EventPulseController::class, 'show'])->name('event-pulse.detail');
+    Route::get('/event-pulse/detail/{id?}', [EventPulseController::class, 'show'])->name('event-pulse.detail');
     
     Route::get('/partner-showcase', [PartnerShowcaseController::class, 'index'])->name('partner-showcase');
-    Route::get('/partner-showcase/detail', [PartnerShowcaseController::class, 'show'])->name('partner-showcase.detail');
+    Route::get('/partner-showcase/detail/{id?}', [PartnerShowcaseController::class, 'show'])->name('partner-showcase.detail');
 });
 
 Route::get('/contact-us', function () {
@@ -189,6 +192,40 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
             Route::put('/{membershipBenefit}', [MembershipBenefitController::class, 'update'])->name('update');
             Route::delete('/{membershipBenefit}', [MembershipBenefitController::class, 'destroy'])->name('destroy');
             Route::patch('/{membershipBenefit}/toggle-status', [MembershipBenefitController::class, 'toggleStatus'])->name('toggle-status');
+        });
+
+        // Event Pulse Management
+        Route::prefix('admin/event-pulse')->name('admin.event-pulse.')->group(function () {
+            Route::get('/', [EventPulseAdminController::class, 'index'])->name('index');
+            Route::get('/create', [EventPulseAdminController::class, 'create'])->name('create');
+            Route::post('/', [EventPulseAdminController::class, 'store'])->name('store');
+            Route::get('/{eventPulse}/edit', [EventPulseAdminController::class, 'edit'])->name('edit');
+            Route::put('/{eventPulse}', [EventPulseAdminController::class, 'update'])->name('update');
+            Route::delete('/{eventPulse}', [EventPulseAdminController::class, 'destroy'])->name('destroy');
+            Route::patch('/{eventPulse}/toggle-status', [EventPulseAdminController::class, 'toggleStatus'])->name('toggle-status');
+        });
+
+        // Partner Showcase Management
+        Route::prefix('admin/partner-showcase')->name('admin.partner-showcase.')->group(function () {
+            Route::get('/', [PartnerShowcaseAdminController::class, 'index'])->name('index');
+            Route::get('/create', [PartnerShowcaseAdminController::class, 'create'])->name('create');
+            Route::post('/', [PartnerShowcaseAdminController::class, 'store'])->name('store');
+            Route::get('/{partnerShowcase}/edit', [PartnerShowcaseAdminController::class, 'edit'])->name('edit');
+            Route::put('/{partnerShowcase}', [PartnerShowcaseAdminController::class, 'update'])->name('update');
+            Route::delete('/{partnerShowcase}', [PartnerShowcaseAdminController::class, 'destroy'])->name('destroy');
+            Route::patch('/{partnerShowcase}/toggle-status', [PartnerShowcaseAdminController::class, 'toggleStatus'])->name('toggle-status');
+        });
+
+        // Legacy Spotlight Management (keep for backward compatibility or remove if not needed)
+        Route::prefix('spotlight')->name('spotlight.')->group(function () {
+            Route::get('/', [SpotlightController::class, 'index'])->name('index');
+            Route::get('/create', [SpotlightController::class, 'create'])->name('create');
+            Route::post('/', [SpotlightController::class, 'store'])->name('store');
+            Route::get('/{spotlight}', [SpotlightController::class, 'show'])->name('show');
+            Route::get('/{spotlight}/edit', [SpotlightController::class, 'edit'])->name('edit');
+            Route::put('/{spotlight}', [SpotlightController::class, 'update'])->name('update');
+            Route::delete('/{spotlight}', [SpotlightController::class, 'destroy'])->name('destroy');
+            Route::patch('/{spotlight}/toggle-status', [SpotlightController::class, 'toggleStatus'])->name('toggle-status');
         });
     });
     // Member Sales Report routes

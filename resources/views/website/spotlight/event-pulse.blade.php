@@ -39,46 +39,82 @@
         </div>
 
 
-        <div class="row mx-auto">
-            <div class="gradient_rounded radies_20 mb-3">
-                <div class="col-12 radies_20 blacklight">
-                    <div class="row align-items-center  px-1 px-lg-3  py-2 py-lg-0 ">
-
-                        <div class="col-4 col-lg-2 mx-0 mb-3 mb-lg-0 py-3">
-                            <div class="event_img">
-                                <img src="{{ asset('images/our_story.jpg') }}" alt="Event Image" class="img-fluid rounded">
-                            </div>
-                        </div>
-
-
-                        <div class="col-8 ">
-                            <p class="fs-6 mb-0">
-                                Lorem ipsum, dolor sit amet consectetur adipisicing elit...
-                            </p>
-                        </div>
-
-
-                        <div class="col-12 col-md-2 text-md-end text-center mt-3 mt-md-0">
-                            <a href="{{ route('spotlight.event-pulse.detail') }}" class="btn btnbg fe-semibold">Read More</a>
-                        </div>
-
-                    </div>
-                </div>
-            </div>
-
-
-
+        <div id="event-pulse-items">
+            @include('website.spotlight.partials.event-pulse-items', ['eventPulseItems' => $eventPulseItems])
         </div>
 
-<div class="row justify-content-center align-items-center mx-0 py-5" bis_skin_checked="1">
-            <button type="button" class="btn btnbg fw-semibold">
-              See More Events
+        @if($eventPulseItems->hasMorePages())
+        <div class="row justify-content-center align-items-center mx-0 py-5">
+            <button type="button" class="btn btnbg fw-semibold" id="load-more-events-btn" onclick="loadMoreEvents()">
+                <span class="btn-text">See More Events</span>
+                <span class="spinner-border spinner-border-sm d-none" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </span>
             </button>
         </div>
-
-
-
-
+        @endif
+        
+        @if($eventPulseItems->count() == 0)
+        <div class="row mx-auto mb-5">
+            <div class="col-12 text-center">
+                <div class="" role="alert">
+                    <h5 class="mb-3">No Event Pulse Items Available</h5>
+                    <p class="mb-0">There are currently no event pulse items to display. Please check back later.</p>
+                </div>
+            </div>
+        </div>
+        @endif
     </div>
+
+@push('scripts')
+<script>
+let currentEventPage = {{ $eventPulseItems->currentPage() }};
+let hasMoreEventPages = {{ $eventPulseItems->hasMorePages() ? 'true' : 'false' }};
+let isEventLoading = false;
+
+function loadMoreEvents() {
+    if (isEventLoading || !hasMoreEventPages) return;
+    
+    isEventLoading = true;
+    const btn = document.getElementById('load-more-events-btn');
+    const btnText = btn.querySelector('.btn-text');
+    const spinner = btn.querySelector('.spinner-border');
+    
+    // Show loading state
+    btnText.textContent = 'Loading...';
+    spinner.classList.remove('d-none');
+    btn.disabled = true;
+    
+    fetch(`{{ route('spotlight.event-pulse') }}?page=${currentEventPage + 1}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.html) {
+            document.getElementById('event-pulse-items').insertAdjacentHTML('beforeend', data.html);
+            currentEventPage = data.nextPage - 1;
+            hasMoreEventPages = data.hasMore;
+            
+            if (!hasMoreEventPages) {
+                btn.style.display = 'none';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error loading more events:', error);
+        alert('Error loading more events. Please try again.');
+    })
+    .finally(() => {
+        isEventLoading = false;
+        btnText.textContent = 'See More Events';
+        spinner.classList.add('d-none');
+        btn.disabled = false;
+    });
+}
+</script>
+@endpush
 
 @endsection

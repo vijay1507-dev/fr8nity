@@ -80,30 +80,54 @@
                     <li class="sidebar-item">
                         <a href="{{ route('security.settings') }}" class="sidebar-link">
                             <i class="nav-icon fas fa-shield-alt"></i>
-                            <p class="mb-0 submenufont">2FA Settings</p>
+                            <p class="m-0 submenufont">2FA Settings</p>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a href="{{ route('settings.index') }}" class="sidebar-link">
                             <i class="nav-icon fas fa-clock"></i>
-                            <p class="mb-0 submenufont">Membership Reminders</p>
+                            <p class="m-0 submenufont">Membership Reminders</p>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a href="{{ route('settings.site.index') }}" class="sidebar-link">
                             <i class="nav-icon fas fa-globe"></i>
-                            <p class="mb-0 submenufont">Site Settings</p>
+                            <p class="m-0 submenufont">Site Settings</p>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a href="{{ route('membership-tiers.index') }}" class="sidebar-link">
                             <i class="nav-icon fas fa-layer-group"></i>
-                            <p class="mb-0 submenufont">Membership Tiers</p>
+                            <p class="m-0 submenufont">Membership Tiers</p>
                         </a>
                     </li>
                 </ul>
             </li>
-                         @endif
+             <!-- Spotlight Management -->
+             <li class="sidebar-item">
+                 <a href="#" class="sidebar-link collapsed" data-bs-target="#spotlight" data-bs-toggle="collapse"
+                     aria-expanded="false">
+                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-star" viewBox="0 0 16 16">
+                         <path d="M2.866 14.85c-.078.444.36.791.746.593l4.39-2.256 4.389 2.256c.386.198.824-.149.746-.592l-.83-4.73 3.522-3.356c.33-.314.16-.888-.282-.95l-4.898-.696L8.465.792a.513.513 0 0 0-.927 0L5.354 5.12l-4.898.696c-.441.062-.612.636-.283.95l3.523 3.356-.83 4.73zm4.905-2.767-3.686 1.894.694-3.957a.56.56 0 0 0-.163-.505L1.71 6.745l4.052-.576a.53.53 0 0 0 .393-.288L8 2.223l1.847 3.658a.53.53 0 0 0 .393.288l4.052.576-2.906 2.77a.56.56 0 0 0-.163.505l.694 3.957-3.686-1.894a.5.5 0 0 0-.461 0z"/>
+                     </svg>
+                     Spotlight
+                 </a>
+                 <ul id="spotlight" class="sidebar-dropdown list-unstyled collapse" data-bs-parent="#sidebar">
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.event-pulse.index') }}" class="sidebar-link">
+                            <i class="nav-icon fas fa-calendar-alt"></i>
+                            <p class="m-0 submenufont">Event Pulse</p>
+                        </a>
+                    </li>
+                    <li class="sidebar-item">
+                        <a href="{{ route('admin.partner-showcase.index') }}" class="sidebar-link">
+                            <i class="nav-icon fas fa-handshake"></i>
+                            <p class="m-0 submenufont">Partner Showcase</p>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+            @endif
            
            <li class="sidebar-item">
                 <a href="{{ route('members.directory') }}" class="sidebar-link">

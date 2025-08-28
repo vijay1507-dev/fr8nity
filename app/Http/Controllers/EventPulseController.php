@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Spotlight;
 use Illuminate\Http\Request;
 
 class EventPulseController extends Controller
@@ -11,12 +12,20 @@ class EventPulseController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function show()
+    public function show($id = null)
     {
-        // You can add logic here to fetch event data from database if needed
-        // For now, we'll just return the view
+        if ($id) {
+            $eventPulse = Spotlight::active()->eventPulse()->findOrFail($id);
+        } else {
+            // Get the first active event pulse item
+            $eventPulse = Spotlight::active()->eventPulse()->ordered()->first();
+            
+            if (!$eventPulse) {
+                abort(404, 'No event pulse items found');
+            }
+        }
         
-        return view('website.spotlight.event-pulse-detail');
+        return view('website.spotlight.event-pulse-detail', compact('eventPulse'));
     }
 
     /**
@@ -24,11 +33,26 @@ class EventPulseController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        // You can add logic here to fetch events list from database if needed
-        // For now, we'll just return the existing view
+        if ($request->ajax()) {
+            $page = $request->get('page', 1);
+            $perPage = 6; // 6 items per page
+            
+            $eventPulseItems = Spotlight::active()
+                ->eventPulse()
+                ->ordered()
+                ->paginate($perPage, ['*'], 'page', $page);
+            
+            return response()->json([
+                'html' => view('website.spotlight.partials.event-pulse-items', compact('eventPulseItems'))->render(),
+                'hasMore' => $eventPulseItems->hasMorePages(),
+                'nextPage' => $eventPulseItems->currentPage() + 1
+            ]);
+        }
         
-        return view('website.spotlight.event-pulse');
+        $eventPulseItems = Spotlight::active()->eventPulse()->ordered()->paginate(6);
+        
+        return view('website.spotlight.event-pulse', compact('eventPulseItems'));
     }
 }

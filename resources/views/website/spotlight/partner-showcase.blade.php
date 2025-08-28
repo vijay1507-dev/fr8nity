@@ -12,192 +12,82 @@
                 <span class="move delay-1" ></span>
             </div>
         </div>
+        <div id="partner-showcase-items">
+            @include('website.spotlight.partials.partner-showcase-items', ['partnerShowcaseItems' => $partnerShowcaseItems])
+        </div>
+        @if($partnerShowcaseItems->hasMorePages())
+        <div class="row justify-content-center align-items-center mx-0 py-5">
+            <button type="button" class="btn btnbg fw-semibold" id="load-more-btn" onclick="loadMoreItems()">
+                <span class="btn-text">Load More Partner Showcases</span>
+                <span class="spinner-border spinner-border-sm d-none" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </span>
+            </button>
+        </div>
+        @endif
+        
+        @if($partnerShowcaseItems->count() == 0)
         <div class="row mx-auto align-items-stretch pt-3">
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (3).png') }}" alt="Benefit 1"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Business Opportunity Matching</div>
-                            <div class="card-desc"> Uellock carated connections with trustad partsars and high-vala prospects-> mandied to accelerate your growth.</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (4).png') }}" alt="Benefit 1"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Cooperation Risk Protection</div>
-                            <div class="card-desc"> Trade with confidence, bechad by salegaards designed to protect your inearests and preserve trust.</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (5).png') }}" alt="Benefit 3"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Marketing and Promotion Services</div>
-                            <div class="card-desc"> Amplify your presence through strategic, high irepact prorsations within as exclusive global agrwad</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (6).png') }}" alt="Benefit 1"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Reduce Costs and Boost efficiency</div>
-                            <div class="card-desc"> Sirsamine-operations, cat overbeach, sed elevate performance through collaborative network advantaρες</div>
-
-                        </div>
-                        </div>
-                    </a>
+            <div class="col-12 text-center">
+                <div class="" role="alert">
+                    <h5 class="mb-3">No Partner Showcase Items Available</h5>
+                    <p class="mb-0">There are currently no partner showcase items to display. Please check back later.</p>
                 </div>
             </div>
         </div>
-         <div class="row mx-auto align-items-stretch pt-3">
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (3).png') }}" alt="Benefit 1"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Business Opportunity Matching</div>
-                            <div class="card-desc"> Uellock carated connections with trustad partsars and high-vala prospects-> mandied to accelerate your growth.</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (4).png') }}" alt="Benefit 1"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Cooperation Risk Protection</div>
-                            <div class="card-desc"> Trade with confidence, bechad by salegaards designed to protect your inearests and preserve trust.</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (5).png') }}" alt="Benefit 3"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Marketing and Promotion Services</div>
-                            <div class="card-desc"> Amplify your presence through strategic, high irepact prorsations within as exclusive global agrwad</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (6).png') }}" alt="Benefit 1"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Reduce Costs and Boost efficiency</div>
-                            <div class="card-desc"> Sirsamine-operations, cat overbeach, sed elevate performance through collaborative network advantaρες</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
-         <div class="row mx-auto align-items-stretch pt-3">
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (3).png') }}" alt="Benefit 1"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Business Opportunity Matching</div>
-                            <div class="card-desc"> Uellock carated connections with trustad partsars and high-vala prospects-> mandied to accelerate your growth.</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (4).png') }}" alt="Benefit 1"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Cooperation Risk Protection</div>
-                            <div class="card-desc"> Trade with confidence, bechad by salegaards designed to protect your inearests and preserve trust.</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (5).png') }}" alt="Benefit 3"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Marketing and Promotion Services</div>
-                            <div class="card-desc"> Amplify your presence through strategic, high irepact prorsations within as exclusive global agrwad</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-            <div class="col-12 col-sm-6 col-lg-3 mb-4">
-                <div class="gradient_rounded radies_20 m-2 h-100">
-                    <a href="{{ route('spotlight.partner-showcase.detail') }}" class="text-decoration-none d-block h-100">
-                        <div class="card blacklight radies_20 p-2 h-100">
-                        <img src="{{ asset('images/Mask group (6).png') }}" alt="Benefit 1"
-                            class="img-fluid mb-3" />
-                        <div class="card-content">
-                            <div class="card-title">Reduce Costs and Boost efficiency</div>
-                            <div class="card-desc"> Sirsamine-operations, cat overbeach, sed elevate performance through collaborative network advantaρες</div>
-
-                        </div>
-                        </div>
-                    </a>
-                </div>
-            </div>
-        </div>
+        @endif
     </div>
-</section> 
+</section>
+
+@push('scripts')
+<script>
+let currentPage = {{ $partnerShowcaseItems->currentPage() }};
+let hasMorePages = {{ $partnerShowcaseItems->hasMorePages() ? 'true' : 'false' }};
+let isLoading = false;
+
+function loadMoreItems() {
+    if (isLoading || !hasMorePages) return;
+    
+    isLoading = true;
+    const btn = document.getElementById('load-more-btn');
+    const btnText = btn.querySelector('.btn-text');
+    const spinner = btn.querySelector('.spinner-border');
+    
+    // Show loading state
+    btnText.textContent = 'Loading...';
+    spinner.classList.remove('d-none');
+    btn.disabled = true;
+    
+    fetch(`{{ route('spotlight.partner-showcase') }}?page=${currentPage + 1}`, {
+        headers: {
+            'X-Requested-With': 'XMLHttpRequest',
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.html) {
+            document.getElementById('partner-showcase-items').insertAdjacentHTML('beforeend', data.html);
+            currentPage = data.nextPage - 1;
+            hasMorePages = data.hasMore;
+            
+            if (!hasMorePages) {
+                btn.style.display = 'none';
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error loading more items:', error);
+        alert('Error loading more items. Please try again.');
+    })
+    .finally(() => {
+        isLoading = false;
+        btnText.textContent = 'Load More Partner Showcases';
+        spinner.classList.add('d-none');
+        btn.disabled = false;
+    });
+}
+</script>
+@endpush
+
 @endsection

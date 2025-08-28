@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Spotlight;
 use Illuminate\Http\Request;
 
 class PartnerShowcaseController extends Controller
@@ -11,12 +12,27 @@ class PartnerShowcaseController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(Request $request)
     {
-        // You can add logic here to fetch partner data from database if needed
-        // For now, we'll just return the existing view
+        if ($request->ajax()) {
+            $page = $request->get('page', 1);
+            $perPage = 8; // 8 items per page (2 rows of 4)
+            
+            $partnerShowcaseItems = Spotlight::active()
+                ->partnerShowcase()
+                ->ordered()
+                ->paginate($perPage, ['*'], 'page', $page);
+            
+            return response()->json([
+                'html' => view('website.spotlight.partials.partner-showcase-items', compact('partnerShowcaseItems'))->render(),
+                'hasMore' => $partnerShowcaseItems->hasMorePages(),
+                'nextPage' => $partnerShowcaseItems->currentPage() + 1
+            ]);
+        }
         
-        return view('website.spotlight.partner-showcase');
+        $partnerShowcaseItems = Spotlight::active()->partnerShowcase()->ordered()->paginate(8);
+        
+        return view('website.spotlight.partner-showcase', compact('partnerShowcaseItems'));
     }
 
     /**
@@ -24,11 +40,19 @@ class PartnerShowcaseController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function show()
+    public function show($id = null)
     {
-        // You can add logic here to fetch partner data from database if needed
-        // For now, we'll just return the view
+        if ($id) {
+            $partnerShowcase = Spotlight::active()->partnerShowcase()->findOrFail($id);
+        } else {
+            // Get the first active partner showcase item
+            $partnerShowcase = Spotlight::active()->partnerShowcase()->ordered()->first();
+            
+            if (!$partnerShowcase) {
+                abort(404, 'No partner showcase items found');
+            }
+        }
         
-        return view('website.spotlight.partner-showcase-detail');
+        return view('website.spotlight.partner-showcase-detail', compact('partnerShowcase'));
     }
 }

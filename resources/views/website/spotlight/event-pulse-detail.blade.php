@@ -1,6 +1,6 @@
 @extends('layouts.website')
 
-@section('title', 'Event Pulse Detail - Spotlight - Fr8nity')
+@section('title', 'Event Pulse - Spotlight - Fr8nity')
 
 @section('content')
 
@@ -9,30 +9,44 @@
     <div class="left-section">
        
         <div class="image-container">
-            <img src="{{ asset('images/our_story.jpg') }}" alt="Museum Tour" class="main-image" id="mainImage">
+            @if($eventPulse->feature_image)
+                <img src="{{ asset('storage/' . $eventPulse->feature_image) }}" alt="{{ $eventPulse->title }}" class="main-image" id="mainImage">
+            @else
+                <img src="{{ asset('images/our_story.jpg') }}" alt="{{ $eventPulse->title }}" class="main-image" id="mainImage">
+            @endif
             
-            <button class="navigation-arrows nav-left" onclick="previousImage()">
-                &lt;
-            </button>
-            <button class="navigation-arrows nav-right" onclick="nextImage()">
-                &gt;
-            </button>
+            @if($eventPulse->gallery_images && count($eventPulse->gallery_images) > 0)
+                <button class="navigation-arrows nav-left" onclick="previousImage()">
+                    &lt;
+                </button>
+                <button class="navigation-arrows nav-right" onclick="nextImage()">
+                    &gt;
+                </button>
+            @endif
         </div>
         
-        <div class="gallery-thumbnails">
-            <img src="{{ asset('images/our_story.jpg') }}" alt="Gallery 1" class="gallery-thumb active" onclick="changeImage(this, '{{ asset('images/our_story.jpg') }}')">
-            <img src="{{ asset('images/Mask group (3).png') }}" alt="Gallery 2" class="gallery-thumb" onclick="changeImage(this, '{{ asset('images/Mask group (3).png') }}')">
-            <img src="{{ asset('images/Mask group (4).png') }}" alt="Gallery 3" class="gallery-thumb" onclick="changeImage(this, '{{ asset('images/Mask group (4).png') }}')">
-            <img src="{{ asset('images/Mask group (5).png') }}" alt="Gallery 4" class="gallery-thumb" onclick="changeImage(this, '{{ asset('images/Mask group (5).png') }}')">
-            <img src="{{ asset('images/Mask group (6).png') }}" alt="Gallery 5" class="gallery-thumb" onclick="changeImage(this, '{{ asset('images/Mask group (6).png') }}')">
-        </div>
+        @if($eventPulse->gallery_images && count($eventPulse->gallery_images) > 0)
+            <div class="gallery-thumbnails">
+                @if($eventPulse->feature_image)
+                    <img src="{{ asset('storage/' . $eventPulse->feature_image) }}" 
+                         alt="{{ $eventPulse->title }}" 
+                         class="gallery-thumb active" 
+                         onclick="changeImage(this, '{{ asset('storage/' . $eventPulse->feature_image) }}')">
+                @endif
+                @foreach($eventPulse->gallery_images as $index => $image)
+                    <img src="{{ asset('storage/' . $image) }}" 
+                         alt="Gallery {{ $index + 1 }}" 
+                         class="gallery-thumb" 
+                         onclick="changeImage(this, '{{ asset('storage/' . $image) }}')">
+                @endforeach
+            </div>
+        @endif
     </div>
 
     <div class="right-section">
-        <h1 class="event-title">Global Trade Summit Adventure</h1>
+        <h1 class="event-title">{{ $eventPulse->title }}</h1>
         <p class="event-description">
-            Experience the thrill of international trade with breathtaking networking opportunities and challenging 
-            business scenarios. Perfect for entrepreneurs and business leaders seeking growth and expansion.
+            {{ $eventPulse->description }}
         </p>
     </div>
 </div>
@@ -40,11 +54,14 @@
 <script>
 let currentImageIndex = 0;
 const images = [
-    '{{ asset('images/our_story.jpg') }}',
-    '{{ asset('images/Mask group (3).png') }}',
-    '{{ asset('images/Mask group (4).png') }}',
-    '{{ asset('images/Mask group (5).png') }}',
-    '{{ asset('images/Mask group (6).png') }}'
+    @if($eventPulse->feature_image)
+        '{{ asset('storage/' . $eventPulse->feature_image) }}',
+    @endif
+    @if($eventPulse->gallery_images)
+        @foreach($eventPulse->gallery_images as $image)
+            '{{ asset('storage/' . $image) }}',
+        @endforeach
+    @endif
 ];
 
 function changeImage(thumbnail, imageSrc) {
@@ -63,31 +80,29 @@ function changeImage(thumbnail, imageSrc) {
 }
 
 function previousImage() {
-    currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
-    updateMainImage();
+    if (images.length > 1) {
+        currentImageIndex = (currentImageIndex - 1 + images.length) % images.length;
+        updateMainImage();
+    }
 }
 
 function nextImage() {
-    currentImageIndex = (currentImageIndex + 1) % images.length;
-    updateMainImage();
+    if (images.length > 1) {
+        currentImageIndex = (currentImageIndex + 1) % images.length;
+        updateMainImage();
+    }
 }
 
 function updateMainImage() {
-    document.getElementById('mainImage').src = images[currentImageIndex];
-    
-    // Update thumbnail active state
-    document.querySelectorAll('.gallery-thumb').forEach((thumb, index) => {
-        thumb.classList.toggle('active', index === currentImageIndex);
-    });
+    if (images.length > 0) {
+        document.getElementById('mainImage').src = images[currentImageIndex];
+        
+        // Update thumbnail active state
+        document.querySelectorAll('.gallery-thumb').forEach((thumb, index) => {
+            thumb.classList.toggle('active', index === currentImageIndex);
+        });
+    }
 }
-
-// Date picker functionality
-document.getElementById('eventDate').addEventListener('click', function() {
-    // You can integrate a date picker library here
-    this.type = 'date';
-    this.min = '2025-01-01';
-    this.max = '2025-12-31';
-});
 </script>
 
 @endsection
