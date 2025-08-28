@@ -243,6 +243,8 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     // Admin Quotations routes
     Route::middleware('admin')->prefix('admin')->group(function () {
         Route::get('/quotations', [MemberQuotationController::class, 'adminIndex'])->name('admin.quotations.index');
+        Route::get('/quotations/create', [MemberQuotationController::class, 'adminCreate'])->name('admin.quotations.create');
+        Route::post('/quotations', [MemberQuotationController::class, 'adminStore'])->name('admin.quotations.store');
         Route::get('/quotations/{quotation}', [MemberQuotationController::class, 'adminShow'])->name('admin.quotations.show');
     });
     Route::get('/{member}/edit-profile', [MemberController::class, 'edit'])->name('editmemberprofile');

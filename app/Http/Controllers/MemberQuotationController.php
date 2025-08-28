@@ -228,6 +228,67 @@ class MemberQuotationController extends Controller
         return view('dashboard.quotations.admin-show', compact('quotation'));
     }
 
+    // Admin: create offline quotation form
+    public function adminCreate()
+    {
+        $this->authorizeAdmin();
+        
+        // Get all active approved members for both giver and receiver selection
+        $members = User::where('role', User::MEMBER)
+            ->where('status', 'approved')
+            ->where('is_active', true)
+            ->orderBy('company_name')
+            ->get();
+            
+        // Get ports for the form dropdowns
+        $ports = Port::orderBy('name')->get();
+        
+        return view('dashboard.quotations.admin-create', compact('members', 'ports'));
+    }
+
+    // Admin: store offline quotation
+    public function adminStore(Request $request)
+    {
+        $this->authorizeAdmin();
+        
+        $rules = [
+            'given_by_id'         => 'required|exists:users,id',
+            'receiver_id'         => 'required|exists:users,id|different:given_by_id',
+            'transaction_value'   => 'required|numeric|min:0',
+            'message'             => 'required|string',
+            'port_of_loading_id'  => 'nullable|exists:ports,id',
+            'port_of_discharge_id'=> 'nullable|exists:ports,id',
+            'specifications'      => 'nullable|array',
+            'specifications.*'    => 'string|in:Air,FCL,LCL,Land,Multimodal,Project Cargo',
+        ];
+        
+        $validated = $request->validate($rules, [
+            'given_by_id.required'              => 'Please select a giver member.',
+            'receiver_id.required'              => 'Please select a receiver member.',
+            'receiver_id.different'             => 'Giver and receiver cannot be the same member.',
+            'transaction_value.required'        => 'Transaction value is required.',
+            'transaction_value.numeric'         => 'Transaction value must be a number.',
+            'transaction_value.min'             => 'Transaction value must be greater than or equal to 0.',
+            'message.required'                  => 'Message is required.',
+        ]);
+        
+        // Get giver member details to populate quotation fields
+        $givenBy = User::find($validated['given_by_id']);
+        
+        // Merge member details into the validated data
+        $validated = array_merge($validated, [
+            'name'   => $givenBy->name,
+            'phone'  => $givenBy->whatsapp_phone ?? $givenBy->company_telephone,
+            'email'  => $givenBy->email,
+            'status' => MemberQuotation::STATUS_CLOSED_SUCCESSFUL,
+            'is_offline_enquiry' => 1
+        ]);
+        
+        $this->memberQuotationService->createAndNotify($validated, null);
+        
+        return redirect()->route('admin.quotations.index')->with('success', 'Offline quotation added successfully.');
+    }
+
     private function authorizeAdmin(): void
     {
         $user = Auth::user();
