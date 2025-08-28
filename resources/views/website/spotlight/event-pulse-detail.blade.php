@@ -4,9 +4,14 @@
 
 @section('content')
 
-<div class="event-detail-container">
-     
-    <div class="left-section">
+
+<div class="container gradient_rounded radies_20 my-5">
+<div class="blacklight radies_20">
+
+
+<div class="event-detail-container  ">
+     <div class="row  p-4">
+    <div class="left-section col-6">
        
         <div class="image-container">
             @if($eventPulse->feature_image)
@@ -17,10 +22,12 @@
             
             @if($eventPulse->gallery_images && count($eventPulse->gallery_images) > 0)
                 <button class="navigation-arrows nav-left" onclick="previousImage()">
-                    &lt;
+                  <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
                 </button>
                 <button class="navigation-arrows nav-right" onclick="nextImage()">
-                    &gt;
+                  <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                  <span class="visually-hidden">Next</span>
                 </button>
             @endif
         </div>
@@ -43,13 +50,15 @@
         @endif
     </div>
 
-    <div class="right-section">
+    <div class="right-section col-6">
         <h1 class="event-title">{{ $eventPulse->title }}</h1>
         <p class="event-description">
             {{ $eventPulse->description }}
         </p>
     </div>
+    </div>
 </div>
+</div></div>
 
 <script>
 let currentImageIndex = 0;

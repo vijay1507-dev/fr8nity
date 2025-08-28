@@ -1306,20 +1306,22 @@ footer .list-unstyled li a:hover:before {
 /* event plus details page */
 
 .event-detail-container {
-    min-height: 100vh;
+    /* min-height: 100vh; */
     display: flex;
-    width: 100%;
+    /* width: 100%; */
 }
 
 .left-section {
     width: 50%;
-    padding: 2rem;
+    /* padding: 2rem; */
 }
 
 .right-section {
     width: 50%;
     padding: 2rem;
-    background: #000;
+    display: flex;
+    flex-direction: column;
+  
 }
 
 .main-image {
@@ -1332,7 +1334,7 @@ footer .list-unstyled li a:hover:before {
 .gallery-thumbnails {
     display: flex;
     gap: 10px;
-    margin-top: 20px;
+    margin-top: 30px;
     justify-content: center;
 }
 
@@ -1344,18 +1346,20 @@ footer .list-unstyled li a:hover:before {
     cursor: pointer;
     border: 2px solid transparent;
     transition: all 0.3s ease;
+    border: 1px solid #767676 !important;
 }
 
-.gallery-thumb:hover,
+/* .gallery-thumb:hover, */
 .gallery-thumb.active {
-    border-color: #ffc107;
+    border-color: #ffc107 !important;
 }
 
 .event-title {
     font-size: 2.5rem;
     font-weight: bold;
     color: #ffc107;
-    margin-bottom: 1rem;
+    /* margin-bottom: 1rem; */
+    margin-top: 60px;
 }
 
 .event-description {
