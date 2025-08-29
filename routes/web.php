@@ -174,7 +174,6 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
             Route::get('/', [SettingsController::class, 'emailTemplatesIndex'])->name('index');
             Route::get('/create', [SettingsController::class, 'emailTemplatesCreate'])->name('create');
             Route::post('/', [SettingsController::class, 'emailTemplatesStore'])->name('store');
-            Route::get('/{mailTemplate}', [SettingsController::class, 'emailTemplatesShow'])->name('show');
             Route::get('/{mailTemplate}/edit', [SettingsController::class, 'emailTemplatesEdit'])->name('edit');
             Route::put('/{mailTemplate}', [SettingsController::class, 'emailTemplatesUpdate'])->name('update');
             Route::delete('/{mailTemplate}', [SettingsController::class, 'emailTemplatesDestroy'])->name('destroy');
@@ -214,7 +213,6 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
             Route::get('/{eventPulse}/edit', [EventPulseAdminController::class, 'edit'])->name('edit');
             Route::put('/{eventPulse}', [EventPulseAdminController::class, 'update'])->name('update');
             Route::delete('/{eventPulse}', [EventPulseAdminController::class, 'destroy'])->name('destroy');
-            Route::patch('/{eventPulse}/toggle-status', [EventPulseAdminController::class, 'toggleStatus'])->name('toggle-status');
         });
 
         // Partner Showcase Management
@@ -225,7 +223,6 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
             Route::get('/{partnerShowcase}/edit', [PartnerShowcaseAdminController::class, 'edit'])->name('edit');
             Route::put('/{partnerShowcase}', [PartnerShowcaseAdminController::class, 'update'])->name('update');
             Route::delete('/{partnerShowcase}', [PartnerShowcaseAdminController::class, 'destroy'])->name('destroy');
-            Route::patch('/{partnerShowcase}/toggle-status', [PartnerShowcaseAdminController::class, 'toggleStatus'])->name('toggle-status');
         });
 
         // Legacy Spotlight Management (keep for backward compatibility or remove if not needed)

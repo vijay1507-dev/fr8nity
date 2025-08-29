@@ -192,29 +192,9 @@ class EventPulseAdminController extends Controller
 
         $eventPulse->delete();
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Event Pulse item deleted successfully.'
-        ]);
+        return redirect()->route('admin.event-pulse.index')
+                        ->with('success', 'Event Pulse item deleted successfully.');
     }
 
-    /**
-     * Toggle the status of the specified event pulse item.
-     */
-    public function toggleStatus(Spotlight $eventPulse)
-    {
-        // Ensure it's an event pulse type
-        if ($eventPulse->type !== Spotlight::TYPE_EVENT_PULSE) {
-            abort(404);
-        }
 
-        $eventPulse->status = !$eventPulse->status;
-        $eventPulse->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Event Pulse status updated successfully.',
-            'status' => $eventPulse->status
-        ]);
-    }
 }

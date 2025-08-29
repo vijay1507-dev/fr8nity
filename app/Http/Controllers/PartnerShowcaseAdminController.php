@@ -191,30 +191,9 @@ class PartnerShowcaseAdminController extends Controller
         }
 
         $partnerShowcase->delete();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Partner Showcase item deleted successfully.'
-        ]);
+        return redirect()->route('admin.partner-showcase.index')
+                        ->with('success', 'Partner Showcase item deleted successfully.');
     }
 
-    /**
-     * Toggle the status of the specified partner showcase item.
-     */
-    public function toggleStatus(Spotlight $partnerShowcase)
-    {
-        // Ensure it's a partner showcase type
-        if ($partnerShowcase->type !== Spotlight::TYPE_PARTNER_SHOWCASE) {
-            abort(404);
-        }
 
-        $partnerShowcase->status = !$partnerShowcase->status;
-        $partnerShowcase->save();
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Partner Showcase status updated successfully.',
-            'status' => $partnerShowcase->status
-        ]);
-    }
 }

@@ -8,9 +8,6 @@
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <h5 class="mb-0">Edit Email Template: {{ $mailTemplate->name }}</h5>
                     <div class="d-flex gap-2">
-                        <a href="{{ route('settings.email-templates.show', $mailTemplate) }}" class="btn btn-outline-info btn-sm">
-                            <i class="fas fa-eye me-1"></i> View
-                        </a>
                         <a href="{{ route('settings.email-templates.index') }}" class="btn btn-secondary btn-sm">
                             <i class="fas fa-arrow-left me-1"></i> Back to Templates
                         </a>
@@ -27,7 +24,7 @@
                         </div>
                     @endif
 
-                    <form action="{{ route('settings.email-templates.update', $mailTemplate) }}" method="POST">
+                    <form action="{{ route('settings.email-templates.update', $mailTemplate) }}" method="POST" id="email-template-form">
                         @csrf
                         @method('PUT')
 
@@ -79,7 +76,7 @@
                             <div class="col-12">
                                 <label for="body" class="form-label">Email Body <span class="text-danger">*</span></label>
                                 <div id="body-editor" style="height: 300px;"></div>
-                                <textarea id="body" name="body" class="d-none @error('body') is-invalid @enderror" required>{{ old('body', $mailTemplate->body) }}</textarea>
+                                <textarea id="body" name="body" class="d-none @error('body') is-invalid @enderror" required>{!! old('body', $mailTemplate->body) !!}</textarea>
                                 <div class="form-text">
                                     Use HTML for formatting. Variables can be used like @{{name}}, @{{email}}, @{{company}}, etc.
                                 </div>
@@ -119,9 +116,6 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save me-1"></i> Update Template
                             </button>
-                            <a href="{{ route('settings.email-templates.show', $mailTemplate) }}" class="btn btn-outline-info">
-                                <i class="fas fa-eye me-1"></i> View Template
-                            </a>
                             <a href="{{ route('settings.email-templates.index') }}" class="btn btn-outline-secondary">
                                 <i class="fas fa-times me-1"></i> Cancel
                             </a>
@@ -160,7 +154,7 @@
                 </div>
                 <div>
                     <label class="form-label fw-bold">Body:</label>
-                    <div id="preview-body" class="p-3 border rounded" style="min-height: 300px; max-height: 400px; overflow-y: auto;"></div>
+                    <div id="preview-body" class="p-3 border rounded email-preview" style="min-height: 300px; max-height: 400px; overflow-y: auto; background: white; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6;"></div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -174,6 +168,32 @@
 @section('scripts')
 <link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
 <script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<style>
+.email-preview {
+    /* Override default email styles for better preview */
+}
+.email-preview a[style*="background-color"] {
+    /* Ensure buttons in preview display properly */
+    display: inline-block !important;
+    text-decoration: none !important;
+    border-radius: 5px !important;
+    font-weight: bold !important;
+}
+.email-preview ul, .email-preview ol {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+.email-preview li {
+    margin: 5px 0;
+}
+.email-preview h1, .email-preview h2, .email-preview h3 {
+    margin: 20px 0 10px 0;
+    font-weight: bold;
+}
+.email-preview p {
+    margin: 10px 0;
+}
+</style>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize Quill editor
@@ -194,14 +214,41 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Get existing content and set it in Quill
-    const existingContent = document.getElementById('body').value;
-    if (existingContent) {
-        quill.root.innerHTML = existingContent;
+    const bodyTextarea = document.getElementById('body');
+    const existingContent = bodyTextarea ? bodyTextarea.value : '';
+    
+    if (existingContent && existingContent.trim() !== '') {
+        // Small delay to ensure Quill is fully initialized
+        setTimeout(() => {
+            try {
+                // Use Quill's clipboard API to properly set HTML content
+                quill.clipboard.dangerouslyPasteHTML(existingContent);
+                console.log('Email template content loaded successfully');
+            } catch (error) {
+                console.error('Error loading email template content:', error);
+                // Fallback to direct innerHTML setting
+                quill.root.innerHTML = existingContent;
+            }
+        }, 100);
     }
 
     // Update hidden textarea when Quill content changes
     quill.on('text-change', function() {
-        document.getElementById('body').value = quill.root.innerHTML;
+        const bodyTextarea = document.getElementById('body');
+        if (bodyTextarea) {
+            // Get clean HTML content, removing any Quill artifacts
+            let content = quill.root.innerHTML;
+            
+            // Clean up the content
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            
+            // Remove any Quill-specific elements or empty paragraphs
+            const emptyPs = tempDiv.querySelectorAll('p:empty, br[data-quill-placeholder]');
+            emptyPs.forEach(element => element.remove());
+            
+            bodyTextarea.value = tempDiv.innerHTML;
+        }
     });
 
     // Add preview functionality
@@ -219,13 +266,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function showPreview() {
         const subject = document.getElementById('subject').value || 'No subject';
-        const body = quill.root.innerHTML || 'No content';
+        let body = '';
+        
+        // Get clean content from Quill editor
+        if (quill) {
+            // Use Quill's getHTML method for cleaner output
+            body = quill.root.innerHTML || 'No content';
+            
+            // Clean up any Quill-specific artifacts
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = body;
+            
+            // Remove any elements that might be Quill artifacts (like empty paragraphs at the end)
+            const emptyPs = tempDiv.querySelectorAll('p:empty, br[data-quill-placeholder]');
+            emptyPs.forEach(element => element.remove());
+            
+            body = tempDiv.innerHTML;
+        } else {
+            body = 'No content';
+        }
         
         document.getElementById('preview-subject').textContent = subject;
         document.getElementById('preview-body').innerHTML = body;
         
         const modal = new bootstrap.Modal(document.getElementById('previewModal'));
         modal.show();
+    }
+
+    // Ensure content is synchronized before form submission
+    const form = document.getElementById('email-template-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Sync the latest content from Quill to hidden textarea
+            const bodyTextarea = document.getElementById('body');
+            if (bodyTextarea && quill) {
+                // Get clean HTML content, removing any Quill artifacts
+                let content = quill.root.innerHTML;
+                
+                // Clean up the content
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = content;
+                
+                // Remove any Quill-specific elements or empty paragraphs
+                const emptyPs = tempDiv.querySelectorAll('p:empty, br[data-quill-placeholder]');
+                emptyPs.forEach(element => element.remove());
+                
+                bodyTextarea.value = tempDiv.innerHTML;
+            }
+        });
     }
 });
 </script>
