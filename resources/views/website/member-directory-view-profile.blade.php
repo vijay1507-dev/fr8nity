@@ -127,16 +127,20 @@
                                 <div class="gradient_rounded radies_20">
                                     <div class="bg-black p-3 py-4 radies_20 text-center h-100 d-flex flex-column justify-content-center align-items-center">
                                         <h4 class="text-white mb-3">E-certificate</h4>
-                                        <a href="{{ Storage::url($member->certificate_document) }}" 
-                                           class="e-certificate-btn" 
-                                           target="_blank">
-                                            <i class="bi bi-eye me-2"></i>Preview
-                                        </a>
-                                        @if($member->certificate_uploaded_at)
-                                        <small class="text-muted mt-3">
-                                            Last updated: {{ $member->certificate_uploaded_at->format('M d, Y') }}
-                                        </small>
-                                        @endif
+                                        
+                                        <!-- Certificate Image Display - Clickable for Preview -->
+                                        <div class="certificate-preview mb-3" style="border: 2px solid #FFD700; border-radius: 10px; padding: 10px; background: rgba(255, 255, 255, 0.1); cursor: pointer;">
+                                            <a href="{{ Storage::url($member->certificate_document) }}" 
+                                               target="_blank"
+                                               style="text-decoration: none; display: block;">
+                                                <img src="{{ Storage::url($member->certificate_document) }}" 
+                                                     alt="E-Certificate - Click to Preview" 
+                                                     class="img-fluid rounded"
+                                                     style="max-width: 100%; max-height: 150px; object-fit: contain; border-radius: 8px; transition: all 0.3s ease;"
+                                                     onmouseover="this.style.transform='scale(1.05)'"
+                                                     onmouseout="this.style.transform='scale(1)'">
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

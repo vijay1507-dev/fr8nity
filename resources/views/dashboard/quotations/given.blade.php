@@ -7,19 +7,21 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="card-title mb-0">Given Quotations</h4>
+            <a href="{{ route('member.quotations.create', ['type' => 'given']) }}" class="btn btn-primary">
+                <i class="bi bi-plus-circle me-2"></i>Add enquiries given offline
+            </a>
         </div>
         <div class="card-body">
             <table class="table table-bordered data-table">
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Reference No</th>
                         <th>Receiver</th>
                         <th>Name</th>
-                        <th>Phone</th>
                         <th>Email</th>
                         <th>Port of Loading</th>
                         <th>Port of Discharge</th>
-                        <th>Specifications</th>
                         <th>Status</th>
                         <th>Created At</th>
                         <th>Action</th>
@@ -44,13 +46,12 @@
             ajax: "{{ route('member.quotations.given') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
+                {data: 'reference_no', name: 'reference_no'},
                 {data: 'receiver', name: 'receiver'},
                 {data: 'name', name: 'name'},
-                {data: 'phone', name: 'phone'},
                 {data: 'email', name: 'email'},
                 {data: 'port_of_loading', name: 'port_of_loading'},
                 {data: 'port_of_discharge', name: 'port_of_discharge'},
-                {data: 'specifications', name: 'specifications'},
                 {data: 'status', name: 'status'},
                 {data: 'created_at', name: 'created_at'},
                 {

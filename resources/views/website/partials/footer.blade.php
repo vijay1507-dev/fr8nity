@@ -1,7 +1,7 @@
 <footer class="footer_main py-md-5 py-4">
     <div class="container py-md-3">
         <div class="row gy-4">
-            <div class="col-12 col-md-3 mb-3">
+            <div class="col-12 col-lg-3 mb-3">
                 <div class=" text-start  ps-3 ps-md-0 ps-lg-0">
                     <img src="{{asset('images/logo (3).svg')}}" alt="Company Logo" class="mb-3 img-fluid" />
                     <p class="fs-6">
@@ -29,30 +29,36 @@
             </div>
 
 
-            <div class="col-12 col-md-9 ">
+            <div class="col-12 col-lg-9 ">
                <div class="row gy-4 ps-3  ps-md-0  ps-lg-0">
 
-                    <div class="col-12 col-sm-6 col-md-3 mb-3 ">
+                    <div class="col-12   col-lg-3 mb-3 ">
                         <div class=''>
                             <h5 class="fw-semibold fs-5">Quick Links</h5>
                             <div
                                 class='d-flex justify-content-start '>
                                 <ul class="list-unstyled mt-3 ">
+                                    
                                     <li class="d-flex align-items-center  ">
-                                        <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                        <Link to="/about" class="text-decoration-none">About Us</Link>
+                                        <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                        <a href="{{ url('/') }}" class="text-decoration-none">Home</a>
+                                    </li>
+                                      <li class="d-flex align-items-center pt-3">
+                                        <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                        <a href="{{ url('/about-us') }}" class="text-decoration-none">About Us</a>
                                     </li>
                                     <li class="d-flex align-items-center pt-3">
-                                        <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                        <Link to="/events/calendar" class="text-decoration-none">Event</Link>
+                                        <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                       <a href="{{ url('/spotlight/event-pulse') }}" class="text-decoration-none">Event</a>
+                                  
                                     </li>
                                     <li class="d-flex align-items-center pt-3">
-                                        <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                        <Link to="/membership" class="text-decoration-none">Membership</Link>
+                                        <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                          <a href="{{ url('contact-us') }}" class="text-decoration-none">Contact Us</a>
                                     </li>
                                     <li class="d-flex align-items-center pt-3">
-                                        <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                        <Link to="/directory" class="text-decoration-none">Company Directory</Link>
+                                        <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                        <a href="{{ url('#') }}" class="text-decoration-none">Company Directory</a>
                                     </li>
                                 </ul>
                             </div>
@@ -61,72 +67,72 @@
                     </div>
 
 
-                    <div class="col-12 col-sm-6 col-md-3">
+                    <div class="col-12 col-lg-3">
 
                         <h5 class="fw-semibold fs-5 ">Useful Links</h5>
                         <div class='d-flex justify-content-start '>
                             <ul class="list-unstyled mt-3">
                                 <li class="d-flex align-items-center">
-                                    <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                    <Link to="#" class="text-decoration-none">Cooperation Risk Protection</Link>
+                                    <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                    <a href="#" class="text-decoration-none">Cooperation Risk Protection</a>
                                 </li>
                                 <li class="d-flex align-items-center pt-3">
-                                    <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                    <Link to="#" class="text-decoration-none">Inquiry</Link>
+                                    <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                    <a href="#" class="text-decoration-none">Inquiry</a>
                                 </li>
                                 <li class="d-flex align-items-center pt-3">
-                                    <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                    <Link to="#" class="text-decoration-none">Tools</Link>
+                                    <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                    <a href="#" class="text-decoration-none">Tools</a>
                                 </li>
                                 <li class="d-flex align-items-center pt-3">
-                                    <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                    <Link to="#" class="text-decoration-none">Global Partner</Link>
+                                    <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                       <a href="#" class="text-decoration-none">Global Partner</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
 
 
-                    <div class="col-12 col-sm-6 col-md-3">
+                    <div class="col-12  col-lg-3">
                         <h5 class="fw-semibold fs-5 ">Services</h5>
                         <div class='d-flex justify-content-start '>
 
                             <ul class="list-unstyled mt-3">
                                 <li class="d-flex align-items-center">
-                                    <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                    <Link to="#" class="text-decoration-none">Business Opportunity Matching</Link>
+                                    <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                      <a href="#" class="text-decoration-none">Business Opportunity Matching</a>
                                 </li>
                                 <li class="d-flex align-items-center pt-3">
-                                    <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                    <Link to="#" class="text-decoration-none">Marketing & Promotion Services</Link>
+                                    <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" /> -->
+                                      <a href="#" class="text-decoration-none">Marketing & Promotion Services</a>
                                 </li>
-                                <li class="d-flex align-items-center pt-3">
-                                    <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2" />
-                                    <Link to="#" class="text-decoration-none">Reduce Costs & Boost Efficiency</Link>
+                                <li class="d-flex align-items-center pt-3 ">
+                                    <!-- <img src="{{asset('images/Vector (1).png')}}" alt="" class="me-2 " /> -->
+                                    <a href="#" class="text-decoration-none">Reduce Costs & Boost Efficiency</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
 
 
-                    <div class="col-12 col-sm-6 col-md-3">
+                    <div class="col-12 col-lg-3">
                         <h5 class="fw-semibold fs-5">Contact Us</h5>
-                        <ul class="list-unstyled mt-3">
+                        <ul class="px-0 mt-3">
                             @if(!empty($siteSettings['site_phone']))
-                            <li class="d-flex align-items-center mb-2">
+                            <li class="d-flex  mb-2">
                                 <img src="{{asset('images/footerphn.svg')}}" alt="Phone" class="me-2" />
-                                <a href="tel:{{ $siteSettings['site_phone'] }}" class="text-decoration-none text-white">{{ $siteSettings['site_phone'] }}</a>
+                                <a href="tel:{{ $siteSettings['site_phone'] }}" class="">{{ $siteSettings['site_phone'] }}</a>
                             </li>
                             @endif
                             @if(!empty($siteSettings['site_email']))
-                            <li class="d-flex align-items-center pt-3 mb-2">
+                            <li class="d-flex  pt-3 mb-2">
                                 <img src="{{asset('images/footermessage.svg')}}" alt="Email" class="me-2" />
-                                <a href="mailto:{{ $siteSettings['site_email'] }}" class="text-decoration-none text-white">{{ $siteSettings['site_email'] }}</a>
+                                <a href="mailto:{{ $siteSettings['site_email'] }}" class="">{{ $siteSettings['site_email'] }}</a>
                             </li>
                             @endif
-                            <li class="d-flex align-items-start pt-3 mb-2">
-                                <img src="{{asset('images/footerlocation.svg')}}" alt="Location" class="me-2" />
-                                <span>Dummy Address</span>
+                            <li class="d-flex  pt-3 mb-2">
+                                <img src="{{asset('images/footerlocation.svg')}}" alt="Location" class="me-2 ms-0" />
+                              <a href="#" class="">Dummy Address</a>
                             </li>
                         </ul>
                     </div>

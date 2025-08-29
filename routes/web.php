@@ -15,6 +15,11 @@ use App\Http\Controllers\SettingsController;
 use App\Http\Controllers\SalesReportController;
 use App\Http\Controllers\MembershipTierController;
 use App\Http\Controllers\MembershipBenefitController;
+use App\Http\Controllers\EventPulseController;
+use App\Http\Controllers\PartnerShowcaseController;
+use App\Http\Controllers\SpotlightController;
+use App\Http\Controllers\EventPulseAdminController;
+use App\Http\Controllers\PartnerShowcaseAdminController;
 
 // Main website route - accessible to all
 Route::get('/', function () {
@@ -43,10 +48,12 @@ Route::prefix('membership')->group(function () {
             $membershipTier = \App\Models\MembershipTier::where('slug', 'summit')->first();
             return view('website.membership.summit', compact('membershipTier'));
         })->name('membership.summit');
+        
+        Route::get('/pinnacle', function () {
+            return view('website.membership.pinnacle');
+        })->name('membership.pinnacle');
     });
-    Route::get('/pinnacle', function () {
-        return view('website.membership.pinnacle');
-    })->name('membership.pinnacle');
+   
     Route::get('/join-member', function () {
         return view('website.membership.join-member');
     })->name('membership.join-member');
@@ -75,9 +82,16 @@ Route::prefix('events')->group(function () {
 Route::get('/about-us', function () {
     return view('website.about-us');
 })->name('about-us')->middleware('auth');
-Route::get('/spotlight', function () {
-    return view('website.spotlight');
-})->name('spotlight');
+
+// Spotlight Routes
+Route::prefix('spotlight')->name('spotlight.')->group(function () {
+    Route::get('/event-pulse', [EventPulseController::class, 'index'])->name('event-pulse');
+    Route::get('/event-pulse/detail/{id?}', [EventPulseController::class, 'show'])->name('event-pulse.detail');
+    
+    Route::get('/partner-showcase', [PartnerShowcaseController::class, 'index'])->name('partner-showcase');
+    Route::get('/partner-showcase/detail/{id?}', [PartnerShowcaseController::class, 'show'])->name('partner-showcase.detail');
+});
+
 Route::get('/contact-us', function () {
     return view('website.contact-us');
 })->name('contact-us');
@@ -112,6 +126,7 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     Route::post('/dashboard/filtered-data', [DashboardController::class, 'getFilteredData'])->name('dashboard.filtered-data');
     Route::post('/dashboard/chart-data', [DashboardController::class, 'getChartData'])->name('dashboard.chart-data');
     Route::post('/dashboard/leadership-board', [DashboardController::class, 'getLeadershipBoardAjax'])->name('dashboard.leadership-board');
+    Route::post('/dashboard/admin-data', [DashboardController::class, 'getAdminDashboardData'])->name('dashboard.admin-data');
     Route::get('/profile', [DashboardController::class, 'profile'])->name('profile');
     Route::get('/edit-profile', [DashboardController::class, 'editprofile'])->name('editprofile');
     Route::post('/update-profile', [DashboardController::class, 'updateProfile'])->name('profile.update');
@@ -141,6 +156,8 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::get('/{member}/edit', [MemberController::class, 'edit'])->name('members.edit');
         Route::patch('/{member}', [MemberController::class, 'update'])->name('members.update');
         Route::delete('/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
+        Route::post('/{member}/cancel-membership', [MemberController::class, 'cancelMembership'])->name('members.cancel-membership');
+        Route::post('/{member}/renew-membership', [MemberController::class, 'renewMembership'])->name('members.renew-membership');
     });
 
     // Settings routes
@@ -151,6 +168,17 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         // Site settings
         Route::get('/settings/site', [SettingsController::class, 'siteIndex'])->name('settings.site.index');
         Route::put('/settings/site', [SettingsController::class, 'siteUpdate'])->name('settings.site.update');
+
+        // Email Template settings
+        Route::prefix('settings/email-templates')->name('settings.email-templates.')->group(function () {
+            Route::get('/', [SettingsController::class, 'emailTemplatesIndex'])->name('index');
+            Route::get('/create', [SettingsController::class, 'emailTemplatesCreate'])->name('create');
+            Route::post('/', [SettingsController::class, 'emailTemplatesStore'])->name('store');
+            Route::get('/{mailTemplate}/edit', [SettingsController::class, 'emailTemplatesEdit'])->name('edit');
+            Route::put('/{mailTemplate}', [SettingsController::class, 'emailTemplatesUpdate'])->name('update');
+            Route::delete('/{mailTemplate}', [SettingsController::class, 'emailTemplatesDestroy'])->name('destroy');
+            Route::patch('/{mailTemplate}/toggle-status', [SettingsController::class, 'emailTemplatesToggleStatus'])->name('toggle-status');
+        });
 
         // Membership Tier Management
         Route::prefix('membership-tiers')->name('membership-tiers.')->group(function () {
@@ -176,6 +204,38 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
             Route::delete('/{membershipBenefit}', [MembershipBenefitController::class, 'destroy'])->name('destroy');
             Route::patch('/{membershipBenefit}/toggle-status', [MembershipBenefitController::class, 'toggleStatus'])->name('toggle-status');
         });
+
+        // Event Pulse Management
+        Route::prefix('admin/event-pulse')->name('admin.event-pulse.')->group(function () {
+            Route::get('/', [EventPulseAdminController::class, 'index'])->name('index');
+            Route::get('/create', [EventPulseAdminController::class, 'create'])->name('create');
+            Route::post('/', [EventPulseAdminController::class, 'store'])->name('store');
+            Route::get('/{eventPulse}/edit', [EventPulseAdminController::class, 'edit'])->name('edit');
+            Route::put('/{eventPulse}', [EventPulseAdminController::class, 'update'])->name('update');
+            Route::delete('/{eventPulse}', [EventPulseAdminController::class, 'destroy'])->name('destroy');
+        });
+
+        // Partner Showcase Management
+        Route::prefix('admin/partner-showcase')->name('admin.partner-showcase.')->group(function () {
+            Route::get('/', [PartnerShowcaseAdminController::class, 'index'])->name('index');
+            Route::get('/create', [PartnerShowcaseAdminController::class, 'create'])->name('create');
+            Route::post('/', [PartnerShowcaseAdminController::class, 'store'])->name('store');
+            Route::get('/{partnerShowcase}/edit', [PartnerShowcaseAdminController::class, 'edit'])->name('edit');
+            Route::put('/{partnerShowcase}', [PartnerShowcaseAdminController::class, 'update'])->name('update');
+            Route::delete('/{partnerShowcase}', [PartnerShowcaseAdminController::class, 'destroy'])->name('destroy');
+        });
+
+        // Legacy Spotlight Management (keep for backward compatibility or remove if not needed)
+        Route::prefix('spotlight')->name('spotlight.')->group(function () {
+            Route::get('/', [SpotlightController::class, 'index'])->name('index');
+            Route::get('/create', [SpotlightController::class, 'create'])->name('create');
+            Route::post('/', [SpotlightController::class, 'store'])->name('store');
+            Route::get('/{spotlight}', [SpotlightController::class, 'show'])->name('show');
+            Route::get('/{spotlight}/edit', [SpotlightController::class, 'edit'])->name('edit');
+            Route::put('/{spotlight}', [SpotlightController::class, 'update'])->name('update');
+            Route::delete('/{spotlight}', [SpotlightController::class, 'destroy'])->name('destroy');
+            Route::patch('/{spotlight}/toggle-status', [SpotlightController::class, 'toggleStatus'])->name('toggle-status');
+        });
     });
     // Member Sales Report routes
     Route::prefix('member-sales-report')->group(function () {
@@ -192,6 +252,8 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
     // Admin Quotations routes
     Route::middleware('admin')->prefix('admin')->group(function () {
         Route::get('/quotations', [MemberQuotationController::class, 'adminIndex'])->name('admin.quotations.index');
+        Route::get('/quotations/create', [MemberQuotationController::class, 'adminCreate'])->name('admin.quotations.create');
+        Route::post('/quotations', [MemberQuotationController::class, 'adminStore'])->name('admin.quotations.store');
         Route::get('/quotations/{quotation}', [MemberQuotationController::class, 'adminShow'])->name('admin.quotations.show');
     });
     Route::get('/{member}/edit-profile', [MemberController::class, 'edit'])->name('editmemberprofile');

@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+
 class User extends Authenticatable
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
@@ -51,6 +52,9 @@ class User extends Authenticatable
         'membership_start_at',
         'membership_expires_at',
         'status',
+        'cancelled_at',
+        'cancellation_reason',
+        'cancelled_by',
         'two_factor_code',
         'two_factor_expires_at',
         'two_factor_enabled',
@@ -62,6 +66,11 @@ class User extends Authenticatable
     const SUPER_ADMIN = 0;
     const ADMIN = 1;   
     const MEMBER = 2;
+    
+    // Profile approval status constants - controls login access and membership lifecycle
+    const STATUS_PENDING = 'pending';    // Profile pending approval, cannot login
+    const STATUS_APPROVED = 'approved';  // Profile approved, can login (if is_active = true)
+    const STATUS_CANCELLED = 'cancelled'; // Membership cancelled, cannot access website
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -86,6 +95,7 @@ class User extends Authenticatable
             'two_factor_expires_at' => 'datetime',
             'membership_start_at' => 'datetime',
             'membership_expires_at' => 'datetime',
+            'cancelled_at' => 'datetime',
             'two_factor_enabled' => 'boolean',
             'certificate_uploaded_at' => 'datetime',
             'is_active' => 'boolean',
@@ -93,13 +103,31 @@ class User extends Authenticatable
     }
 
     /**
-     * Scope: only approved and active members
+     * Scope: only approved and active members (can login and access website)
      */
     public function scopeApprovedActiveMembers(Builder $query): Builder
     {
         return $query->where('role', self::MEMBER)
-            ->where('status', 'approved')
-            ->where('is_active', true);
+            ->where('status', self::STATUS_APPROVED)  // Profile approved
+            ->where('is_active', true);                // Active access to website
+    }
+
+    /**
+     * Scope: only cancelled members
+     */
+    public function scopeCancelledMembers(Builder $query): Builder
+    {
+        return $query->where('role', self::MEMBER)
+            ->where('status', self::STATUS_CANCELLED);
+    }
+
+    /**
+     * Scope: only approved members
+     */
+    public function scopeApprovedMembers(Builder $query): Builder
+    {
+        return $query->where('role', self::MEMBER)
+            ->where('status', self::STATUS_APPROVED);
     }
 
     /**
@@ -128,9 +156,15 @@ class User extends Authenticatable
 
     /**
      * Scope: apply directory filters (company/city/country/specialization)
+     * Only shows approved and active members (can login and access website)
      */
     public function scopeFilterForDirectory(Builder $query, array $filters): Builder
     {
+        // Base filter: only approved and active members
+        $query->where('role', self::MEMBER)
+            ->where('status', self::STATUS_APPROVED)  // Profile approved and not cancelled
+            ->where('is_active', true);                // Active access to website
+
         $query->when(!empty($filters['company_name']), function (Builder $q) use ($filters) {
             $term = $filters['company_name'];
             $q->where(function (Builder $inner) use ($term) {
@@ -141,7 +175,10 @@ class User extends Authenticatable
 
         $query->when(!empty($filters['country']), function (Builder $q) use ($filters) {
             $q->whereHas('country', function (Builder $rel) use ($filters) {
-                $rel->where('name', 'like', "%{$filters['country']}%");
+                $rel->where(function (Builder $inner) use ($filters) {
+                    $inner->where('name', 'like', "%{$filters['country']}%")
+                          ->orWhere('code', 'like', "%{$filters['country']}%");
+                });
             });
         });
 
@@ -306,5 +343,45 @@ class User extends Authenticatable
     public function receivedQuotations()
     {
         return $this->hasMany(MemberQuotation::class, 'receiver_id');
+    }
+
+    /**
+     * Get the admin who cancelled the membership
+     */
+    public function cancelledBy()
+    {
+        return $this->belongsTo(User::class, 'cancelled_by');
+    }
+
+    /**
+     * Get membership cancellation and renewal logs for this user
+     */
+    public function membershipCancellationAndRenewalLogs()
+    {
+        return $this->hasMany(MembershipLog::class)->whereIn('action', ['cancelled', 'renewed']);
+    }
+
+    /**
+     * Check if membership is cancelled
+     */
+    public function isCancelled()
+    {
+        return $this->status === self::STATUS_CANCELLED;
+    }
+
+    /**
+     * Check if membership is active
+     */
+    public function isActive()
+    {
+        return $this->status === self::STATUS_APPROVED && $this->is_active === true;
+    }
+
+    /**
+     * Check if membership is renewed
+     */
+    public function isRenewed()
+    {
+        return $this->status === self::STATUS_APPROVED && $this->is_active === true;
     }
 }

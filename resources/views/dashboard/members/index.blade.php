@@ -8,6 +8,12 @@
             <a href="{{ route('members.add') }}" class="btn btn-primary">Add Member</a>
         </div>
         <div class="card-body">
+            @if(request('country'))
+                <div class="alert alert-info mb-3">
+                    <strong>Filtered by Country:</strong> {{ $countryName ?? request('country') }}
+                    <a href="{{ route('members.index') }}" class="btn btn-sm btn-outline-secondary ms-2">Clear Filter</a>
+                </div>
+            @endif
             <table class="table table-bordered data-table">
                 <thead>
                     <tr>
@@ -41,7 +47,14 @@
             serverSide: true,
                     scrollX: true,
                     autoWidth: false,
-            ajax: "{{ route('members.index') }}",
+            ajax: {
+                url: "{{ route('members.index') }}",
+                data: function (d) {
+                    @if(request('country'))
+                        d.country = "{{ request('country') }}";
+                    @endif
+                }
+            },
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
                 {data: 'name', name: 'name'},

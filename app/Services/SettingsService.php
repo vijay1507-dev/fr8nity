@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\Setting;
+use App\Models\MailTemplate;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class SettingsService
 {
@@ -38,6 +40,56 @@ class SettingsService
         Setting::set('social_linkedin', $data['social_linkedin'] ?? '');
         Setting::set('social_twitter', $data['social_twitter'] ?? '');
         Setting::set('social_youtube', $data['social_youtube'] ?? '');
+    }
+
+    // Email Template Management Methods
+    public function getEmailTemplates(int $perPage = 10): LengthAwarePaginator
+    {
+        return MailTemplate::paginate($perPage);
+    }
+
+    public function getEmailTemplate(int $id): ?MailTemplate
+    {
+        return MailTemplate::find($id);
+    }
+
+    public function createEmailTemplate(array $data): MailTemplate
+    {
+        return MailTemplate::create([
+            'name' => $data['name'],
+            'subject' => $data['subject'],
+            'body' => $data['body'],
+            'comment' => $data['comment'] ?? null,
+            'variables' => $data['variables'] ?? [],
+            'is_active' => $data['is_active'] ?? true,
+        ]);
+    }
+
+    public function updateEmailTemplate(MailTemplate $template, array $data): bool
+    {
+        return $template->update([
+            'name' => $data['name'],
+            'subject' => $data['subject'],
+            'body' => $data['body'],
+            'comment' => $data['comment'] ?? null,
+            'variables' => $data['variables'] ?? [],
+            'is_active' => $data['is_active'] ?? true,
+        ]);
+    }
+
+    public function deleteEmailTemplate(MailTemplate $template): bool
+    {
+        return $template->delete();
+    }
+
+    public function toggleEmailTemplateStatus(MailTemplate $template): bool
+    {
+        return $template->update(['is_active' => !$template->is_active]);
+    }
+
+    public function getActiveEmailTemplates(): \Illuminate\Database\Eloquent\Collection
+    {
+        return MailTemplate::where('is_active', true)->get();
     }
 }
 

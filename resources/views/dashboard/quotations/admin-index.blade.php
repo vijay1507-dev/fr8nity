@@ -7,12 +7,16 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="card-title mb-0">All Quotations</h4>
+            <a href="{{ route('admin.quotations.create') }}" class="btn btn-primary d-inline-flex align-items-center gap-2 flex-nowrap">
+                <i class="bi bi-plus-circle"></i>Add Offline Quotations
+            </a>
         </div>
         <div class="card-body">
             <table class="table table-bordered data-table">
                 <thead>
                     <tr>
                         <th>No</th>
+                        <th>Reference No</th>
                         <th>Sender Name</th>
                         <th>Company Name</th>
                         <th>Email</th>
@@ -44,6 +48,7 @@
             ajax: "{{ route('admin.quotations.index') }}",
             columns: [
                 {data: 'DT_RowIndex', name: 'id'},
+                {data: 'reference_no', name: 'reference_no'},
                 {data: 'name', name: 'name'},
                 {data: 'sender_company_name', name: 'sender_company_name'},
                 {data: 'sender_email', name: 'sender_email'},

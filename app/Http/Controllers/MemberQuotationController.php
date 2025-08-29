@@ -27,14 +27,17 @@ class MemberQuotationController extends Controller
         if ($request->ajax()) {
             return DataTables::of($quotations)
                 ->addIndexColumn()
+                ->addColumn('reference_no', function ($quotation) {
+                    return $quotation->quotation_reference_no ?? '-';
+                })
                 ->addColumn('receiver', function ($quotation) {
                     return $quotation->receiver ? $quotation->receiver->company_name : '-';
                 })
                 ->addColumn('port_of_loading', function ($quotation) {
-                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
+                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : '-';
                 })
                 ->addColumn('port_of_discharge', function ($quotation) {
-                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
+                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : '-';
                 })
                 ->addColumn('status', function ($quotation) {
                     return $quotation->getStatusLabel();
@@ -61,14 +64,17 @@ class MemberQuotationController extends Controller
         if ($request->ajax()) {
             return DataTables::of($quotations)
                 ->addIndexColumn()
+                ->addColumn('reference_no', function ($quotation) {
+                    return $quotation->quotation_reference_no ?? '-';
+                })
                 ->addColumn('given_by', function ($quotation) {
                     return $quotation->givenBy ? $quotation->givenBy->company_name : '-';
                 })
                 ->addColumn('port_of_loading', function ($quotation) {
-                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : null;
+                    return $quotation->portOfLoading ? $quotation->portOfLoading->name : '-';
                 })
                 ->addColumn('port_of_discharge', function ($quotation) {
-                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : null;
+                    return $quotation->portOfDischarge ? $quotation->portOfDischarge->name : '-';
                 })
                 ->addColumn('transaction_value', function ($quotation) {
                     return $quotation->transaction_value
@@ -91,8 +97,9 @@ class MemberQuotationController extends Controller
         return view('dashboard.quotations.received');
     }
 
-    public function create()
+    public function create(Request $request)
     {
+        $type = $request->get('type', 'received');        
         // Get ports for the form dropdowns
         $ports = Port::orderBy('name')->get();
         
@@ -104,7 +111,7 @@ class MemberQuotationController extends Controller
             ->orderBy('company_name')
             ->get();
 
-        return view('dashboard.quotations.create', compact('ports', 'members'));
+        return view('dashboard.quotations.create', compact('ports', 'members', 'type'));
     }
 
     public function show(MemberQuotation $quotation)
@@ -174,6 +181,9 @@ class MemberQuotationController extends Controller
         if ($request->ajax()) {
             return \Yajra\DataTables\Facades\DataTables::of($quotations)
                 ->addIndexColumn()
+                ->addColumn('reference_no', function ($quotation) {
+                    return $quotation->quotation_reference_no ?? '-';
+                })
                 ->addColumn('member', function ($quotation) {
                     return $quotation->receiver ? $quotation->receiver->company_name : '-';
                 })
@@ -216,6 +226,67 @@ class MemberQuotationController extends Controller
         $this->authorizeAdmin();
         $quotation->load(['receiver', 'portOfLoading', 'portOfDischarge']);
         return view('dashboard.quotations.admin-show', compact('quotation'));
+    }
+
+    // Admin: create offline quotation form
+    public function adminCreate()
+    {
+        $this->authorizeAdmin();
+        
+        // Get all active approved members for both giver and receiver selection
+        $members = User::where('role', User::MEMBER)
+            ->where('status', 'approved')
+            ->where('is_active', true)
+            ->orderBy('company_name')
+            ->get();
+            
+        // Get ports for the form dropdowns
+        $ports = Port::orderBy('name')->get();
+        
+        return view('dashboard.quotations.admin-create', compact('members', 'ports'));
+    }
+
+    // Admin: store offline quotation
+    public function adminStore(Request $request)
+    {
+        $this->authorizeAdmin();
+        
+        $rules = [
+            'given_by_id'         => 'required|exists:users,id',
+            'receiver_id'         => 'required|exists:users,id|different:given_by_id',
+            'transaction_value'   => 'required|numeric|min:0',
+            'message'             => 'required|string',
+            'port_of_loading_id'  => 'nullable|exists:ports,id',
+            'port_of_discharge_id'=> 'nullable|exists:ports,id',
+            'specifications'      => 'nullable|array',
+            'specifications.*'    => 'string|in:Air,FCL,LCL,Land,Multimodal,Project Cargo',
+        ];
+        
+        $validated = $request->validate($rules, [
+            'given_by_id.required'              => 'Please select a giver member.',
+            'receiver_id.required'              => 'Please select a receiver member.',
+            'receiver_id.different'             => 'Giver and receiver cannot be the same member.',
+            'transaction_value.required'        => 'Transaction value is required.',
+            'transaction_value.numeric'         => 'Transaction value must be a number.',
+            'transaction_value.min'             => 'Transaction value must be greater than or equal to 0.',
+            'message.required'                  => 'Message is required.',
+        ]);
+        
+        // Get giver member details to populate quotation fields
+        $givenBy = User::find($validated['given_by_id']);
+        
+        // Merge member details into the validated data
+        $validated = array_merge($validated, [
+            'name'   => $givenBy->name,
+            'phone'  => $givenBy->whatsapp_phone ?? $givenBy->company_telephone,
+            'email'  => $givenBy->email,
+            'status' => MemberQuotation::STATUS_CLOSED_SUCCESSFUL,
+            'is_offline_enquiry' => 1
+        ]);
+        
+        $this->memberQuotationService->createAndNotify($validated, null);
+        
+        return redirect()->route('admin.quotations.index')->with('success', 'Offline quotation added successfully.');
     }
 
     private function authorizeAdmin(): void
@@ -278,7 +349,12 @@ class MemberQuotationController extends Controller
         $this->memberQuotationService->createAndNotify($validated, $request->file('document'));
         
         if($request->is_offline_enquiry == 1){
-            return redirect()->route('member.quotations.received')->with('success', 'Enquiry Added successfully');
+            // Check if this is a given or received quotation and redirect accordingly
+            if ($request->quotation_type === 'given') {
+                return redirect()->route('member.quotations.given')->with('success', 'Enquiry Added successfully');
+            } else {
+                return redirect()->route('member.quotations.received')->with('success', 'Enquiry Added successfully');
+            }
         }
         return redirect()->back()->with('success', 'Quotation request submitted successfully');
     }

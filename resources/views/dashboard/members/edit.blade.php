@@ -5,7 +5,44 @@
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
             <h4 class="card-title">@if(auth()->user()->role == \App\Models\User::MEMBER) Edit Profile @else Edit Member @endif</h4>
-            <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
+            <div class="d-flex gap-2 align-items-center">
+                @if(auth()->user()->role !== \App\Models\User::MEMBER)
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-{{ $member->status === 'approved' ? 'success' : ($member->status === 'cancelled' ? 'danger' : 'warning') }} dropdown-toggle"
+                            type="button" data-bs-toggle="dropdown">
+                            Status: {{ ucfirst($member->status) }}
+                        </button>
+                        <ul class="dropdown-menu">
+                            @if($member->status === 'pending')
+                            <li>
+                                <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-check-circle me-2 text-success"></i>Set as Approved
+                                    </button>
+                                </form>
+                            </li>
+                            @elseif($member->status === 'approved')
+                            <li>
+                                <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#cancelMembershipModal">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel Membership
+                                </button>
+                            </li>
+                            @elseif($member->status === 'cancelled')
+                            <li>
+                                <button type="button" class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#renewMembershipModal">
+                                    <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
+                                </button>
+                            </li>
+                            @endif
+                        </ul>
+                    </div>
+                @endif
+                <a href="{{ url()->previous() }}" class="btn btn-secondary">Back</a>
+            </div>
         </div>
         <div class="card-body">
 
@@ -16,7 +53,7 @@
             @endif
                 @csrf
                 @method('PATCH')
-                @if(auth()->user()->role == \App\Models\User::MEMBER)
+                {{-- @if(auth()->user()->role == \App\Models\User::MEMBER) --}}
                 <div class="row">
                 <div class="col-6 mb-4">
                     <div class="d-flex align-items-center">
@@ -58,7 +95,7 @@
                     </div>
                 </div>
                 </div>
-                @endif
+                {{-- @endif --}}
 
                 @if(auth()->user()->role == \App\Models\User::MEMBER)
                 <div class="alert alert-info mb-4">
@@ -66,6 +103,8 @@
                     You can update your profile picture, company logo, about company description, and password. For any other changes, please contact our support team.
                 </div>
                 @endif
+
+               
 
                 <div class="row">
                     <div class="mb-3 col-12 col-md-6">
@@ -420,6 +459,79 @@
         </div>
     </div>
 </div>
+
+<!-- Cancel Membership Modal -->
+<div class="modal fade" id="cancelMembershipModal" tabindex="-1" aria-labelledby="cancelMembershipModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-danger" id="cancelMembershipModalLabel">
+                    <i class="bi bi-exclamation-triangle me-2"></i>Cancel Membership
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('members.cancel-membership', $member) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle me-2"></i>
+                        <strong>Warning:</strong> This action will cancel the membership for <strong>{{ $member->name }}</strong>.
+                    </div>
+                    <p>Please provide a reason for cancellation:</p>
+                    <div class="mb-3">
+                        <label for="cancellation_reason" class="form-label">Cancellation Reason*</label>
+                        <textarea class="form-control" id="cancellation_reason" name="cancellation_reason" rows="4" required 
+                                  placeholder="Please provide a detailed reason for cancelling this membership..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">
+                        <i class="bi bi-x-circle me-2"></i>Cancel Membership
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Renew Membership Modal -->
+<div class="modal fade" id="renewMembershipModal" tabindex="-1" aria-labelledby="renewMembershipModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title text-success" id="renewMembershipModalLabel">
+                    <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('members.renew-membership', $member) }}" method="POST">
+                @csrf
+                <div class="modal-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-calendar-check me-2"></i>
+                        <strong>Automatic Renewal:</strong> Membership will be renewed for 1 year from today's date.
+                    </div>
+                    <div class="mb-3">
+                        <label for="renewal_reason" class="form-label">Renewal Reason*</label>
+                        <textarea class="form-control" id="renewal_reason" name="renewal_reason" rows="3" required 
+                                  placeholder="Please provide a reason for renewing this membership..."></textarea>
+                    </div>
+                    <div class="mb-3">
+                        
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">
+                        <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('scripts')

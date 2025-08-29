@@ -7,7 +7,7 @@
 
       <div class="col-12 col-md-6 mb-4 d-flex justify-content-center flex-column text-center text-md-start">
       <div>
-        <h1 class="fw-bold size text_image pt-5 pb-1 pt-lg-0">
+        <h1 class="fw-bold size text_image pt-0 pt-lg-5 pb-1 pt-lg-0">
         Pinnacle Membership
         </h1>
         <p class="bannerp fs-6">The Founder Membership is not just a tier — it’s a statement. Reserved for the earliest
@@ -26,7 +26,7 @@
   </section>
   <section class="freightmember_sec blacklight">
     <div class="container py-5 px-2">
-    <div class="text-center">
+    <div class="text-center pb-2">
       <h2 class="text-center fw-bold fs-2">Pinnacle Privileges</h2>
       <div class="underline mb-4 mx-auto">
       <span class="move delay-0"></span>
@@ -232,7 +232,7 @@
   <section class="  blackdark pb-5">
     <div class="container pt-5 px-4 px-lg-2">
     <div class="row d-flex">
-     <h3 class="fw-bold fs-2 fs-md-4 text-center pb-5">How to Earn RisePoints</h3>
+     <h3 class="fw-bold fs-2 fs-md-4 text-center pb-0  pb-lg-5">How to Earn RisePoints</h3>
       <div class="col-12 col-lg-6 d-flex flex-column h-100">
       <div class="flex-grow-1">
         <h3 class="fw-bold fs-3 mt-4 mt-lg-0 text-center">Membership Renewal</h3>
@@ -290,7 +290,7 @@
     </div>
     </div>
 
-    <div class="container pt-5 px-4 px-lg-2">
+    <div class="container pt-4 px-4 px-lg-2">
     <div class="text-center">
       <h3 class="text-center fw-bold fs-3 mb-4">Business Collaboration (As a Giver)</h3>
     </div>
@@ -338,7 +338,7 @@
     </div>
 
 
-    <div class="container pt-5 px-4 px-lg-2">
+    <div class="container pt-4 px-4 px-lg-2">
     <div class="text-center">
       <h3 class="text-center fw-bold fs-3 mb-4">Engagement & Participation Online/Conference attendance</h3>
     </div>
@@ -389,7 +389,7 @@
       </div>
     </div>
     </div>
-    <div class="container pt-5 px-4 px-lg-2">
+    <div class="container pt-4 px-4 px-lg-2">
     <div class="text-center">
       <h3 class="text-center fw-bold fs-3 mb-4">Can you exchange your points with?</h3>
     </div>

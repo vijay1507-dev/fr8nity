@@ -112,11 +112,9 @@ table td {
   flex-direction: column;
   min-height: 100vh;
   min-width: 0;
-  transition: margin-left 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all 0.35s ease-in-out;
   width: 100%;
   background: #f7f9fc;
-  will-change: margin-left;
-  transform: translateZ(0);
 }
 
 /* Sidebar Elements Style */
@@ -127,7 +125,6 @@ table td {
   display: flex;
   margin-bottom: 20px;
   padding-left: 30px;
-  transition: opacity 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .sidebar-logo a {
@@ -162,7 +159,6 @@ a.sidebar-link {
   font-family: Plus Jakarta Sans;
   align-items: center;
   gap: 11px;
-  transition: padding 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 a.sidebar-link.active {
 background: rgba(181, 131, 32, 0.5);
@@ -191,7 +187,7 @@ ul.sidebar-nav a svg {
   right: 1.5rem;
   top: 16px;
   transform: rotate(45deg);
-  transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: all .2s ease-out;
 }
 
 .avatar {
@@ -468,13 +464,11 @@ a.page-link.text-primary {
     font-size: 0;
     align-items: center;
     justify-content: center;
-    transition: padding 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   body.collapsed aside#sidebar a.sidebar-link::after {
     top: 14px;
     right: 10px;
-    transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
 }
@@ -487,7 +481,6 @@ a.page-link.text-primary {
     min-width: 200px;
     right: -210px;
     left: auto;
-    transition: right 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
   }
 
   body.collapsed aside#sidebar {
@@ -1140,44 +1133,55 @@ div .select2-container--default .select2-selection--single .select2-selection__a
 .sidebar-item{
   font-weight:700;
 }
+ /* #chartdiv {
+        width: 100%;
+        height: 500px;
+        background-color: #e9ecef;
+    }
+    .map-dis ul {
+        list-style: none;
+        padding: 0;
+        margin: 10px 0;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+    .map-dis li {
+        display: flex;
+        align-items: center;
+        font-size: 14px;
+        font-weight: 500;
+        padding: 5px 10px;
+        background: #f8f9fa;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .map-dis li::before {
+        content: '';
+        width: 12px;
+        height: 12px;
+        border-radius: 3px;
+        margin-right: 8px;
+        display: inline-block;
+    }
+    .map-dis li:nth-child(1)::before { background-color: #FF6F61; } 
+    .map-dis li:nth-child(2)::before { background-color: #6B728E; } 
+    .map-dis li:nth-child(3)::before { background-color: #FFB347; } 
+    .map-dis li:nth-child(4)::before { background-color: #4A90E2; } 
+    .map-dis li:nth-child(5)::before { background-color: #8B008B; } 
+    .map-dis li:nth-child(6)::before { background-color: #2ECC71; } 
+    .map-dis li:nth-child(7)::before { background-color: #E74C3C; } */
 
-  #chartdiv {
-            width: 100%;
-            height: 500px;
-            background-color: #e9ecef;
-        }
-        .map-dis ul {
-            list-style: none;
-            padding: 0;
-            margin: 10px 0;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        .map-dis li {
-            display: flex;
-            align-items: center;
-            font-size: 14px;
-            font-weight: 500;
-            padding: 5px 10px;
-            background: #f8f9fa;
-            border-radius: 5px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
-        }
-        .map-dis li::before {
-            content: '';
-            width: 12px;
-            height: 12px;
-            border-radius: 3px;
-            margin-right: 8px;
-            display: inline-block;
-        }
-        .map-dis li:nth-child(1)::before { background-color: #FF6F61; } 
-        .map-dis li:nth-child(2)::before { background-color: #6B728E; } 
-        .map-dis li:nth-child(3)::before { background-color: #FFB347; } 
-        .map-dis li:nth-child(4)::before { background-color: #4A90E2; } 
-        .map-dis li:nth-child(5)::before { background-color: #8B008B; } 
-        .map-dis li:nth-child(6)::before { background-color: #2ECC71; } 
-        .map-dis li:nth-child(7)::before { background-color: #E74C3C; }
-        
-    
+     .map-border {
+      border: 1px solid #dee2e6;
+      border-radius: 20px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 80vh;
+    }
+    .map-border #chartdiv {
+      flex: 1;
+      width: 100%;
+      background: #f9fafc;
+    }

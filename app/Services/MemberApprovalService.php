@@ -7,12 +7,14 @@ use App\Models\User;
 use App\Notifications\ProfileApprovalNotification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Services\MembershipNumberService;
 
 class MemberApprovalService
 {
     public function __construct(
         private readonly RewardPointService $rewardPointService,
         private readonly MembershipLogService $membershipLogService,
+        private readonly MembershipNumberService $membershipNumberService,
     ) {}
 
     public function updateStatus(User $member, string $status): void
@@ -29,9 +31,16 @@ class MemberApprovalService
     {
         $notification = new ProfileApprovalNotification();
 
+        // Generate membership number only if it doesn't exist
+        $membershipNumber = $member->membership_number;
+        if (!$membershipNumber) {
+            $membershipNumber = $this->membershipNumberService->generateForTierId((int) $member->membership_tier);
+        }
+
         $member->update([
             'status' => 'approved',
             'password' => Hash::make($notification->getPassword()),
+            'membership_number' => $membershipNumber,
             'membership_start_at' => now(),
             'membership_expires_at' => now()->addYear(),
         ]);

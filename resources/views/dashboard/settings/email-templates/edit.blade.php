@@ -1,0 +1,320 @@
+@extends('layouts.dashboard')
+
+@section('content')
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">Edit Email Template: {{ $mailTemplate->name }}</h5>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('settings.email-templates.index') }}" class="btn btn-secondary btn-sm">
+                            <i class="fas fa-arrow-left me-1"></i> Back to Templates
+                        </a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    @if($errors->any())
+                        <div class="alert alert-danger">
+                            <ul class="mb-0">
+                                @foreach($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
+                    <form action="{{ route('settings.email-templates.update', $mailTemplate) }}" method="POST" id="email-template-form">
+                        @csrf
+                        @method('PUT')
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="name" class="form-label">Template Name <span class="text-danger">*</span></label>
+                                <input type="text" 
+                                       class="form-control @error('name') is-invalid @enderror" 
+                                       id="name" 
+                                       name="name" 
+                                       value="{{ old('name', $mailTemplate->name) }}" 
+                                       placeholder="e.g., welcome-email, password-reset"
+                                       required>
+                                <div class="form-text">Use a unique, descriptive name for this template</div>
+                                @error('name')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="is_active" class="form-label">Status</label>
+                                <div class="form-check form-switch">
+                                    <input type="checkbox" 
+                                           class="form-check-input" 
+                                           id="is_active" 
+                                           name="is_active" 
+                                           value="1" 
+                                           {{ old('is_active', $mailTemplate->is_active) ? 'checked' : '' }}>
+                                    <label class="form-check-label" for="is_active">Active</label>
+                                </div>
+                                <div class="form-text">Only active templates can be used for sending emails</div>
+                            </div>
+
+                            <div class="col-12">
+                                <label for="subject" class="form-label">Email Subject <span class="text-danger">*</span></label>
+                                <input type="text" 
+                                       class="form-control @error('subject') is-invalid @enderror" 
+                                       id="subject" 
+                                       name="subject" 
+                                       value="{{ old('subject', $mailTemplate->subject) }}" 
+                                       placeholder="Enter email subject line"
+                                       required>
+                                <div class="form-text">You can use variables like @{{name}}, @{{company}} in the subject</div>
+                                @error('subject')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-12">
+                                <label for="body" class="form-label">Email Body <span class="text-danger">*</span></label>
+                                <div id="body-editor" style="height: 300px;"></div>
+                                <textarea id="body" name="body" class="d-none @error('body') is-invalid @enderror" required>{!! old('body', $mailTemplate->body) !!}</textarea>
+                                <div class="form-text">
+                                    Use HTML for formatting. Variables can be used like @{{name}}, @{{email}}, @{{company}}, etc.
+                                </div>
+                                @error('body')
+                                    <div class="invalid-feedback d-block">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="variables" class="form-label">Available Variables</label>
+                                <textarea class="form-control @error('variables') is-invalid @enderror" 
+                                          id="variables" 
+                                          name="variables" 
+                                          rows="6" 
+                                          placeholder="Enter one variable per line&#10;name&#10;email&#10;company&#10;membership_tier">{{ old('variables', $mailTemplate->variables ? implode("\n", $mailTemplate->variables) : '') }}</textarea>
+                                <div class="form-text">List variables that can be used in this template (one per line)</div>
+                                @error('variables')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+
+                            <div class="col-md-6">
+                                <label for="comment" class="form-label">Comments/Notes</label>
+                                <textarea class="form-control @error('comment') is-invalid @enderror" 
+                                          id="comment" 
+                                          name="comment" 
+                                          rows="6" 
+                                          placeholder="Add any notes or comments about this template...">{{ old('comment', $mailTemplate->comment) }}</textarea>
+                                <div class="form-text">Optional description or usage notes for this template</div>
+                                @error('comment')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-center gap-3 mt-4">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save me-1"></i> Update Template
+                            </button>
+                            <a href="{{ route('settings.email-templates.index') }}" class="btn btn-outline-secondary">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </a>
+                        </div>
+                    </form>
+
+                    <!-- Template Info -->
+                    <div class="mt-4 pt-4 border-top">
+                        <div class="row text-muted small">
+                            <div class="col-md-6">
+                                <strong>Created:</strong> {{ $mailTemplate->created_at->format('M d, Y \a\t g:i A') }}
+                            </div>
+                            <div class="col-md-6">
+                                <strong>Last Updated:</strong> {{ $mailTemplate->updated_at->format('M d, Y \a\t g:i A') }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-labelledby="previewModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="previewModalLabel">Email Preview</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Subject:</label>
+                    <div id="preview-subject" class="p-2 bg-light rounded"></div>
+                </div>
+                <div>
+                    <label class="form-label fw-bold">Body:</label>
+                    <div id="preview-body" class="p-3 border rounded email-preview" style="min-height: 300px; max-height: 400px; overflow-y: auto; background: white; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.6;"></div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+@endsection
+
+@section('scripts')
+<link href="https://cdn.quilljs.com/1.3.6/quill.snow.css" rel="stylesheet">
+<script src="https://cdn.quilljs.com/1.3.6/quill.min.js"></script>
+<style>
+.email-preview {
+    /* Override default email styles for better preview */
+}
+.email-preview a[style*="background-color"] {
+    /* Ensure buttons in preview display properly */
+    display: inline-block !important;
+    text-decoration: none !important;
+    border-radius: 5px !important;
+    font-weight: bold !important;
+}
+.email-preview ul, .email-preview ol {
+    margin: 10px 0;
+    padding-left: 20px;
+}
+.email-preview li {
+    margin: 5px 0;
+}
+.email-preview h1, .email-preview h2, .email-preview h3 {
+    margin: 20px 0 10px 0;
+    font-weight: bold;
+}
+.email-preview p {
+    margin: 10px 0;
+}
+</style>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize Quill editor
+    const quill = new Quill('#body-editor', {
+        theme: 'snow',
+        modules: {
+            toolbar: [
+                [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+                ['bold', 'italic', 'underline', 'strike'],
+                [{ 'color': [] }, { 'background': [] }],
+                [{ 'align': [] }],
+                [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                ['link', 'image'],
+                ['clean']
+            ]
+        },
+        placeholder: 'Enter your email template content here...'
+    });
+
+    // Get existing content and set it in Quill
+    const bodyTextarea = document.getElementById('body');
+    const existingContent = bodyTextarea ? bodyTextarea.value : '';
+    
+    if (existingContent && existingContent.trim() !== '') {
+        // Small delay to ensure Quill is fully initialized
+        setTimeout(() => {
+            try {
+                // Use Quill's clipboard API to properly set HTML content
+                quill.clipboard.dangerouslyPasteHTML(existingContent);
+                console.log('Email template content loaded successfully');
+            } catch (error) {
+                console.error('Error loading email template content:', error);
+                // Fallback to direct innerHTML setting
+                quill.root.innerHTML = existingContent;
+            }
+        }, 100);
+    }
+
+    // Update hidden textarea when Quill content changes
+    quill.on('text-change', function() {
+        const bodyTextarea = document.getElementById('body');
+        if (bodyTextarea) {
+            // Get clean HTML content, removing any Quill artifacts
+            let content = quill.root.innerHTML;
+            
+            // Clean up the content
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = content;
+            
+            // Remove any Quill-specific elements or empty paragraphs
+            const emptyPs = tempDiv.querySelectorAll('p:empty, br[data-quill-placeholder]');
+            emptyPs.forEach(element => element.remove());
+            
+            bodyTextarea.value = tempDiv.innerHTML;
+        }
+    });
+
+    // Add preview functionality
+    const previewBtn = document.createElement('button');
+    previewBtn.type = 'button';
+    previewBtn.className = 'btn btn-outline-info';
+    previewBtn.innerHTML = '<i class="fas fa-eye me-1"></i> Preview';
+    previewBtn.onclick = showPreview;
+    
+    // Add preview button to the form actions
+    const formActions = document.querySelector('.d-flex.justify-content-center');
+    if (formActions) {
+        formActions.insertBefore(previewBtn, formActions.firstChild);
+    }
+
+    function showPreview() {
+        const subject = document.getElementById('subject').value || 'No subject';
+        let body = '';
+        
+        // Get clean content from Quill editor
+        if (quill) {
+            // Use Quill's getHTML method for cleaner output
+            body = quill.root.innerHTML || 'No content';
+            
+            // Clean up any Quill-specific artifacts
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = body;
+            
+            // Remove any elements that might be Quill artifacts (like empty paragraphs at the end)
+            const emptyPs = tempDiv.querySelectorAll('p:empty, br[data-quill-placeholder]');
+            emptyPs.forEach(element => element.remove());
+            
+            body = tempDiv.innerHTML;
+        } else {
+            body = 'No content';
+        }
+        
+        document.getElementById('preview-subject').textContent = subject;
+        document.getElementById('preview-body').innerHTML = body;
+        
+        const modal = new bootstrap.Modal(document.getElementById('previewModal'));
+        modal.show();
+    }
+
+    // Ensure content is synchronized before form submission
+    const form = document.getElementById('email-template-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            // Sync the latest content from Quill to hidden textarea
+            const bodyTextarea = document.getElementById('body');
+            if (bodyTextarea && quill) {
+                // Get clean HTML content, removing any Quill artifacts
+                let content = quill.root.innerHTML;
+                
+                // Clean up the content
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = content;
+                
+                // Remove any Quill-specific elements or empty paragraphs
+                const emptyPs = tempDiv.querySelectorAll('p:empty, br[data-quill-placeholder]');
+                emptyPs.forEach(element => element.remove());
+                
+                bodyTextarea.value = tempDiv.innerHTML;
+            }
+        });
+    }
+});
+</script>
+@endsection

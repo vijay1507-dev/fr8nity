@@ -36,7 +36,10 @@ class DashboardController extends Controller
             return view('dashboard.member-dashboard', compact('totalPoints', 'leadershipBoard', 'currentYear'));
         }
         
-        return view('dashboard.admin-dashboard');
+        // For admin users, get admin dashboard data
+        $adminData = $this->dashboardService->getAdminDashboardData(12); // Default to 1 year
+        
+        return view('dashboard.admin-dashboard', compact('adminData'));
     }
 
     /**
@@ -89,6 +92,30 @@ class DashboardController extends Controller
         $chartData = $this->dashboardService->getMonthlyChartData($userId, $year);
         
         return response()->json($chartData);
+    }
+
+    /**
+     * Get filtered admin dashboard data for the specified period
+     */
+    public function getAdminDashboardData(Request $request)
+    {
+        // Check if user is admin
+        if (!in_array(Auth::user()->role, [User::SUPER_ADMIN, User::ADMIN])) {
+            abort(403, 'Unauthorized access');
+        }
+
+        $request->validate([
+            'period' => 'required|in:3,6,12'
+        ]);
+        
+        $period = (int) $request->period;
+        $adminData = $this->dashboardService->getAdminDashboardData($period);
+        
+        return response()->json([
+            'success' => true,
+            'data' => $adminData,
+            'period' => $period
+        ]);
     }
 
     public function profile()

@@ -4,7 +4,7 @@
 
 @section('content')
 <section class="trader_sec">
-    <div class="col-12 col-md-8 mx-auto bg-dark p-5 rounded my-5">
+    <div class="col-12 col-lg-8 mx-auto bg-dark p-5 rounded my-5 member-join">
        <div class="tittle d-flex justify-content-center align-items-center">
           <div class="pb-3">  <h1 class="mb-4 fw-semibold text-center">Looking for a Trusted <br>Freight Partner?</h1>
            <div class="col-md-10 mx-auto text-center">

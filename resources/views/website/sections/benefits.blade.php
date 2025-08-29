@@ -1,6 +1,6 @@
 <section class="benefits_sec">
     <div class="container py-5 pt-3 px-2">
-        <div class="text-center">
+        <div class="text-center pb-4">
             <h2 class="text-center fw-bold fs-2">Your Benefits</h2>
             <div class="underline mb-4 mx-auto">
                 <span class="move delay-0" ></span>

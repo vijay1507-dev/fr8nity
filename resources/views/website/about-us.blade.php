@@ -30,9 +30,9 @@
 
 <!-- About Section -->
 <section class="about_sec">
-    <div class="container py-5">
+    <div class="container py-3">
          <div class="row align-items-center justify-content-center p-3">
-            <div class="col-12 col-md-6 text-center mb-4 mb-md-0 px-md-4">
+            <div class="col-12 col-lg-6 text-center mb-4  px-0 px-lg-4">
                 <div class="gradient_rounded radies_20">
                     <div class="blacklight radies_20 p-3">
                             <img src="{{asset('images/ourStory.png')}}" alt="about the fr8nity"
@@ -41,7 +41,7 @@
                     </div>    
                 </div>    
             </div>
-            <div class="col-12 col-md-6">
+            <div class="col-12 col-lg-6">
                 <h2 class="mb-3 fw-bold">About The FR8NITY </h2>
                 <div class="underline mb-4">
                     <span class="move delay-0"></span>
@@ -69,8 +69,8 @@
 
 
 <section class="founders_sec">
-    <div class="container py-5 px-2">
-        <div class="text-center">
+    <div class="container py-4 px-2">
+        <div class="text-center pb-4">
             <h2 class="text-center fw-bold fs-2">Meet Our Founders</h2>
             <div class="underline mb-4 mx-auto">
                 <span class="move delay-0"></span>
@@ -79,11 +79,11 @@
         </div>
 
         <div class="row mx-auto align-items-stretch">
-              <div class="col-12 col-md-6 mb-3">
+              <div class="col-12 col-lg-6 mb-3">
                 <div class="gradient_rounded radies_20 m-2 h-100">
-                    <div class="p-3 h-100 radies_20 blacklight">
+                    <div class="p-2 p-md-3 h-100 radies_20 blacklight">
                         <img src="{{ asset('images/dawn.webp') }}" alt="Dawn Tan" class="img-fluid mb-3" />
-                        <div class="px-4 d-flex flex-column">
+                        <div class=" d-flex flex-column">
                             <h3 class="h4 textcolor">
                                 Dawn – The Trailblazer
                             </h3>
@@ -93,12 +93,12 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="col-12 col-md-6 mb-3">
+
+            <div class="col-12 col-lg-6 mb-3">
                 <div class="gradient_rounded radies_20 m-2 h-100">
-                    <div class="p-3 h-100 radies_20 blacklight">
+                    <div class="p-2 p-md-3 h-100 radies_20 blacklight">
                         <img src="{{ asset('images/creryl.webp') }}" alt="Cheryl Tan" class="img-fluid mb-3" />
-                        <div class="px-4 d-flex flex-column">
+                        <div class=" d-flex flex-column">
                             <h3 class="h4 textcolor">
                                  Cheryl – The Firestarter 
                             </h3>
@@ -117,9 +117,9 @@
 
 
 <section class="about_sec">
-    <div class="container py-5">
+    <div class="container py-4">
          <div class="row align-items-center justify-content-center p-3">
-             <div class="col-12 col-md-6">
+             <div class="col-12 col-lg-6">
                 <h2 class="mb-3 fw-bold">A New Kind of Network</h2>
                 <div class="underline mb-4">
                     <span class="move delay-0"></span>
@@ -144,7 +144,7 @@
                    Fr8nity is that bridge. A place where all forwarders — seasoned or new — thrive together.
                 </p>
             </div>
-            <div class="col-12 col-md-6 text-center mb-4 mb-md-0 px-md-4">
+            <div class="col-12 col-lg-6 text-center mb-4 px-0 px-lg-4">
                 <div class="gradient_rounded radies_20">
                     <div class="blacklight radies_20 p-3">
                             <img src="{{asset('images/ourStory.png')}}" alt="A new kind of network"
