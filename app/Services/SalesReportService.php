@@ -98,7 +98,7 @@ class SalesReportService
         // CSV Headers
         $headers = [
             'Date',
-            'Quotation ID',
+            'Reference Quotation No',
             'Role',
             'Giver Name',
             'Giver Company',
@@ -208,21 +208,11 @@ class SalesReportService
     public function generateAllMembersCsvData(Collection $quotations, ?string $dateFrom = null, ?string $dateTo = null): string
     {
         $csvData = "";
-        if ($dateFrom || $dateTo) {
-            $csvData .= "Date Range: ";
-            if ($dateFrom && $dateTo) {
-                $csvData .= "From {$dateFrom} to {$dateTo}\n";
-            } elseif ($dateFrom) {
-                $csvData .= "From {$dateFrom}\n";
-            } elseif ($dateTo) {
-                $csvData .= "Until {$dateTo}\n";
-            }
-        }
 
         // CSV Headers
         $headers = [
             'Date',
-            'Quotation ID',
+            'Reference Quotation No',
             'Giver Name',
             'Giver Company',
             'Receiver Name',
