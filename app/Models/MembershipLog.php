@@ -125,6 +125,21 @@ class MembershipLog extends Model
      */
     public function getStatusLabelAttribute(): string
     {
+        // Check if this is a status change to pending based on metadata
+        if (isset($this->metadata['status_changed_to_pending']) && $this->metadata['status_changed_to_pending'] === true) {
+            return 'Status Change';
+        }
+        
+        // Check if this is a status change to suspended based on metadata
+        if (isset($this->metadata['status_changed_to_suspended']) && $this->metadata['status_changed_to_suspended'] === true) {
+            return 'Account Suspended';
+        }
+        
+        // Check if this is a reactivation from suspended based on metadata
+        if (isset($this->metadata['reactivated_from_suspended']) && $this->metadata['reactivated_from_suspended'] === true) {
+            return 'Account Reactivated';
+        }
+        
         return match($this->status) {
             self::STATUS_UPGRADE => 'Upgrade',
             self::STATUS_DOWNGRADE => 'Downgrade',
@@ -141,6 +156,21 @@ class MembershipLog extends Model
      */
     public function getStatusBadgeClassAttribute(): string
     {
+        // Check if this is a status change to pending based on metadata
+        if (isset($this->metadata['status_changed_to_pending']) && $this->metadata['status_changed_to_pending'] === true) {
+            return 'warning';
+        }
+        
+        // Check if this is a status change to suspended based on metadata
+        if (isset($this->metadata['status_changed_to_suspended']) && $this->metadata['status_changed_to_suspended'] === true) {
+            return 'dark';
+        }
+        
+        // Check if this is a reactivation from suspended based on metadata
+        if (isset($this->metadata['reactivated_from_suspended']) && $this->metadata['reactivated_from_suspended'] === true) {
+            return 'success';
+        }
+        
         return match($this->status) {
             self::STATUS_UPGRADE => 'success',
             self::STATUS_DOWNGRADE => 'warning',

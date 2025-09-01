@@ -129,9 +129,12 @@ class AuthController extends Controller
             // Check approval and active status
             if ($user->status !== 'approved' || !$user->is_active) {
                 Auth::logout();
-                $message = ($user->status !== 'approved')
-                    ? 'Your application is pending approval.'
-                    : 'Your account is blocked. Please contact support.';
+                $message = match($user->status) {
+                    'pending' => 'Your application is pending approval.',
+                    'suspended' => 'Your account is suspended. Please contact support.',
+                    'cancelled' => 'Your membership has been cancelled. Please contact support.',
+                    default => !$user->is_active ? 'Your account is blocked. Please contact support.' : 'Your application is pending approval.'
+                };
                 return back()->withErrors([
                     'email' => $message,
                 ]);

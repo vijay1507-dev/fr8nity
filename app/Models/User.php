@@ -71,6 +71,7 @@ class User extends Authenticatable
     const STATUS_PENDING = 'pending';    // Profile pending approval, cannot login
     const STATUS_APPROVED = 'approved';  // Profile approved, can login (if is_active = true)
     const STATUS_CANCELLED = 'cancelled'; // Membership cancelled, cannot access website
+    const STATUS_SUSPENDED = 'suspended'; // Account suspended, cannot login
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -122,6 +123,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Scope: only suspended members
+     */
+    public function scopeSuspendedMembers(Builder $query): Builder
+    {
+        return $query->where('role', self::MEMBER)
+            ->where('status', self::STATUS_SUSPENDED);
+    }
+
+    /**
      * Scope: only approved members
      */
     public function scopeApprovedMembers(Builder $query): Builder
@@ -160,9 +170,9 @@ class User extends Authenticatable
      */
     public function scopeFilterForDirectory(Builder $query, array $filters): Builder
     {
-        // Base filter: only approved and active members
+        // Base filter: only approved and active members (exclude suspended)
         $query->where('role', self::MEMBER)
-            ->where('status', self::STATUS_APPROVED)  // Profile approved and not cancelled
+            ->where('status', self::STATUS_APPROVED)  // Profile approved and not cancelled or suspended
             ->where('is_active', true);                // Active access to website
 
         $query->when(!empty($filters['company_name']), function (Builder $q) use ($filters) {
@@ -367,6 +377,14 @@ class User extends Authenticatable
     public function isCancelled()
     {
         return $this->status === self::STATUS_CANCELLED;
+    }
+
+    /**
+     * Check if membership is suspended
+     */
+    public function isSuspended()
+    {
+        return $this->status === self::STATUS_SUSPENDED;
     }
 
     /**

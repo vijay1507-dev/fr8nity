@@ -39,7 +39,7 @@
                             <div class="col-5 d-flex gap-2 justify-content-end">
                                 <div class="dropdown">
                                     <button
-                                        class="btn btn-{{ $member->status === 'approved' ? 'success' : ($member->status === 'cancelled' ? 'danger' : 'warning') }} dropdown-toggle"
+                                        class="btn btn-{{ $member->status === 'approved' ? 'success' : ($member->status === 'cancelled' ? 'danger' : ($member->status === 'suspended' ? 'dark' : 'warning')) }} dropdown-toggle"
                                         type="button" data-bs-toggle="dropdown">
                                         Status: {{ ucfirst($member->status) }}
                                     </button>
@@ -57,6 +57,26 @@
                                         </li>
                                         @elseif($member->status === 'approved')
                                         <li>
+                                            <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="pending">
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="bi bi-clock me-2 text-warning"></i>Set as Pending
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li>
+                                            <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="suspended">
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="bi bi-pause-circle me-2 text-dark"></i>Set as Suspended
+                                                </button>
+                                            </form>
+                                        </li>
+                                        <li>
                                             <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#cancelMembershipModal">
                                                 <i class="bi bi-x-circle me-2"></i>Cancel Membership
                                             </button>
@@ -66,6 +86,17 @@
                                             <button type="button" class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#renewMembershipModal">
                                                 <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
                                             </button>
+                                        </li>
+                                        @elseif($member->status === 'suspended')
+                                        <li>
+                                            <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                                @csrf
+                                                @method('PATCH')
+                                                <input type="hidden" name="status" value="approved">
+                                                <button type="submit" class="dropdown-item">
+                                                    <i class="bi bi-check-circle me-2 text-success"></i>Reactivate Account
+                                                </button>
+                                            </form>
                                         </li>
                                         @endif
                                     </ul>

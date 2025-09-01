@@ -181,7 +181,7 @@ class MemberController extends Controller
         }
 
         $request->validate([
-            'status' => ['required', 'in:pending,approved'],
+            'status' => ['required', 'in:pending,approved,suspended'],
         ]);
 
         $this->memberApprovalService->updateStatus($member, $request->status);
