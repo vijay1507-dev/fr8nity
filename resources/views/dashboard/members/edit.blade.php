@@ -67,7 +67,7 @@
                         <div>
                             <label class="form-label" for="profile_photo">Profile Photo</label>
                             <input type="file" id="profile_photo" name="profile_photo" class="form-control" accept="image/*">
-                            <div class="form-text">Maximum file size: 2MB. Supported formats: JPG, PNG, GIF</div>
+                            <div class="form-text">Maximum file size: 10MB. Supported formats: JPG, PNG, GIF</div>
                             @error('profile_photo')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -87,7 +87,7 @@
                         <div>
                             <label class="form-label" for="company_logo">Company Logo</label>
                             <input type="file" id="company_logo" name="company_logo" class="form-control" accept="image/*">
-                            <div class="form-text">Maximum file size: 2MB. Supported formats: JPG, PNG, GIF</div>
+                            <div class="form-text">Maximum file size: 10MB. Supported formats: JPG, PNG, GIF</div>
                             @error('company_logo')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror

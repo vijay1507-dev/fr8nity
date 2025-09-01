@@ -144,20 +144,32 @@ class MembershipLogService
         $previousTier = $previousData['membership_tier'] ?? null;
         $newTier = $newData['membership_tier'] ?? null;
 
+        // If tier changed, it's a tier change
         if ($previousTier != $newTier) {
             return MembershipLog::ACTION_CHANGE_TIER;
         }
 
+        // Check if only dates changed (and tier remained the same)
         $previousExpiry = $previousData['membership_expires_at'] ?? null;
         $newExpiry = $newData['membership_expires_at'] ?? null;
+        $previousStart = $previousData['membership_start_at'] ?? null;
+        $newStart = $newData['membership_start_at'] ?? null;
 
-        if ($previousExpiry && $newExpiry && $previousExpiry != $newExpiry) {
-            // If expiry date is extended, it's likely a renewal
-            if ($newExpiry > $previousExpiry) {
+        // Convert to strings for comparison if they are Carbon instances
+        $previousExpiryStr = $previousExpiry instanceof \Carbon\Carbon ? $previousExpiry->toDateTimeString() : $previousExpiry;
+        $newExpiryStr = $newExpiry instanceof \Carbon\Carbon ? $newExpiry->toDateTimeString() : $newExpiry;
+        $previousStartStr = $previousStart instanceof \Carbon\Carbon ? $previousStart->toDateTimeString() : $previousStart;
+        $newStartStr = $newStart instanceof \Carbon\Carbon ? $newStart->toDateTimeString() : $newStart;
+
+        // Only consider it a renewal if both start and expiry dates are extended
+        // and the membership tier hasn't changed
+        if ($previousExpiryStr && $newExpiryStr && $previousStartStr && $newStartStr) {
+            if ($newExpiryStr > $previousExpiryStr && $newStartStr >= $previousStartStr) {
                 return MembershipLog::ACTION_RENEWAL;
             }
         }
 
+        // If we reach here, it's just a regular update (no meaningful membership changes)
         return MembershipLog::ACTION_UPDATE;
     }
 

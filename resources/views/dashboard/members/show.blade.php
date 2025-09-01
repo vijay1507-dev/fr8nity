@@ -325,6 +325,111 @@
                            
                         </div>
             </div>
+            
+            <!-- Member Logs Section -->
+            <div class="col-12 mt-4">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Member Activity Logs</h5>
+                        <small class="text-muted">Track all membership changes and administrative actions</small>
+                    </div>
+                    <div class="card-body">
+                        @if($membershipLogs->count() > 0)
+                            <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                                <table class="table table-striped table-sm">
+                                    <thead class="table-light sticky-top">
+                                        <tr>
+                                            <th width="15%">Action</th>
+                                            <th width="10%">Status</th>
+                                            <th width="15%">Tier Change</th>
+                                            <th width="15%">Membership No.</th>
+                                            <th width="12%">Annual Fee</th>
+                                            <th width="13%">Valid Until</th>
+                                            <th width="10%">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($membershipLogs as $log)
+                                            <tr>
+                                                <td>
+                                                    <div class="d-flex align-items-center">
+                                                        <i class="bi bi-{{ 
+                                                            $log->action === 'approve' ? 'check-circle-fill text-success' : (
+                                                            $log->action === 'update' ? 'pencil-fill text-primary' : (
+                                                            $log->action === 'change_tier' ? 'arrow-up-circle-fill text-info' : (
+                                                            $log->action === 'renewal' ? 'arrow-clockwise text-info' : (
+                                                            $log->action === 'cancelled' ? 'x-circle-fill text-danger' : (
+                                                            $log->action === 'renewed' ? 'arrow-clockwise text-success' : 'info-circle-fill text-secondary'
+                                                            )))))
+                                                        }} me-2"></i>
+                                                        <span class="fw-medium">{{ $log->action_label }}</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <span class="badge bg-light text-dark">{{ $log->status_label }}</span>
+                                                </td>
+                                                <td>
+                                                    @if($log->previous_tier_name && $log->new_tier_name && $log->previous_tier_name !== $log->new_tier_name)
+                                                        <div class="d-flex align-items-center flex-wrap">
+                                                            <span class="badge bg-light text-dark me-1">{{ $log->previous_tier_name }}</span>
+                                                            <i class="bi bi-arrow-right me-1"></i>
+                                                            <span class="badge bg-light text-dark">{{ $log->new_tier_name }}</span>
+                                                        </div>
+                                                    @elseif($log->new_tier_name)
+                                                        <span class="badge bg-light text-dark ">{{ $log->new_tier_name }}</span>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($log->new_membership_number && $log->new_membership_number !== 'N/A')
+                                                        <span class="small">{{ $log->new_membership_number }}</span>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($log->formatted_new_annual_fee)
+                                                        <strong class="small">{{ $log->formatted_new_annual_fee }}</strong>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    @if($log->new_expiry_date)
+                                                        <span class="small">{{ $log->new_expiry_date->format('d M Y') }}</span>
+                                                    @else
+                                                        <span class="text-muted">-</span>
+                                                    @endif
+                                                </td>
+                                                <td>
+                                                    <span class="small text-muted">{{ $log->created_at->format('d M Y H:i') }}</span>
+                                                </td>
+                                            </tr>
+                                            @if($log->reason)
+                                                <tr class="table-active">
+                                                    <td colspan="8">
+                                                        <small class="text-muted">
+                                                            <i class="bi bi-chat-quote me-1"></i>
+                                                            <strong>Reason:</strong> {{ $log->reason }}
+                                                        </small>
+                                                    </td>
+                                                </tr>
+                                            @endif
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-center py-5">
+                                <i class="bi bi-clock-history text-muted" style="font-size: 3rem;"></i>
+                                <h5 class="text-muted mt-3">No Activity Logs</h5>
+                                <p class="text-muted">No membership changes or administrative actions have been recorded for this member yet.</p>
+                            </div>
+                        @endif
+                    </div>
+                </div>
+            </div>
         </div>
         <!-- Back Button -->
         <div class="position-fixed bottom-0 end-0 p-4">

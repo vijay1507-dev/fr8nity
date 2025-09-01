@@ -148,7 +148,7 @@ class DashboardController extends Controller
         $rules = [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users,email,' . $user->id],
-            'profile_photo' => ['nullable', 'image', 'max:2048'], // Max 2MB
+            'profile_photo' => ['nullable', 'image', 'max:10240'], // Max 10MB
         ];
 
         // Add password validation if password is being updated

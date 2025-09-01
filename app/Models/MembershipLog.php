@@ -31,8 +31,6 @@ class MembershipLog extends Model
         'metadata' => 'array',
         'previous_expiry_date' => 'datetime',
         'new_expiry_date' => 'datetime',
-        'previous_annual_fee' => 'decimal:2',
-        'new_annual_fee' => 'decimal:2',
     ];
 
     // Actions constants
@@ -180,5 +178,91 @@ class MembershipLog extends Model
             self::ACTION_RENEWED => 'Renewed',
             default => ucfirst($this->action)
         };
+    }
+
+    /**
+     * Parse annual fee from currency string to decimal
+     * Converts currency strings like "$1,900" to decimal values
+     * Returns null for non-numeric strings like "N/A"
+     */
+    public function parseAnnualFee($fee): ?float
+    {
+        if (is_null($fee) || $fee === 'N/A' || $fee === '') {
+            return null;
+        }
+        
+        // Remove currency symbols and formatting
+        $cleaned = preg_replace('/[^0-9.,]/', '', $fee);
+        $cleaned = str_replace(',', '', $cleaned);
+        
+        if (is_numeric($cleaned)) {
+            return (float) $cleaned;
+        }
+        
+        return null;
+    }
+
+    /**
+     * Get formatted previous annual fee
+     */
+    public function getFormattedPreviousAnnualFeeAttribute(): ?string
+    {
+        $fee = $this->parseAnnualFee($this->previous_annual_fee);
+        if ($fee === null) {
+            return null;
+        }
+        
+        $currency = $this->previous_annual_fee_currency ?? 'USD';
+        return $currency . ' ' . number_format($fee, 2);
+    }
+
+    /**
+     * Get formatted new annual fee
+     */
+    public function getFormattedNewAnnualFeeAttribute(): ?string
+    {
+        $fee = $this->parseAnnualFee($this->new_annual_fee);
+        if ($fee === null) {
+            return null;
+        }
+        
+        $currency = $this->new_annual_fee_currency ?? 'USD';
+        return $currency . ' ' . number_format($fee, 2);
+    }
+
+    /**
+     * Accessor for previous_annual_fee to handle non-numeric values
+     */
+    public function getPreviousAnnualFeeAttribute($value)
+    {
+        if (is_null($value) || $value === 'N/A' || $value === '') {
+            return $value;
+        }
+        
+        // If it's already numeric, return as is
+        if (is_numeric($value)) {
+            return $value;
+        }
+        
+        // If it's a currency string, keep it as string to avoid casting errors
+        return $value;
+    }
+
+    /**
+     * Accessor for new_annual_fee to handle non-numeric values
+     */
+    public function getNewAnnualFeeAttribute($value)
+    {
+        if (is_null($value) || $value === 'N/A' || $value === '') {
+            return $value;
+        }
+        
+        // If it's already numeric, return as is
+        if (is_numeric($value)) {
+            return $value;
+        }
+        
+        // If it's a currency string, keep it as string to avoid casting errors
+        return $value;
     }
 }

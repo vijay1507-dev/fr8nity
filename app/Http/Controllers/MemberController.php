@@ -94,7 +94,14 @@ class MemberController extends Controller
         $membershipName = $member->membershipTier->name;
         $membershipTiers = MembershipTier::all();
         $totalPoints = $member->rewardPoints()->sum('points');
-        return view('dashboard.members.show', compact('member', 'membershipTiers','membershipName','totalPoints'));
+        
+        // Fetch membership logs for this member
+        $membershipLogs = \App\Models\MembershipLog::where('user_id', $member->id)
+            ->with(['changedBy', 'membershipTier'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('dashboard.members.show', compact('member', 'membershipTiers','membershipName','totalPoints', 'membershipLogs'));
     }
 
     /**
@@ -191,7 +198,17 @@ class MemberController extends Controller
         }
         
         $membershipTiers = MembershipTier::all();
-        return view('dashboard.members.edit', compact('member', 'membershipTiers'));
+        
+        // Fetch membership logs for this member (only for admin users)
+        $membershipLogs = collect();
+        if (Auth::user()->role !== User::MEMBER) {
+            $membershipLogs = \App\Models\MembershipLog::where('user_id', $member->id)
+                ->with(['changedBy', 'membershipTier'])
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+        
+        return view('dashboard.members.edit', compact('member', 'membershipTiers', 'membershipLogs'));
     }
 
     /**
@@ -206,9 +223,9 @@ class MemberController extends Controller
         // Different validation rules based on user role
         if (Auth::user()->role == User::MEMBER) {
             $rules = [
-                'company_logo' => ['nullable', 'image', 'max:2048'],
+                'company_logo' => ['nullable', 'image', 'max:10240'],
                 'company_description' => ['nullable', 'string', 'max:2000'],
-                'profile_photo' => ['nullable', 'image', 'max:2048'],
+                'profile_photo' => ['nullable', 'image', 'max:10240'],
             ];
 
             // Add password validation rules if password is being updated
@@ -257,7 +274,7 @@ class MemberController extends Controller
                 'designation' => ['required', 'string', 'max:255'],
                 'whatsapp_phone' => ['required'],
                 'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry($member->id)],
-                'company_logo' => ['nullable', 'image', 'max:2048'],
+                'company_logo' => ['nullable', 'image', 'max:10240'],
                 'company_description' => ['nullable', 'string', 'max:2000'],
                 'company_telephone' => ['required'],
                 'company_address' => ['required', 'string'],
@@ -272,7 +289,7 @@ class MemberController extends Controller
                 'is_network_member' => ['required', 'in:yes,no'],
                 'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
                 'membership_tier' => ['required'],
-                'profile_photo' => ['nullable', 'image', 'max:2048'],
+                'profile_photo' => ['nullable', 'image', 'max:10240'],
                 'certificate_document' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             ];
 
@@ -297,6 +314,9 @@ class MemberController extends Controller
             
             // Update membership number based on tier change
             $membershipNumber = $member->membership_number;
+            $membershipStartAt = $member->membership_start_at;
+            $membershipExpiresAt = $member->membership_expires_at;
+            
             if ($request->membership_tier != $member->membership_tier) {
                 // Tier changed - update prefix but keep sequence number
                 if ($membershipNumber) {
@@ -305,13 +325,14 @@ class MemberController extends Controller
                     // No existing number - generate new one
                     $membershipNumber = $this->membershipNumberService->generateForTierId((int) $request->membership_tier);
                 }
-            }
-            
-            // Determine membership expiry date based on tier
-            $tier = MembershipTier::find($request->membership_tier);
-            $expiryDate = Carbon::now()->addYear(); 
-            if ($tier && $tier->name === 'Pinnacle') {
-                $expiryDate = Carbon::now()->addYears(3);
+                
+                // Update membership dates only when tier changes
+                $tier = MembershipTier::find($request->membership_tier);
+                $membershipStartAt = Carbon::now();
+                $membershipExpiresAt = Carbon::now()->addYear(); 
+                if ($tier && $tier->name === 'Pinnacle') {
+                    $membershipExpiresAt = Carbon::now()->addYears(3);
+                }
             }
 
             $updateData = [
@@ -335,11 +356,14 @@ class MemberController extends Controller
                 'network_name' => $request->network_name,
                 'membership_number' => $membershipNumber,
                 'membership_tier' => $request->membership_tier,
-                'membership_start_at' => now(),
-                'membership_expires_at' => $expiryDate,
-                'certificate_document' => $certificatePath,
-                'certificate_uploaded_at' => now(),
+                'membership_start_at' => $membershipStartAt,
+                'membership_expires_at' => $membershipExpiresAt,
             ];
+            
+            if ($certificatePath) {
+                $updateData['certificate_document'] = $certificatePath;
+                $updateData['certificate_uploaded_at'] = now();
+            }
 
             if (isset($path)) {
                 $updateData['profile_photo'] = $path;
@@ -360,14 +384,18 @@ class MemberController extends Controller
             $newMemberData = [
                 'membership_tier' => $request->membership_tier,
                 'membership_number' => $membershipNumber ?? $member->membership_number,
-                'membership_expires_at' => $member->membership_expires_at,
-                'membership_start_at' => $member->membership_start_at,
+                'membership_expires_at' => $membershipExpiresAt ?? $member->membership_expires_at,
+                'membership_start_at' => $membershipStartAt ?? $member->membership_start_at,
             ];
 
             // Check if membership-related fields changed
             $hasChanges = false;
             foreach ($oldMemberData as $key => $oldValue) {
-                if ($oldValue != $newMemberData[$key]) {
+                // Convert dates to strings for comparison to avoid object comparison issues
+                $oldVal = $oldValue instanceof \Carbon\Carbon ? $oldValue->toDateTimeString() : $oldValue;
+                $newVal = $newMemberData[$key] instanceof \Carbon\Carbon ? $newMemberData[$key]->toDateTimeString() : $newMemberData[$key];
+                
+                if ($oldVal != $newVal) {
                     $hasChanges = true;
                     break;
                 }
