@@ -260,6 +260,7 @@ class DashboardService
             'membership_fees' => $this->getMembershipFeesByTier($startDate),
             'average_revenue' => $this->getAverageRevenuePerMonth(),
             'country_members' => $this->getCountryWiseMemberCounts(),
+            'referral_leaders' => $this->getReferralLeaders($startDate),
         ];
     }
 
@@ -415,5 +416,42 @@ class DashboardService
     private function getAverageRevenuePerMonth(): float
     {
         return 0;
+    }
+
+    /**
+     * Get referral leaders data for the admin dashboard
+     */
+    private function getReferralLeaders(Carbon $startDate): array
+    {
+        $referralLeaders = User::select([
+                'users.id',
+                'users.name', 
+                'users.company_name',
+                'users.company_logo'
+            ])
+            ->selectRaw('COUNT(referrals.id) as referral_count')
+            ->leftJoin('referrals', 'users.id', '=', 'referrals.referrer_id')
+            ->where('users.role', User::MEMBER)
+            ->where('users.status', 'approved')
+            ->where('users.deleted_at', null)
+            ->where(function($query) use ($startDate) {
+                $query->where('referrals.created_at', '>=', $startDate)
+                      ->orWhereNull('referrals.created_at');
+            })
+            ->groupBy('users.id', 'users.name', 'users.company_name', 'users.company_logo')
+            ->having('referral_count', '>', 0)
+            ->orderBy('referral_count', 'desc')
+            ->limit(10)
+            ->get();
+
+        return $referralLeaders->map(function ($leader) {
+            return [
+                'id' => $leader->id,
+                'name' => $leader->name,
+                'company_name' => $leader->company_name,
+                'company_logo' => $leader->company_logo ? asset('storage/' . $leader->company_logo) : asset('images/default-company-logo.png'),
+                'referral_count' => $leader->referral_count,
+            ];
+        })->toArray();
     }
 }

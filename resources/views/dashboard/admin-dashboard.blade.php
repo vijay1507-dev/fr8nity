@@ -168,6 +168,40 @@
                         </div>
                     </div>
                 </div>
+                <!-- Most Referred Leader Section -->
+                <div class="col-lg-6 d-flex mt-4">
+                        <div class="chart-card w-100">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h1 class="chart-title">Most Referred Leaders</h1>
+                                </div>
+                            </div>
+
+                            <!-- Referral Leaders Wrapper -->
+                            <div class="leaderboard-wrapper p-3" style="max-height: 400px; overflow-y: auto;">
+                                @if(count($adminData['referral_leaders'] ?? []) > 0)
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach($adminData['referral_leaders'] as $index => $leader)
+                                        <li class="d-flex align-items-center mb-3 p-2 rounded leaderboard-item">
+                                            <img src="{{ $leader['company_logo'] }}" class="rounded-circle me-3" width="50" height="50" alt="{{ $leader['company_name'] }}">
+                                            <div class="flex-grow-1">
+                                                <div class="text-muted small">#{{ $index + 1 }} Referrer</div>
+                                                <span class="fw-semibold d-block">{{ $leader['company_name'] }}</span>
+                                                <div class="text-muted small">{{ $leader['referral_count'] }} referrals</div>
+                                            </div>
+                                            <span class="badge bg-warning text-dark">Top Referrer</span>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <div class="text-center text-muted py-4">
+                                        <p>No referral data available yet.</p>
+                                        <p class="small">Members will appear here once they start referring others!</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
             </div>
         </div>
         </div>
