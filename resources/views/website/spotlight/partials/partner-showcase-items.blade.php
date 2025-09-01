@@ -17,7 +17,7 @@
                             <img src="{{ asset('images/Mask group (3).png') }}" alt="{{ $item->title }}"
                                 class="img-fluid mb-3" style="height: 180px; object-fit: cover; width: 100%;" />
                         @endif
-                        <div class="card-content">
+                        <div class="card-content w-100">
                             <div class="card-title">{{ $item->title }}</div>
                             <div class="card-desc">{{ Str::limit($item->description, 120) }}</div>
                         </div>

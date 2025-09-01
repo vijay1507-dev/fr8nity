@@ -16,7 +16,7 @@ class PartnerShowcaseController extends Controller
     {
         if ($request->ajax()) {
             $page = $request->get('page', 1);
-            $perPage = 8; // 8 items per page (2 rows of 4)
+            $perPage = 8; 
             
             $partnerShowcaseItems = Spotlight::active()
                 ->partnerShowcase()
