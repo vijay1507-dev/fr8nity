@@ -14,6 +14,7 @@ use App\Services\MemberApprovalService;
 use App\Services\MembershipNumberService;
 use App\Services\MembershipLogService;
 use App\Rules\UniqueCompanyInCountry;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
 class MemberController extends Controller
@@ -306,6 +307,13 @@ class MemberController extends Controller
                 }
             }
             
+            // Determine membership expiry date based on tier
+            $tier = MembershipTier::find($request->membership_tier);
+            $expiryDate = Carbon::now()->addYear(); 
+            if ($tier && $tier->name === 'Pinnacle') {
+                $expiryDate = Carbon::now()->addYears(3);
+            }
+
             $updateData = [
                 'name' => $request->name,
                 'email' => $request->email,
@@ -328,7 +336,7 @@ class MemberController extends Controller
                 'membership_number' => $membershipNumber,
                 'membership_tier' => $request->membership_tier,
                 'membership_start_at' => now(),
-                'membership_expires_at' => now()->addYear(),
+                'membership_expires_at' => $expiryDate,
                 'certificate_document' => $certificatePath,
                 'certificate_uploaded_at' => now(),
             ];
@@ -463,9 +471,14 @@ class MemberController extends Controller
             'renewal_reason' => 'required|string|max:1000',
         ]);
 
-        // Calculate expiry date automatically (1 year from renewal date)
-        $renewalDate = now();
-        $expiryDate = $renewalDate->copy()->addYear();
+        // Calculate expiry date automatically based on tier
+        $renewalDate = Carbon::now();
+        $tier = $member->membershipTier;
+        $expiryDate = $renewalDate->copy()->addYear(); 
+
+        if ($tier && $tier->name === 'Pinnacle') {
+            $expiryDate = $renewalDate->copy()->addYears(3);
+        }
         
         // Update member status to approved and reactivate access
         $member->update([

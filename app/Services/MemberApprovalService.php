@@ -37,12 +37,19 @@ class MemberApprovalService
             $membershipNumber = $this->membershipNumberService->generateForTierId((int) $member->membership_tier);
         }
 
+        // Determine membership expiry date based on tier
+        $tier = $member->membershipTier;
+        $expiryDate = now()->addYear(); 
+        if ($tier && $tier->name === 'Pinnacle') {
+            $expiryDate = now()->addYears(3);
+        }
+
         $member->update([
             'status' => 'approved',
             'password' => Hash::make($notification->getPassword()),
             'membership_number' => $membershipNumber,
             'membership_start_at' => now(),
-            'membership_expires_at' => now()->addYear(),
+            'membership_expires_at' => $expiryDate,
         ]);
 
         // Log the initial approval
@@ -73,5 +80,3 @@ class MemberApprovalService
         );
     }
 }
-
-
