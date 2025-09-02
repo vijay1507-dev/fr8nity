@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use App\Models\MemberQuotation;
+use App\Models\MembershipTierReward;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -26,8 +27,8 @@ class BusinessCollaborationPointsService
                 return false;
             }
 
-            // Calculate points based on transaction value and tier
-            $points = $this->calculatePoints($quotation->transaction_value, $giver->membershipTier->name);
+            // Calculate points based on transaction value and tier using database configuration
+            $points = $this->calculatePoints($quotation->transaction_value, $giver->membershipTier->id);
             
             if ($points <= 0) {
                 Log::info('No points to allocate for transaction value', [
@@ -68,83 +69,34 @@ class BusinessCollaborationPointsService
     }
 
     /**
-     * Calculate points based on transaction value and membership tier
+     * Calculate points based on transaction value and membership tier using database configuration
      */
-    private function calculatePoints(float $transactionValue, string $tierName): float
+    private function calculatePoints(float $transactionValue, int $membershipTierId): float
     {
-        // Points matrix with base points and tier-specific multipliers
-        $pointsMatrix = [
-            // >USD50 & <=USD1000
-            [
-                'min' => 50,
-                'max' => 1000,
-                'base_points' => 500,
-                'multipliers' => [
-                    'Explorer' => 1,
-                    'Elevate' => 1.5,
-                    'Summit' => 2,
-                    'Pinnacle' => 2
-                ]
-            ],
-            // >USD1000 & <=USD5000
-            [
-                'min' => 1000,
-                'max' => 5000,
-                'base_points' => 700,
-                'multipliers' => [
-                    'Explorer' => 1,
-                    'Elevate' => 1.5,
-                    'Summit' => 2,
-                    'Pinnacle' => 2
-                ]
-            ],
-            // >USD5000 & <=USD25000
-            [
-                'min' => 5000,
-                'max' => 25000,
-                'base_points' => 1000,
-                'multipliers' => [
-                    'Explorer' => 1,
-                    'Elevate' => 1.5,
-                    'Summit' => 2,
-                    'Pinnacle' => 2
-                ]
-            ],
-            // >USD25000 & <=USD100K
-            [
-                'min' => 25000,
-                'max' => 100000,
-                'base_points' => 1500,
-                'multipliers' => [
-                    'Explorer' => 1.5,
-                    'Elevate' => 2,
-                    'Summit' => 2.5,
-                    'Pinnacle' => 2.5
-                ]
-            ],
-            // Above USD100K
-            [
-                'min' => 100000,
-                'max' => null,
-                'base_points' => 2000,
-                'multipliers' => [
-                    'Explorer' => 2,
-                    'Elevate' => 2.5,
-                    'Summit' => 3,
-                    'Pinnacle' => 3
-                ]
-            ]
-        ];
+        // Get transaction value ranges from model
+        $ranges = MembershipTierReward::getBusinessCollaborationRanges();
 
-        // Find the appropriate range and calculate points
-        foreach ($pointsMatrix as $range) {
+        // Find the appropriate range for the transaction value
+        foreach ($ranges as $range) {
             if ($transactionValue > $range['min'] && 
                 ($range['max'] === null || $transactionValue <= $range['max'])) {
                 
-                $basePoints = $range['base_points'];
-                $multiplier = $range['multipliers'][$tierName] ?? 1;
+                // Get points from database
+                $reward = MembershipTierReward::where('membership_tier_id', $membershipTierId)
+                    ->where('activity_type', $range['activity_type'])
+                    ->first();
                 
-                return $basePoints * $multiplier;
+                if ($reward) {
+                    return (float) ($reward->points * $reward->multiplier);
+                }
+                
+                Log::warning('No reward configuration found for business collaboration', [
+                    'membership_tier_id' => $membershipTierId,
+                    'activity_type' => $range['activity_type'],
+                    'transaction_value' => $transactionValue
+                ]);
+                
+                return 0;
             }
         }
 
