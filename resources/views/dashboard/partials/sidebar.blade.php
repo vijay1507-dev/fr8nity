@@ -116,13 +116,11 @@
                  <ul id="spotlight" class="sidebar-dropdown list-unstyled collapse {{ request()->routeIs('admin.event-pulse.*') || request()->routeIs('admin.partner-showcase.*') ? 'show' : '' }}" data-bs-parent="#sidebar">
                     <li class="sidebar-item">
                         <a href="{{ route('admin.event-pulse.index') }}" class="sidebar-link {{ request()->routeIs('admin.event-pulse.*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-calendar-alt"></i>
                             <p class="m-0 submenufont">Event Pulse</p>
                         </a>
                     </li>
                     <li class="sidebar-item">
                         <a href="{{ route('admin.partner-showcase.index') }}" class="sidebar-link {{ request()->routeIs('admin.partner-showcase.*') ? 'active' : '' }}">
-                            <i class="nav-icon fas fa-handshake"></i>
                             <p class="m-0 submenufont">Partner Showcase</p>
                         </a>
                     </li>
