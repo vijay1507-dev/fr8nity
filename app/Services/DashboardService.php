@@ -261,6 +261,7 @@ class DashboardService
             'average_revenue' => $this->getAverageRevenuePerMonth(),
             'country_members' => $this->getCountryWiseMemberCounts(),
             'referral_leaders' => $this->getReferralLeaders($startDate),
+            'inactive_members' => $this->getInactiveMembersCount(),
         ];
     }
 
@@ -308,13 +309,19 @@ class DashboardService
     {
         $upgrades = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
             ->where('status', MembershipLog::STATUS_UPGRADE)
-            ->where('created_at', '>=', $startDate)
-            ->count();
+            ->whereHas('user', function($query) {
+                $query->where('status', User::STATUS_APPROVED);
+            })
+            ->distinct('user_id')
+            ->count('user_id');
 
         $downgrades = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
             ->where('status', MembershipLog::STATUS_DOWNGRADE)
-            ->where('created_at', '>=', $startDate)
-            ->count();
+            ->whereHas('user', function($query) {
+                $query->where('status', User::STATUS_APPROVED);
+            })
+            ->distinct('user_id')
+            ->count('user_id');
 
         return [
             'upgrades' => $upgrades,
@@ -453,5 +460,22 @@ class DashboardService
                 'referral_count' => $leader->referral_count,
             ];
         })->toArray();
+    }
+
+    /**
+     * Get count of active members with 0 points
+     */
+    public function getInactiveMembersCount(): int
+    {
+        return User::where('role', User::MEMBER)
+            ->where('status', User::STATUS_APPROVED)
+            ->where('is_active', true)
+            ->whereNotExists(function($query) {
+                $query->selectRaw(1)
+                    ->from('reward_points')
+                    ->whereColumn('reward_points.user_id', 'users.id')
+                    ->where('reward_points.points', '>', 0);
+            })
+            ->count();
     }
 }

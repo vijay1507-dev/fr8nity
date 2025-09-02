@@ -51,6 +51,8 @@
                                     <small class="text-muted">{{ number_format($adminData['membership_fees']['explorer']['count'] ?? 0) }} active members</small>
                                     <br>
                                     <small class="text-info">Annual Fee: ${{ number_format($adminData['membership_fees']['explorer']['annual_fee'] ?? 0) }}</small>
+                                    <br>
+                                    <button class="view-btn mt-2" onclick="redirectWithPeriod('{{ route('members.index') }}?tier=explorer')">View</button>
                                 </div>
                                 <div class="col-3 p-3 py-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Elevate">
@@ -61,6 +63,8 @@
                                     <small class="text-muted">{{ number_format($adminData['membership_fees']['elevate']['count'] ?? 0) }} active members</small>
                                     <br>
                                     <small class="text-info">Annual Fee: ${{ number_format($adminData['membership_fees']['elevate']['annual_fee'] ?? 0) }}</small>
+                                    <br>
+                                    <button class="view-btn mt-2" onclick="redirectWithPeriod('{{ route('members.index') }}?tier=elevate')">View</button>
                                 </div>
                                 <div class="col-3 p-3 py-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Summit">
@@ -71,6 +75,8 @@
                                     <small class="text-muted">{{ number_format($adminData['membership_fees']['summit']['count'] ?? 0) }} active members</small>
                                     <br>
                                     <small class="text-info">Annual Fee: ${{ number_format($adminData['membership_fees']['summit']['annual_fee'] ?? 0) }}</small>
+                                    <br>
+                                    <button class="view-btn mt-2" onclick="redirectWithPeriod('{{ route('members.index') }}?tier=summit')">View</button>
                                 </div>
                                 <div class="col-3 p-3 py-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Pinnacle">
@@ -81,6 +87,8 @@
                                     <small class="text-muted">{{ number_format($adminData['membership_fees']['pinnacle']['count'] ?? 0) }} active members</small>
                                     <br>
                                     <small class="text-info">Annual Fee: ${{ number_format($adminData['membership_fees']['pinnacle']['annual_fee'] ?? 0) }}</small>
+                                    <br>
+                                    <button class="view-btn mt-2" onclick="redirectWithPeriod('{{ route('members.index') }}?tier=pinnacle')">View</button>
                                 </div>
                             </div>
                         </div>
@@ -111,6 +119,9 @@
                                     <img src="{{ asset('images/dashboardIcon5.svg') }}" alt="New Sign-ups">
                                     <h2 class="mb-0 mt-3" id="new-signups">{{ number_format($adminData['new_signups'] ?? 0) }}</h2>
                                     <p class="pt-2">New member registrations in the selected period</p>
+                                    <div class="text-center pb-3">
+                                        <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?new_signups=1')">View</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -124,14 +135,16 @@
                                     <h2 class="mb-0 mt-3" id="cancellations">
                                         {{ number_format($adminData['member_churn']['cancellations'] ?? 0) }}
                                     </h2>
-                                    <p class="pt-2">Cancellations </p>
+                                    <p class="pt-2">Cancellations</p>
+                                    <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?status=cancelled')">View</button>
                                 </div>
-                                <div class="col-6 p-3 py-4 text-center border-l">
+                                <div class="col-6 p-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Non-Renewals">
                                     <h2 class="mb-0 mt-3" id="non-renewals">
                                         {{ number_format($adminData['member_churn']['non_renewals'] ?? 0) }}
                                     </h2>
                                     <p class="pt-2">Non-Renewals</p>
+                                    <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?status=expired')">View</button>
                                 </div>
                             </div>
                         </div>
@@ -148,6 +161,7 @@
                                         {{ number_format($adminData['tier_growth']['upgrades'] ?? 0) }}
                                     </h2>
                                     <p class="pt-2">Upgrade </p>
+                                    <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?tier_change=upgrade')">View</button>
                                 </div>
                                 <div class="col-6 p-3 py-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Downgrades">
@@ -155,21 +169,31 @@
                                         {{ number_format($adminData['tier_growth']['downgrades'] ?? 0) }}
                                     </h2>
                                     <p class="pt-2">Downgrade</p>
+                                    <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?tier_change=downgrade')">View</button>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="row g-3 pt-3">
-                    <h6 class="pt-3">Global Coverage map</h6>
-                    <div class="col-12">
-                        <div class="map-border">
-                            <div id="chartdiv"></div>
+                    
+                    <!-- Inactive Members Section -->
+                    <div class="col-12 col-lg-4 ">
+                        <div class="dashboard-card  p-0 h-100 d-flex flex-column">
+                            <div class="row flex-grow-1">
+                                <h6 class="text-center pt-3">Inactive Members</h6>
+                                <div class="col-12 text-center p-4">
+                                    <img src="{{ asset('images/dashboardIcon5.svg') }}" alt="Inactive Members">
+                                    <h2 class="mb-0 mt-3" id="inactive-members-count">{{ number_format($adminData['inactive_members'] ?? 0) }}</h2>
+                                    <p class="pt-2">Active members with 0 points</p>
+                                </div>
+                            </div>
+                            <div class="text-center pb-3">
+                                <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?no_activity=1')">View</button>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <!-- Most Referred Leader Section -->
-                <div class="col-lg-6 d-flex mt-4">
+                    
+                    <!-- Most Referred Leaders Section -->
+                    <div class="col-12 col-lg-8 d-flex">
                         <div class="chart-card w-100">
                             <div class="d-flex justify-content-between align-items-center">
                                 <div>
@@ -202,6 +226,15 @@
                             </div>
                         </div>
                     </div>
+                </div>
+                <div class="row g-3 pt-3">
+                    <h6 class="pt-3">Global Coverage map</h6>
+                    <div class="col-12">
+                        <div class="map-border">
+                            <div id="chartdiv"></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         </div>
@@ -220,7 +253,7 @@
         document.addEventListener('DOMContentLoaded', function () {
             // Period button functionality
             const periodButtons = document.querySelectorAll('.monthbtn');
-            let currentPeriod = 12; // Default to 1 year
+            window.currentPeriod = 12; // Default to 1 year (make it global)
 
             periodButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -230,12 +263,19 @@
                     this.classList.add('active');
                     
                     const period = parseInt(this.dataset.period);
-                    currentPeriod = period;
+                    window.currentPeriod = period;
                     
                     // Update dashboard data
                     updateAdminDashboardData(period);
                 });
             });
+
+            // Function to redirect with current period parameter (make it global)
+            window.redirectWithPeriod = function(baseUrl) {
+                const separator = baseUrl.includes('?') ? '&' : '?';
+                const url = baseUrl + separator + 'period=' + window.currentPeriod;
+                window.location.href = url;
+            };
 
             // Function to update admin dashboard data via AJAX
             function updateAdminDashboardData(period) {
@@ -388,6 +428,12 @@
                         }
                     }
 
+                    // Update inactive members count
+                    const inactiveMembersElement = document.getElementById('inactive-members-count');
+                    if (inactiveMembersElement && data.inactive_members !== undefined) {
+                        inactiveMembersElement.textContent = Number(data.inactive_members || 0).toLocaleString();
+                    }
+
                     // Update map data
                     if (data.country_members) {
                         updateMapData(data.country_members);
@@ -402,7 +448,7 @@
             function showLoadingState() {
                 // Add loading indicators to key elements
                 const elements = ['explorer-revenue', 'elevate-revenue', 'summit-revenue', 'pinnacle-revenue', 
-                                'avg-revenue', 'new-signups', 'cancellations', 'non-renewals', 'upgrades', 'downgrades'];
+                                'avg-revenue', 'new-signups', 'cancellations', 'non-renewals', 'upgrades', 'downgrades', 'inactive-members-count'];
                 
                 elements.forEach(id => {
                     const element = document.getElementById(id);
@@ -425,7 +471,7 @@
             // Function to hide loading state
             function hideLoadingState() {
                 const elements = ['explorer-revenue', 'elevate-revenue', 'summit-revenue', 'pinnacle-revenue', 
-                                'avg-revenue', 'new-signups', 'cancellations', 'non-renewals', 'upgrades', 'downgrades'];
+                                'avg-revenue', 'new-signups', 'cancellations', 'non-renewals', 'upgrades', 'downgrades', 'inactive-members-count'];
                 
                 elements.forEach(id => {
                     const element = document.getElementById(id);

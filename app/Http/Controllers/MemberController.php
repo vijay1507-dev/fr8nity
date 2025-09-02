@@ -42,6 +42,62 @@ class MemberController extends Controller
                 $data->where('is_active', true);
             }
 
+            // Apply no activity filter (members with 0 points)
+            if ($request->filled('no_activity') && $request->no_activity == '1') {
+                $data->where('status', User::STATUS_APPROVED)
+                    ->where('is_active', true)
+                    ->whereNotExists(function($query) {
+                        $query->selectRaw(1)
+                            ->from('reward_points')
+                            ->whereColumn('reward_points.user_id', 'users.id')
+                            ->where('reward_points.points', '>', 0);
+                    });
+            }
+
+            // Apply tier filter (from dashboard)
+            if ($request->filled('tier')) {
+                $tier = \App\Models\MembershipTier::where('slug', $request->tier)->first();
+                if ($tier) {
+                    $data->where('membership_tier', $tier->id)
+                         ->where('status', User::STATUS_APPROVED);
+                }
+            }
+
+            // Apply status filter (from dashboard)
+            if ($request->filled('status')) {
+                if ($request->status === 'cancelled') {
+                    $data->where('status', User::STATUS_CANCELLED);
+                } elseif ($request->status === 'expired') {
+                    $data->where('membership_expires_at', '<', now())
+                        ->where('status', '!=', User::STATUS_CANCELLED);
+                }
+            }
+
+            // Apply new signups filter (from dashboard)
+            if ($request->filled('new_signups') && $request->new_signups == '1') {
+                $period = $request->filled('period') ? (int)$request->period : 12;
+                $data->where('created_at', '>=', now()->subMonths($period))
+                    ->where('status', User::STATUS_APPROVED);
+            }
+
+            // Apply tier change filter (from dashboard)
+            if ($request->filled('tier_change')) {
+                $period = $request->filled('period') ? (int)$request->period : 12;
+                if ($request->tier_change === 'upgrade') {
+                    $data->whereHas('membershipLogs', function($query) use ($period) {
+                        $query->where('action', \App\Models\MembershipLog::ACTION_CHANGE_TIER)
+                              ->where('status', \App\Models\MembershipLog::STATUS_UPGRADE)
+                              ->where('created_at', '>=', now()->subMonths($period));
+                    })->where('status', User::STATUS_APPROVED);
+                } elseif ($request->tier_change === 'downgrade') {
+                    $data->whereHas('membershipLogs', function($query) use ($period) {
+                        $query->where('action', \App\Models\MembershipLog::ACTION_CHANGE_TIER)
+                              ->where('status', \App\Models\MembershipLog::STATUS_DOWNGRADE)
+                              ->where('created_at', '>=', now()->subMonths($period));
+                    })->where('status', User::STATUS_APPROVED);
+                }
+            }
+
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('current_tier', function($row) {
@@ -79,7 +135,43 @@ class MemberController extends Controller
             $countryName = $country ? $country->name : $request->country;
         }
 
-        return view('dashboard.members.index', compact('countryName'));
+        // Prepare filter information for the view
+        $filterInfo = [];
+        if ($request->filled('tier')) {
+            $tierNames = [
+                'explorer' => 'Explorer',
+                'elevate' => 'Elevate', 
+                'summit' => 'Summit',
+                'pinnacle' => 'Pinnacle'
+            ];
+            $filterInfo['tier'] = $tierNames[$request->tier] ?? $request->tier;
+        }
+        
+        if ($request->filled('status')) {
+            $statusNames = [
+                'cancelled' => 'Cancelled Members',
+                'expired' => 'Expired Members'
+            ];
+            $filterInfo['status'] = $statusNames[$request->status] ?? $request->status;
+        }
+        
+        if ($request->filled('new_signups') && $request->new_signups == '1') {
+            $period = $request->filled('period') ? (int)$request->period : 12;
+            $periodText = $period == 3 ? '3 months' : ($period == 6 ? '6 months' : '1 year');
+            $filterInfo['new_signups'] = "New Sign-ups (Last $periodText)";
+        }
+        
+        if ($request->filled('tier_change')) {
+            $period = $request->filled('period') ? (int)$request->period : 12;
+            $periodText = $period == 3 ? '3 months' : ($period == 6 ? '6 months' : '1 year');
+            $tierChangeNames = [
+                'upgrade' => "Upgrades (Last $periodText)",
+                'downgrade' => "Downgrades (Last $periodText)"
+            ];
+            $filterInfo['tier_change'] = $tierChangeNames[$request->tier_change] ?? $request->tier_change;
+        }
+
+        return view('dashboard.members.index', compact('countryName', 'filterInfo'));
     }
 
     /**
