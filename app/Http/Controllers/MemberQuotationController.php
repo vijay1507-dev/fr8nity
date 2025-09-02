@@ -9,14 +9,17 @@ use App\Notifications\QuotationNotification;
 use App\Notifications\QuotationStatusNotification;
 use Illuminate\Support\Facades\Notification;
 use App\Services\MemberQuotationService;
+use App\Services\BusinessCollaborationPointsService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Yajra\DataTables\Facades\DataTables;
 
 class MemberQuotationController extends Controller
 {
-    public function __construct(private readonly MemberQuotationService $memberQuotationService)
-    {
+    public function __construct(
+        private readonly MemberQuotationService $memberQuotationService,
+        private readonly BusinessCollaborationPointsService $businessCollaborationPointsService
+    ) {
     }
     public function givenQuotations(Request $request)
     {
@@ -158,6 +161,9 @@ class MemberQuotationController extends Controller
             'status' => MemberQuotation::STATUS_CLOSED_SUCCESSFUL,
         ]);
 
+        // Allocate business collaboration points to the giver
+        $this->businessCollaborationPointsService->allocatePointsForQuotationSuccess($quotation);
+
         // Notify SA, sender (external email), and receiver
         $admins = User::where('role', User::SUPER_ADMIN)->get();
         Notification::send($admins, new QuotationStatusNotification($quotation, 'admin'));
@@ -284,7 +290,10 @@ class MemberQuotationController extends Controller
             'is_offline_enquiry' => 1
         ]);
         
-        $this->memberQuotationService->createAndNotify($validated, null);
+        $quotation = $this->memberQuotationService->createAndNotify($validated, null);
+        
+        // Allocate business collaboration points for successful quotations
+        $this->businessCollaborationPointsService->allocatePointsForQuotationSuccess($quotation);
         
         return redirect()->route('admin.quotations.index')->with('success', 'Offline quotation added successfully.');
     }
@@ -346,7 +355,12 @@ class MemberQuotationController extends Controller
             'transaction_value.min'      => 'Transaction value must be greater than or equal to 0.',
         ]);
         
-        $this->memberQuotationService->createAndNotify($validated, $request->file('document'));
+        $quotation = $this->memberQuotationService->createAndNotify($validated, $request->file('document'));
+        
+        // Allocate points for offline enquiries with successful status
+        if($request->is_offline_enquiry == 1 && isset($validated['status']) && $validated['status'] == MemberQuotation::STATUS_CLOSED_SUCCESSFUL){
+            $this->businessCollaborationPointsService->allocatePointsForQuotationSuccess($quotation);
+        }
         
         if($request->is_offline_enquiry == 1){
             // Check if this is a given or received quotation and redirect accordingly

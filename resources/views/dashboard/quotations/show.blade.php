@@ -134,7 +134,7 @@
 				<h5 class="modal-title" id="markSuccessModalLabel">Mark Quotation as Successful</h5>
 				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 			</div>
-			<form action="{{ route('member.quotations.success', $quotation) }}" method="POST">
+			<form id="frmSuccess" action="{{ route('member.quotations.success', $quotation) }}" method="POST">
 				@csrf
 				@method('PATCH')
 				<div class="modal-body">
@@ -152,4 +152,13 @@
 	</div>
 </div>
 @endif
+@endsection
+@section('scripts')
+<script>
+$(document).ready(function () {
+    $('#frmSuccess').on('submit', function () {
+        $(this).find('button[type="submit"]').prop('disabled', true);
+    });
+});
+</script>
 @endsection
