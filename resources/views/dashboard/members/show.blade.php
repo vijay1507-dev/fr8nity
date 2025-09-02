@@ -236,8 +236,13 @@
             <!-- Membership Information -->
             <div class="col-12 col-lg-4">
                 <div class="card">
-                    <div class="card-header">
+                    <div class="card-header d-flex justify-content-between align-items-center">
                         <p class="mb-0 fs-5">Membership Details</p>
+                        @if($member->status === 'approved' && auth()->user()->role == \App\Models\User::SUPER_ADMIN)
+                        <button type="button" class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#allocatePointsModal">
+                            <i class="bi bi-award me-2"></i>Allocate Signup Points
+                        </button>
+                        @endif
                     </div>
                     <div class="card-body">
                         <div class="d-flex row">
@@ -282,14 +287,18 @@
                             <div>
                                  <span class="info-label d-block">Tier Benefits</span>
                                  
-                                <ul class="list-unstyled mb-0 mt-2">
-                                    @foreach ($member->membershipTier->benefits as $benefit)
-                                        <li class="mb-2 d-flex align-items-center">
-                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
-                                            {{ $benefit->title }}
-                                        </li>
-                                    @endforeach
-                                </ul>
+                                @if($member->membershipTier->benefits && $member->membershipTier->benefits->count() > 0)
+                                    <ul class="list-unstyled mb-0 mt-2">
+                                        @foreach ($member->membershipTier->benefits as $benefit)
+                                            <li class="mb-2 d-flex align-items-center">
+                                                <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                                {{ $benefit->title }}
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <p class="text-muted mt-2 mb-0">No tier benefits found</p>
+                                @endif
                             </div>
                         @endif
 
@@ -545,6 +554,51 @@
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
                         <button type="submit" class="btn btn-success">
                             <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Allocate Signup Points Modal -->
+    <div class="modal fade" id="allocatePointsModal" tabindex="-1" aria-labelledby="allocatePointsModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title " id="allocatePointsModalLabel">
+                        <i class="bi bi-award me-2"></i>Allocate Signup Reward Points
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('members.allocate-points', $member) }}" method="POST">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="points" class="form-label">Points to Allocate <span class="text-danger">*</span></label>
+                            <input type="number" class="form-control @error('points') is-invalid @enderror" 
+                                   id="points" name="points" min="1" max="1000" 
+                                   placeholder="Enter points (1-1000)" required>
+                            @error('points')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                            <small class="form-text text-muted">Enter the number of signup reward points to allocate to this member.</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="reason" class="form-label">Reason <span class="text-danger">*</span></label>
+                            <textarea class="form-control @error('reason') is-invalid @enderror" 
+                                      id="reason" name="reason" rows="3" 
+                                      placeholder="Please provide a reason for allocating these points..." required></textarea>
+                            @error('reason')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning">
+                            <i class="bi bi-award me-2"></i>Allocate Points
                         </button>
                     </div>
                 </form>

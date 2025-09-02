@@ -16,6 +16,7 @@ use App\Services\MembershipLogService;
 use App\Rules\UniqueCompanyInCountry;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class MemberController extends Controller
 {
@@ -683,6 +684,47 @@ class MemberController extends Controller
             return view('website.member-directory-view-profile', compact('member', 'ports'));
         } catch (\Exception $e) {
             abort(404, 'Member not found');
+        }
+    }
+
+    /**
+     * Allocate signup reward points to a member
+     */
+    public function allocatePoints(Request $request, User $member)
+    {
+        // Ensure only Super Admin can access this
+        if (Auth::user()->role !== User::SUPER_ADMIN) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Validate the request
+        $request->validate([
+            'points' => 'required|integer|min:1|max:1000',
+            'reason' => 'required|string|max:500',
+        ]);
+
+        // Ensure member is approved
+        if ($member->status !== User::STATUS_APPROVED) {
+            return redirect()->back()->with('error', 'Points can only be allocated to approved members.');
+        }
+
+        try {
+            // Create reward points entry
+            \DB::table('reward_points')->insert([
+                'user_id' => $member->id,
+                'activity_type' => 'signup_reward',
+                'points' => $request->points,
+                'description' => $request->reason,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ]);
+
+            return redirect()->back()->with('success', 
+                "Successfully allocated {$request->points} signup reward points to {$member->name}.");
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 
+                'Failed to allocate points. Please try again.');
         }
     }
     
