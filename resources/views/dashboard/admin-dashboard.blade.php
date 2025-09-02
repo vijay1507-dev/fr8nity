@@ -175,6 +175,9 @@
                         </div>
                     </div>
                     
+                    <div class="">
+                    <h6 class="fw-semibold mb-0 mt-2">Referral & Business Flow Intelligence</h6>
+                </div>
                     <!-- Inactive Members Section -->
                     <div class="col-12 col-lg-4 ">
                         <div class="dashboard-card  p-0 h-100 d-flex flex-column">
