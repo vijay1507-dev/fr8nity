@@ -249,6 +249,21 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::post('/export', [SalesReportController::class, 'export'])->name('sales-report.export');
         Route::get('/members', [SalesReportController::class, 'getMembers'])->name('sales-report.members');
     });
+    
+    // New Report routes
+    Route::middleware('admin')->prefix('reports')->group(function () {
+        // Members by Country Report
+        Route::prefix('members-by-country')->name('reports.members-by-country.')->group(function () {
+            Route::get('/', [SalesReportController::class, 'membersByCountryIndex'])->name('index');
+            Route::post('/export', [SalesReportController::class, 'membersByCountryExport'])->name('export');
+        });
+        
+        // Membership Type Report
+        Route::prefix('membership-type')->name('reports.membership-type.')->group(function () {
+            Route::get('/', [SalesReportController::class, 'membershipTypeIndex'])->name('index');
+            Route::post('/export', [SalesReportController::class, 'membershipTypeExport'])->name('export');
+        });
+    });
     // Admin Quotations routes
     Route::middleware('admin')->prefix('admin')->group(function () {
         Route::get('/quotations', [MemberQuotationController::class, 'adminIndex'])->name('admin.quotations.index');

@@ -197,10 +197,16 @@
                     </svg>
                     Report
                 </a>
-                <ul id="sales-report" class="sidebar-dropdown list-unstyled collapse {{ request()->routeIs('sales-report.*') || request()->routeIs('member.sales-report.*') ? 'show' : '' }}" data-bs-parent="#sidebar">
+                <ul id="sales-report" class="sidebar-dropdown list-unstyled collapse {{ request()->routeIs('sales-report.*') || request()->routeIs('member.sales-report.*') || request()->routeIs('reports.members-by-country.*') || request()->routeIs('reports.membership-type.*') ? 'show' : '' }}" data-bs-parent="#sidebar">
                     @if(auth()->user()->role == \App\Models\User::SUPER_ADMIN)
                         <li class="sidebar-item">
                             <a href="{{ route('sales-report.index') }}" class="sidebar-link submenufont {{ request()->routeIs('sales-report.*') ? 'active' : '' }}">Giver & Receiver Report</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('reports.members-by-country.index') }}" class="sidebar-link submenufont {{ request()->routeIs('reports.members-by-country.*') ? 'active' : '' }}">Members by Country</a>
+                        </li>
+                        <li class="sidebar-item">
+                            <a href="{{ route('reports.membership-type.index') }}" class="sidebar-link submenufont {{ request()->routeIs('reports.membership-type.*') ? 'active' : '' }}">Master Report by Membership</a>
                         </li>
                         @else
                         <li class="sidebar-item">
