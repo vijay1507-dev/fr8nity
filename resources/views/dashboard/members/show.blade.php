@@ -81,7 +81,6 @@
                                                 <i class="bi bi-x-circle me-2"></i>Cancel Membership
                                             </button>
                                         </li>
-                                        @elseif($member->status === 'cancelled')
                                         <li>
                                             <button type="button" class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#renewMembershipModal">
                                                 <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
