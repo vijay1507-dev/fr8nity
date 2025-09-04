@@ -36,8 +36,8 @@ class BusinessCollaborationRewardsSeeder extends Seeder
                         'activity_type' => $range['activity_type'],
                         'points' => $range['base_points'], // Store base points, not calculated
                         'multiplier' => $range[$tierName],
-                        'created_at' => now(),
-                        'updated_at' => now(),
+                        'created_at' => utcNow(),
+                        'updated_at' => utcNow(),
                     ]);
                 }
             }

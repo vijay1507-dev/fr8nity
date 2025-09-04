@@ -259,7 +259,7 @@ class SalesReportService
      */
     public function generateFilename(User $member): string
     {
-        return 'successful_sales_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . now()->format('Y_m_d_H_i_s') . '.csv';
+        return 'successful_sales_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . utcNow()->format('Y_m_d_H_i_s') . '.csv';
     }
 
     /**
@@ -267,7 +267,7 @@ class SalesReportService
      */
     public function generateAllQuotationsFilename(User $member): string
     {
-        return 'all_quotations_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . now()->format('Y_m_d_H_i_s') . '.csv';
+        return 'all_quotations_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . utcNow()->format('Y_m_d_H_i_s') . '.csv';
     }
 
     /**
@@ -275,7 +275,7 @@ class SalesReportService
      */
     public function generateAllMembersFilename(?string $dateFrom = null, ?string $dateTo = null): string
     {
-        $filename = 'all_members_successful_sales_report_' . now()->format('Y_m_d_H_i_s');
+        $filename = 'all_members_successful_sales_report_' . utcNow()->format('Y_m_d_H_i_s');
         
         if ($dateFrom && $dateTo) {
             $filename .= '_' . $dateFrom . '_to_' . $dateTo;
@@ -518,7 +518,7 @@ class SalesReportService
      */
     public function generateMembersByCountryFilename(?string $dateFrom = null, ?string $dateTo = null): string
     {
-        $filename = 'members_by_country_report_' . now()->format('Y_m_d_H_i_s');
+        $filename = 'members_by_country_report_' . utcNow()->format('Y_m_d_H_i_s');
         
         if ($dateFrom && $dateTo) {
             $filename .= '_' . $dateFrom . '_to_' . $dateTo;
@@ -536,7 +536,7 @@ class SalesReportService
      */
     public function generateMembershipTypeFilename(?string $dateFrom = null, ?string $dateTo = null): string
     {
-        $filename = 'membership_type_report_' . now()->format('Y_m_d_H_i_s');
+        $filename = 'membership_type_report_' . utcNow()->format('Y_m_d_H_i_s');
         
         if ($dateFrom && $dateTo) {
             $filename .= '_' . $dateFrom . '_to_' . $dateTo;

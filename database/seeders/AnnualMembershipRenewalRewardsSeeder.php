@@ -42,8 +42,8 @@ class AnnualMembershipRenewalRewardsSeeder extends Seeder
                         'activity_type' => $reward['activity_type'],
                         'points' => $reward['points'][$tierName],
                         'multiplier' => $reward['multiplier'][$tierName],
-                        'created_at' => now(),
-                        'updated_at' => now(),
+                        'created_at' => utcNow(),
+                        'updated_at' => utcNow(),
                     ]);
                 }
             }

@@ -20,7 +20,7 @@ class SendMembershipExpiryReminders extends Command
     public function handle()
     {
         $today = Carbon::today();
-        $now = now();
+        $now = utcNow();
         $reminderDays = Setting::get('membership_reminder_days', 15);
         $notificationsEnabled = Schema::hasTable('notifications');
 
@@ -97,11 +97,11 @@ class SendMembershipExpiryReminders extends Command
             'data' => json_encode([
                 'days_until_expiry' => $daysUntilExpiry,
                 'membership_expires_at' => $user->membership_expires_at,
-                'sent_at' => now()->toISOString(),
+                'sent_at' => utcNow()->toISOString(),
                 'status' => $isExpired ? 'expired' : 'active',
             ]),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => utcNow(),
+            'updated_at' => utcNow(),
         ]);
     }
 }

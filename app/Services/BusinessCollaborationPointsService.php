@@ -45,8 +45,8 @@ class BusinessCollaborationPointsService
                 'activity_type' => 'business_collaboration',
                 'points' => $points,
                 'description' => "Business collaboration points for successful quotation (Ref: {$quotation->quotation_reference_no}, Value: USD {$quotation->transaction_value})",
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => utcNow(),
+                'updated_at' => utcNow(),
             ]);
 
             Log::info('Business collaboration points allocated successfully', [

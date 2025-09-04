@@ -69,7 +69,7 @@ class MemberController extends Controller
                 if ($request->status === 'cancelled') {
                     $data->where('status', User::STATUS_CANCELLED);
                 } elseif ($request->status === 'expired') {
-                    $data->where('membership_expires_at', '<', now())
+                    $data->where('membership_expires_at', '<', utcNow())
                         ->where('status', '!=', User::STATUS_CANCELLED);
                 }
             }
@@ -77,7 +77,7 @@ class MemberController extends Controller
             // Apply new signups filter (from dashboard)
             if ($request->filled('new_signups') && $request->new_signups == '1') {
                 $period = $request->filled('period') ? (int)$request->period : 12;
-                $data->where('created_at', '>=', now()->subMonths($period))
+                $data->where('created_at', '>=', utcNow()->subMonths($period))
                     ->where('status', User::STATUS_APPROVED);
             }
 
@@ -88,13 +88,13 @@ class MemberController extends Controller
                     $data->whereHas('membershipLogs', function($query) use ($period) {
                         $query->where('action', \App\Models\MembershipLog::ACTION_CHANGE_TIER)
                               ->where('status', \App\Models\MembershipLog::STATUS_UPGRADE)
-                              ->where('created_at', '>=', now()->subMonths($period));
+                              ->where('created_at', '>=', utcNow()->subMonths($period));
                     })->where('status', User::STATUS_APPROVED);
                 } elseif ($request->tier_change === 'downgrade') {
                     $data->whereHas('membershipLogs', function($query) use ($period) {
                         $query->where('action', \App\Models\MembershipLog::ACTION_CHANGE_TIER)
                               ->where('status', \App\Models\MembershipLog::STATUS_DOWNGRADE)
-                              ->where('created_at', '>=', now()->subMonths($period));
+                              ->where('created_at', '>=', utcNow()->subMonths($period));
                     })->where('status', User::STATUS_APPROVED);
                 }
             }
@@ -402,7 +402,7 @@ class MemberController extends Controller
             if ($request->hasFile('certificate_document')) {
                 $certificatePath = $request->file('certificate_document')->store('member-certificates', 'public');
                 $updateData['certificate_document'] = $certificatePath;
-                $updateData['certificate_uploaded_at'] = now();
+                $updateData['certificate_uploaded_at'] = utcNow();
             }
             
             // Update membership number based on tier change
@@ -421,10 +421,10 @@ class MemberController extends Controller
                 
                 // Update membership dates only when tier changes
                 $tier = MembershipTier::find($request->membership_tier);
-                $membershipStartAt = Carbon::now();
-                $membershipExpiresAt = Carbon::now()->addYear(); 
+                $membershipStartAt = utcNow();
+                $membershipExpiresAt = utcNow()->addYear(); 
                 if ($tier && $tier->name === 'Pinnacle') {
-                    $membershipExpiresAt = Carbon::now()->addYears(3);
+                    $membershipExpiresAt = utcNow()->addYears(3);
                 }
             }
 
@@ -455,7 +455,7 @@ class MemberController extends Controller
             
             if ($certificatePath) {
                 $updateData['certificate_document'] = $certificatePath;
-                $updateData['certificate_uploaded_at'] = now();
+                $updateData['certificate_uploaded_at'] = utcNow();
             }
 
             if (isset($path)) {
@@ -544,7 +544,7 @@ class MemberController extends Controller
         // Update member status to cancelled and deactivate access
         $member->update([
             'status' => User::STATUS_CANCELLED,
-            'cancelled_at' => now(),
+            'cancelled_at' => utcNow(),
             'cancellation_reason' => $request->cancellation_reason,
             'cancelled_by' => Auth::id(),
             'is_active' => false, // Deactivate access to website
@@ -569,7 +569,7 @@ class MemberController extends Controller
             'reason' => $request->cancellation_reason,
             'changed_by' => Auth::id(),
             'metadata' => [
-                'cancelled_at' => now()->toISOString(),
+                'cancelled_at' => utcNow()->toISOString(),
                 'previous_is_active' => $member->is_active,
                 'previous_status' => $member->status,
             ],
@@ -588,59 +588,25 @@ class MemberController extends Controller
             abort(404);
         }
 
-        $request->validate([
-            'renewal_reason' => 'required|string|max:1000',
-        ]);
-
-        // Calculate expiry date automatically based on tier
-        $renewalDate = Carbon::now();
-        $tier = $member->membershipTier;
-        $expiryDate = $renewalDate->copy()->addYear(); 
-
-        if ($tier && $tier->name === 'Pinnacle') {
-            $expiryDate = $renewalDate->copy()->addYears(3);
+        // Validate membership status before renewal
+        if ($member->status === User::STATUS_PENDING) {
+            return redirect()->back()->with('error', 'Cannot renew pending membership. Please approve the membership first.');
         }
+
+        // Create renewal plan instead of directly updating user
+        $renewalService = app(\App\Services\MembershipRenewalService::class);
         
-        // Update member status to approved and reactivate access
-        $member->update([
-            'status' => User::STATUS_APPROVED,
-            'membership_start_at' => $renewalDate, 
-            'membership_expires_at' => $expiryDate,
-            'cancelled_at' => null,
-            'cancellation_reason' => null,
-            'cancelled_by' => null,
-            'is_active' => true, // Reactivate access to website
-        ]);
+        try {
+            $renewal = $renewalService->createRenewalPlan(
+                $member,
+                $request->input('renewal_reason', 'Membership renewed by admin')
+            );
 
-        // Log the renewal with previous membership details
-        \App\Models\MembershipLog::create([
-            'user_id' => $member->id,
-            'action' => \App\Models\MembershipLog::ACTION_RENEWED,
-            'membership_tier_id' => $member->membership_tier,
-            'previous_tier_name' => 'N/A', // Was cancelled, so no previous tier
-            'previous_membership_number' => $member->membership_number,
-            'previous_annual_fee' => 'N/A', // Was cancelled, so no previous fee
-            'previous_annual_fee_currency' => 'N/A',
-            'previous_expiry_date' => $member->membership_expires_at,
-            'new_tier_name' => $member->membershipTier->name ?? 'N/A',
-            'new_membership_number' => $member->membership_number,
-            'new_annual_fee' => $member->membershipTier->annual_fee ?? 'N/A',
-            'new_annual_fee_currency' => $member->membershipTier->annual_fee_currency ?? 'USD',
-            'new_expiry_date' => $expiryDate,
-            'new_membership_start_at' => $renewalDate, // Log the new start date
-            'status' => \App\Models\MembershipLog::STATUS_RENEWED,
-            'reason' => $request->renewal_reason,
-            'changed_by' => Auth::id(),
-            'metadata' => [
-                'renewed_at' => now()->toISOString(),
-                'previous_is_active' => $member->is_active,
-                'previous_status' => $member->status,
-                'renewal_type' => 'same_plan', // Indicates renewal with same plan
-            ],
-        ]);
-
-        return redirect()->route('members.edit', $member)
-            ->with('success', 'Membership renewed successfully.');
+            return redirect()->route('members.edit', $member)
+                ->with('success', 'Renewal plan created successfully. It will be activated after the current membership expires.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to create renewal plan: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -688,6 +654,45 @@ class MemberController extends Controller
     }
 
     /**
+     * Process early renewal for the specified member.
+     */
+    public function earlyRenewal(Request $request, User $member)
+    {
+        if ($member->role !== User::MEMBER) {
+            abort(404);
+        }
+
+        // Validate that member can have early renewal
+        if ($member->status !== User::STATUS_APPROVED) {
+            return redirect()->back()->with('error', 'Only approved members can renew early.');
+        }
+
+        if (!$member->membership_expires_at || Carbon::parse($member->membership_expires_at)->isPast()) {
+            return redirect()->back()->with('error', 'Cannot process early renewal for expired membership.');
+        }
+
+        // Validate renewal details
+        $request->validate([
+            'early_renewal_reason' => 'required|string|max:500',
+        ]);
+
+        // Create early renewal plan
+        $renewalService = app(\App\Services\MembershipRenewalService::class);
+        
+        try {
+            $renewal = $renewalService->createRenewalPlan(
+                $member,
+                $request->early_renewal_reason
+            );
+
+            return redirect()->route('members.edit', $member)
+                ->with('success', 'Early renewal plan created successfully. Membership will be extended from current expiry date.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to create early renewal plan: ' . $e->getMessage());
+        }
+    }
+
+    /**
      * Allocate signup reward points to a member
      */
     public function allocatePoints(Request $request, User $member)
@@ -715,8 +720,8 @@ class MemberController extends Controller
                 'activity_type' => 'signup_reward',
                 'points' => $request->points,
                 'description' => $request->reason,
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => utcNow(),
+                'updated_at' => utcNow(),
             ]);
 
             return redirect()->back()->with('success', 

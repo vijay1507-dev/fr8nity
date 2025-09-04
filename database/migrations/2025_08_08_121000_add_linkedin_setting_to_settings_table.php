@@ -14,8 +14,8 @@ return new class extends Migration
                 'value' => '',
                 'type' => 'string',
                 'description' => 'LinkedIn profile URL',
-                'created_at' => now(),
-                'updated_at' => now(),
+                'created_at' => utcNow(),
+                'updated_at' => utcNow(),
             ]);
         }
     }

@@ -4,7 +4,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Console\Scheduling\Schedule;
-use App\Console\Commands\{SeedTrack,SendMembershipExpiryReminders};
+use App\Console\Commands\{SeedTrack,SendMembershipExpiryReminders,ActivatePendingRenewals};
 use App\Http\Middleware\{SetTimezone,AdminAccess,EnsureKycIsComplete};
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -16,9 +16,11 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withCommands([
         SeedTrack::class,
         SendMembershipExpiryReminders::class,
+        ActivatePendingRenewals::class,
     ])
     ->withSchedule(function (Schedule $schedule) {
         $schedule->command('membership:send-expiry-reminders')->daily();
+        $schedule->command('membership:activate-renewals')->everyMinute();
     })
     ->withMiddleware(function (Middleware $middleware) {
         // Register global middleware

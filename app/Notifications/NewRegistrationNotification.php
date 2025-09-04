@@ -55,7 +55,7 @@ class NewRegistrationNotification extends Notification implements ShouldQueue
             'whatsapp_phone' => $this->user->whatsapp_phone,
             'company_address' => $this->user->company_address,
             'membership_tier_name' => $this->membershipTierName,
-            'registration_date' => now()->format('Y-m-d H:i:s')
+            'registration_date' => utcNow()->format('Y-m-d H:i:s')
         ];
 
         $subject = $template->subject;

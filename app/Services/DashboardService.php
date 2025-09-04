@@ -36,7 +36,7 @@ class DashboardService
      */
     public function getFilteredDashboardData(int $userId, int $period): array
     {
-        $startDate = Carbon::now()->subMonths($period);
+        $startDate = utcNow()->subMonths($period);
         
         return [
             'given_quotations' => $this->getGivenQuotationsData($userId, $startDate),
@@ -185,8 +185,8 @@ class DashboardService
      */
     public function getMonthlyChartData(int $userId, int $year = null): array
     {
-        $year = $year ?? Carbon::now()->year;
-        $currentMonth = $year == Carbon::now()->year ? Carbon::now()->month : 12;
+        $year = $year ?? utcNow()->year;
+        $currentMonth = $year == utcNow()->year ? utcNow()->month : 12;
         $months = [];
         $givenData = [];
         $receivedData = [];
@@ -252,7 +252,7 @@ class DashboardService
      */
     public function getAdminDashboardData(int $period = 12): array
     {
-        $startDate = Carbon::now()->subMonths($period);
+        $startDate = utcNow()->subMonths($period);
         return [
             'new_signups' => $this->getNewSignupsCount($startDate),
             'member_churn' => $this->getMemberChurnData($startDate),
@@ -291,7 +291,7 @@ class DashboardService
         // This counts members whose membership expired but they weren't cancelled or renewed
         $nonRenewals = User::where('role', User::MEMBER)
             ->where('status', 'approved') // Only approved members (not cancelled)
-            ->where('membership_expires_at', '<', now()) // Expired
+            ->where('membership_expires_at', '<', utcNow()) // Expired
             ->where('membership_expires_at', '>=', $startDate) // Expired in the period
             ->where('deleted_at', null)
             ->count();

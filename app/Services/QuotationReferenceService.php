@@ -40,7 +40,7 @@ class QuotationReferenceService
         }
         
         // Get current date in YYMM format
-        $datePrefix = Carbon::now()->format('ym');
+        $datePrefix = utcNow()->format('ym');
         
         // Get the next incremental number for this company and date
         $nextNumber = $this->getNextIncrementalNumber($companyPrefix, $datePrefix);

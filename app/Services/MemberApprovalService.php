@@ -54,9 +54,9 @@ class MemberApprovalService
 
         // Determine membership expiry date based on tier
         $tier = $member->membershipTier;
-        $expiryDate = now()->addYear(); 
+        $expiryDate = utcNow()->addYear(); 
         if ($tier && $tier->name === 'Pinnacle') {
-            $expiryDate = now()->addYears(3);
+            $expiryDate = utcNow()->addYears(3);
         }
 
         $member->update([
@@ -64,7 +64,7 @@ class MemberApprovalService
             'is_active' => true,
             'password' => Hash::make($notification->getPassword()),
             'membership_number' => $membershipNumber,
-            'membership_start_at' => now(),
+            'membership_start_at' => utcNow(),
             'membership_expires_at' => $expiryDate,
         ]);
 
@@ -105,7 +105,7 @@ class MemberApprovalService
             'metadata' => [
                 'status_changed_to_pending' => true,
                 'previous_status' => 'approved',
-                'changed_at' => now()->toISOString(),
+                'changed_at' => utcNow()->toISOString(),
                 'previous_is_active' => true,
                 'action_type' => 'status_change_to_pending',
             ],
@@ -145,7 +145,7 @@ class MemberApprovalService
             'metadata' => [
                 'status_changed_to_suspended' => true,
                 'previous_status' => $previousStatus,
-                'changed_at' => now()->toISOString(),
+                'changed_at' => utcNow()->toISOString(),
                 'previous_is_active' => $previousIsActive,
                 'action_type' => 'status_change_to_suspended',
             ],
@@ -185,7 +185,7 @@ class MemberApprovalService
             'metadata' => [
                 'reactivated_from_suspended' => true,
                 'previous_status' => $previousStatus,
-                'changed_at' => now()->toISOString(),
+                'changed_at' => utcNow()->toISOString(),
                 'previous_is_active' => $previousIsActive,
                 'action_type' => 'reactivation_from_suspended',
                 'password_preserved' => true,
