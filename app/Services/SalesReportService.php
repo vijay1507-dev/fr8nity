@@ -98,7 +98,7 @@ class SalesReportService
         // CSV Headers
         $headers = [
             'Date',
-            'Quotation ID',
+            'Reference Quotation No',
             'Role',
             'Giver Name',
             'Giver Company',
@@ -208,21 +208,11 @@ class SalesReportService
     public function generateAllMembersCsvData(Collection $quotations, ?string $dateFrom = null, ?string $dateTo = null): string
     {
         $csvData = "";
-        if ($dateFrom || $dateTo) {
-            $csvData .= "Date Range: ";
-            if ($dateFrom && $dateTo) {
-                $csvData .= "From {$dateFrom} to {$dateTo}\n";
-            } elseif ($dateFrom) {
-                $csvData .= "From {$dateFrom}\n";
-            } elseif ($dateTo) {
-                $csvData .= "Until {$dateTo}\n";
-            }
-        }
 
         // CSV Headers
         $headers = [
             'Date',
-            'Quotation ID',
+            'Reference Quotation No',
             'Giver Name',
             'Giver Company',
             'Receiver Name',
@@ -269,7 +259,7 @@ class SalesReportService
      */
     public function generateFilename(User $member): string
     {
-        return 'successful_sales_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . now()->format('Y_m_d_H_i_s') . '.csv';
+        return 'successful_sales_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . utcNow()->format('Y_m_d_H_i_s') . '.csv';
     }
 
     /**
@@ -277,7 +267,7 @@ class SalesReportService
      */
     public function generateAllQuotationsFilename(User $member): string
     {
-        return 'all_quotations_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . now()->format('Y_m_d_H_i_s') . '.csv';
+        return 'all_quotations_report_' . str_replace(' ', '_', strtolower($member->name)) . '_' . utcNow()->format('Y_m_d_H_i_s') . '.csv';
     }
 
     /**
@@ -285,7 +275,7 @@ class SalesReportService
      */
     public function generateAllMembersFilename(?string $dateFrom = null, ?string $dateTo = null): string
     {
-        $filename = 'all_members_successful_sales_report_' . now()->format('Y_m_d_H_i_s');
+        $filename = 'all_members_successful_sales_report_' . utcNow()->format('Y_m_d_H_i_s');
         
         if ($dateFrom && $dateTo) {
             $filename .= '_' . $dateFrom . '_to_' . $dateTo;
@@ -383,5 +373,179 @@ class SalesReportService
                 'company' => $member->company_name
             ]
         ];
+    }
+
+    /**
+     * Get members grouped by country within date range
+     */
+    public function getMembersByCountry(?string $dateFrom = null, ?string $dateTo = null): Collection
+    {
+        $query = User::with(['country'])
+            ->where('role', User::MEMBER)
+            ->where('status', 'approved');
+
+        // Apply date filters if provided
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        return $query->orderByRaw('CASE WHEN country_id IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('country_id')
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Get members grouped by membership type within date range
+     */
+    public function getMembersByMembershipType(?string $dateFrom = null, ?string $dateTo = null): Collection
+    {
+        $query = User::with(['membershipTier'])
+            ->where('role', User::MEMBER)
+            ->where('status', 'approved');
+
+        // Apply date filters if provided
+        if ($dateFrom) {
+            $query->whereDate('created_at', '>=', $dateFrom);
+        }
+        if ($dateTo) {
+            $query->whereDate('created_at', '<=', $dateTo);
+        }
+
+        return $query->orderByRaw('CASE WHEN membership_tier IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('membership_tier')
+            ->orderBy('name')
+            ->get();
+    }
+
+    /**
+     * Generate CSV data for members by country report
+     */
+    public function generateMembersByCountryCsvData(Collection $members, ?string $dateFrom = null, ?string $dateTo = null): string
+    {
+        // CSV Headers
+        $headers = [
+            'Country',
+            'Member Name',
+            'Company Name',
+            'Email',
+            'Membership Tier',
+            'Status',
+            'Registration Date',
+            'Company Address'
+        ];
+
+        $csvData = implode(',', array_map([$this, 'escapeCsvValue'], $headers)) . "\n";
+
+        // Group members by country for better organization
+        $groupedMembers = $members->groupBy(function ($member) {
+            return $member->country ? $member->country->name : 'No Country Assigned';
+        });
+
+        // CSV Data rows
+        foreach ($groupedMembers as $countryName => $countryMembers) {
+            foreach ($countryMembers as $member) {
+                $row = [
+                    $countryName,
+                    $member->name ?? 'N/A',
+                    $member->company_name ?? 'N/A',
+                    $member->email ?? 'N/A',
+                    $member->membershipTier->name ?? 'N/A',
+                    $member->status ?? 'N/A',
+                    $member->created_at->format('Y-m-d'),
+                    $member->company_address ?? 'N/A'
+                ];
+
+                $csvData .= implode(',', array_map([$this, 'escapeCsvValue'], $row)) . "\n";
+            }
+        }
+
+        return $csvData;
+    }
+
+    /**
+     * Generate CSV data for membership type report
+     */
+    public function generateMembershipTypeCsvData(Collection $members, ?string $dateFrom = null, ?string $dateTo = null): string
+    {
+        // CSV Headers
+        $headers = [
+            'Membership Type',
+            'Member Name',
+            'Company Name',
+            'Email',
+            'Country',
+            'Status',
+            'Registration Date',
+            'Annual Fee',
+            'Company Address'
+        ];
+
+        $csvData = implode(',', array_map([$this, 'escapeCsvValue'], $headers)) . "\n";
+
+        // Group members by membership type for better organization
+        $groupedMembers = $members->groupBy(function ($member) {
+            return $member->membershipTier ? $member->membershipTier->name : 'No Membership';
+        });
+
+        // CSV Data rows
+        foreach ($groupedMembers as $membershipType => $typeMembers) {
+            foreach ($typeMembers as $member) {
+                $row = [
+                    $membershipType,
+                    $member->name ?? 'N/A',
+                    $member->company_name ?? 'N/A',
+                    $member->email ?? 'N/A',
+                    $member->country ? $member->country->name : 'No Country Assigned',
+                    $member->status ?? 'N/A',
+                    $member->created_at->format('Y-m-d'),
+                    $member->membershipTier->annual_fee ?? 'N/A',
+                    $member->company_address ?? 'N/A'
+                ];
+
+                $csvData .= implode(',', array_map([$this, 'escapeCsvValue'], $row)) . "\n";
+            }
+        }
+
+        return $csvData;
+    }
+
+    /**
+     * Generate filename for members by country CSV export
+     */
+    public function generateMembersByCountryFilename(?string $dateFrom = null, ?string $dateTo = null): string
+    {
+        $filename = 'members_by_country_report_' . utcNow()->format('Y_m_d_H_i_s');
+        
+        if ($dateFrom && $dateTo) {
+            $filename .= '_' . $dateFrom . '_to_' . $dateTo;
+        } elseif ($dateFrom) {
+            $filename .= '_from_' . $dateFrom;
+        } elseif ($dateTo) {
+            $filename .= '_until_' . $dateTo;
+        }
+        
+        return $filename . '.csv';
+    }
+
+    /**
+     * Generate filename for membership type CSV export
+     */
+    public function generateMembershipTypeFilename(?string $dateFrom = null, ?string $dateTo = null): string
+    {
+        $filename = 'membership_type_report_' . utcNow()->format('Y_m_d_H_i_s');
+        
+        if ($dateFrom && $dateTo) {
+            $filename .= '_' . $dateFrom . '_to_' . $dateTo;
+        } elseif ($dateFrom) {
+            $filename .= '_from_' . $dateFrom;
+        } elseif ($dateTo) {
+            $filename .= '_until_' . $dateTo;
+        }
+        
+        return $filename . '.csv';
     }
 }

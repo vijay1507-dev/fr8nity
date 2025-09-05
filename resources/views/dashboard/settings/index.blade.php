@@ -31,6 +31,21 @@
                             @enderror
                         </div>
 
+                        <div class="form-group">
+                            <label for="renewal_days_prior_expiring" class="form-label text-bold mb-2">Renewal Days of Prior Expiring</label>
+                            <input type="number" 
+                                   class="form-control @error('renewal_days_prior_expiring') is-invalid @enderror" 
+                                   id="renewal_days_prior_expiring" 
+                                   name="renewal_days_prior_expiring" 
+                                   value="{{ old('renewal_days_prior_expiring', $renewalDaysPriorExpiring ?? 30) }}"
+                                   min="1"
+                                   max="365">
+                            <small class="form-text text-muted">Number of days before membership expiry to consider as early renewal (1-365 days)</small>
+                            @error('renewal_days_prior_expiring')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Update</button>
                     </form>
                 </div>

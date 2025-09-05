@@ -47,7 +47,7 @@
                             @endif
                             <input type="file" class="form-control @error('feature_image') is-invalid @enderror" 
                                    id="feature_image" name="feature_image" accept="image/*">
-                            <div class="form-text">Leave empty to keep current image. Supported formats: JPEG, PNG, JPG, GIF. Max size: 2MB</div>
+                            <div class="form-text">Leave empty to keep current image. Supported formats: JPEG, PNG, JPG, GIF. Max size: 10MB</div>
                             @error('feature_image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

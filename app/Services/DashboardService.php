@@ -36,7 +36,7 @@ class DashboardService
      */
     public function getFilteredDashboardData(int $userId, int $period): array
     {
-        $startDate = Carbon::now()->subMonths($period);
+        $startDate = utcNow()->subMonths($period);
         
         return [
             'given_quotations' => $this->getGivenQuotationsData($userId, $startDate),
@@ -185,8 +185,8 @@ class DashboardService
      */
     public function getMonthlyChartData(int $userId, int $year = null): array
     {
-        $year = $year ?? Carbon::now()->year;
-        $currentMonth = $year == Carbon::now()->year ? Carbon::now()->month : 12;
+        $year = $year ?? utcNow()->year;
+        $currentMonth = $year == utcNow()->year ? utcNow()->month : 12;
         $months = [];
         $givenData = [];
         $receivedData = [];
@@ -252,7 +252,7 @@ class DashboardService
      */
     public function getAdminDashboardData(int $period = 12): array
     {
-        $startDate = Carbon::now()->subMonths($period);
+        $startDate = utcNow()->subMonths($period);
         return [
             'new_signups' => $this->getNewSignupsCount($startDate),
             'member_churn' => $this->getMemberChurnData($startDate),
@@ -260,6 +260,8 @@ class DashboardService
             'membership_fees' => $this->getMembershipFeesByTier($startDate),
             'average_revenue' => $this->getAverageRevenuePerMonth(),
             'country_members' => $this->getCountryWiseMemberCounts(),
+            'referral_leaders' => $this->getReferralLeaders($startDate),
+            'inactive_members' => $this->getInactiveMembersCount(),
         ];
     }
 
@@ -289,7 +291,7 @@ class DashboardService
         // This counts members whose membership expired but they weren't cancelled or renewed
         $nonRenewals = User::where('role', User::MEMBER)
             ->where('status', 'approved') // Only approved members (not cancelled)
-            ->where('membership_expires_at', '<', now()) // Expired
+            ->where('membership_expires_at', '<', utcNow()) // Expired
             ->where('membership_expires_at', '>=', $startDate) // Expired in the period
             ->where('deleted_at', null)
             ->count();
@@ -305,15 +307,26 @@ class DashboardService
      */
     private function getTierGrowthData(Carbon $startDate): array
     {
-        $upgrades = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
-            ->where('status', MembershipLog::STATUS_UPGRADE)
+        // Get the most recent tier change for each user in the period
+        // This ensures each user is counted only once based on their latest action
+        $latestTierChanges = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
             ->where('created_at', '>=', $startDate)
-            ->count();
+            ->whereHas('user', function($query) {
+                $query->where('status', User::STATUS_APPROVED);
+            })
+            ->whereIn('status', [MembershipLog::STATUS_UPGRADE, MembershipLog::STATUS_DOWNGRADE])
+            ->selectRaw('user_id, status, created_at')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy('user_id')
+            ->map(function($userLogs) {
+                // Return only the most recent log for each user
+                return $userLogs->first();
+            });
 
-        $downgrades = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
-            ->where('status', MembershipLog::STATUS_DOWNGRADE)
-            ->where('created_at', '>=', $startDate)
-            ->count();
+        // Count upgrades and downgrades from the latest changes per user
+        $upgrades = $latestTierChanges->where('status', MembershipLog::STATUS_UPGRADE)->count();
+        $downgrades = $latestTierChanges->where('status', MembershipLog::STATUS_DOWNGRADE)->count();
 
         return [
             'upgrades' => $upgrades,
@@ -359,10 +372,11 @@ class DashboardService
         }
 
         foreach ($tiers as $tier) {
-            // Get total count of active users for this tier (regardless of start date)
+            // Get count of all currently active users for this tier
+            // Note: We don't filter by created_at here as we want to show current membership distribution
             $memberCount = User::where('role', User::MEMBER)
                 ->where('membership_tier', $tier->id)
-                ->where('status', 'approved') // Only approved members (not cancelled)
+                ->where('status', 'approved') 
                 ->where('deleted_at', null)
                 ->count();
 
@@ -415,5 +429,59 @@ class DashboardService
     private function getAverageRevenuePerMonth(): float
     {
         return 0;
+    }
+
+    /**
+     * Get referral leaders data for the admin dashboard
+     */
+    private function getReferralLeaders(Carbon $startDate): array
+    {
+        $referralLeaders = User::select([
+                'users.id',
+                'users.name', 
+                'users.company_name',
+                'users.company_logo'
+            ])
+            ->selectRaw('COUNT(referrals.id) as referral_count')
+            ->leftJoin('referrals', 'users.id', '=', 'referrals.referrer_id')
+            ->where('users.role', User::MEMBER)
+            ->where('users.status', 'approved')
+            ->where('users.deleted_at', null)
+            ->where(function($query) use ($startDate) {
+                $query->where('referrals.created_at', '>=', $startDate)
+                      ->orWhereNull('referrals.created_at');
+            })
+            ->groupBy('users.id', 'users.name', 'users.company_name', 'users.company_logo')
+            ->having('referral_count', '>', 0)
+            ->orderBy('referral_count', 'desc')
+            ->limit(10)
+            ->get();
+
+        return $referralLeaders->map(function ($leader) {
+            return [
+                'id' => $leader->id,
+                'name' => $leader->name,
+                'company_name' => $leader->company_name,
+                'company_logo' => $leader->company_logo ? asset('storage/' . $leader->company_logo) : asset('images/default-company-logo.png'),
+                'referral_count' => $leader->referral_count,
+            ];
+        })->toArray();
+    }
+
+    /**
+     * Get count of active members with 0 points
+     */
+    public function getInactiveMembersCount(): int
+    {
+        return User::where('role', User::MEMBER)
+            ->where('status', User::STATUS_APPROVED)
+            ->where('is_active', true)
+            ->whereNotExists(function($query) {
+                $query->selectRaw(1)
+                    ->from('reward_points')
+                    ->whereColumn('reward_points.user_id', 'users.id')
+                    ->where('reward_points.points', '>', 0);
+            })
+            ->count();
     }
 }

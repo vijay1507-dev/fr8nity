@@ -16,16 +16,19 @@ class SettingsController extends Controller
     public function index()
     {
         $reminderDays = $this->settingsService->getMembershipReminderDays();
-        return view('dashboard.settings.index', compact('reminderDays'));
+        $renewalDaysPriorExpiring = $this->settingsService->getRenewalDaysPriorExpiring();
+        return view('dashboard.settings.index', compact('reminderDays', 'renewalDaysPriorExpiring'));
     }
 
     public function update(Request $request)
     {
         $request->validate([
-            'membership_reminder_days' => 'required|integer|min:1|max:90'
+            'membership_reminder_days' => 'required|integer|min:1|max:90',
+            'renewal_days_prior_expiring' => 'required|integer|min:1|max:365'
         ]);
 
         $this->settingsService->setMembershipReminderDays((int) $request->membership_reminder_days);
+        $this->settingsService->setRenewalDaysPriorExpiring((int) $request->renewal_days_prior_expiring);
 
         return redirect()->route('settings.index')
             ->with('success', 'Settings updated successfully');

@@ -158,6 +158,21 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::delete('/{member}', [MemberController::class, 'destroy'])->name('members.destroy');
         Route::post('/{member}/cancel-membership', [MemberController::class, 'cancelMembership'])->name('members.cancel-membership');
         Route::post('/{member}/renew-membership', [MemberController::class, 'renewMembership'])->name('members.renew-membership');
+        Route::post('/{member}/early-renewal', [MemberController::class, 'earlyRenewal'])->name('members.early-renewal');
+        Route::post('/{member}/allocate-points', [MemberController::class, 'allocatePoints'])->name('members.allocate-points');
+        
+        // Membership renewal management routes
+        Route::get('/{member}/renewals', [\App\Http\Controllers\MembershipRenewalController::class, 'index'])->name('members.renewals.index');
+        Route::get('/{member}/renewals/{renewal}', [\App\Http\Controllers\MembershipRenewalController::class, 'show'])->name('members.renewals.show');
+        Route::post('/{member}/renewals/{renewal}/activate', [\App\Http\Controllers\MembershipRenewalController::class, 'activate'])->name('members.renewals.activate');
+        Route::post('/{member}/renewals/{renewal}/force-activate', [\App\Http\Controllers\MembershipRenewalController::class, 'forceActivate'])->name('members.renewals.force-activate');
+        Route::post('/{member}/renewals/{renewal}/cancel', [\App\Http\Controllers\MembershipRenewalController::class, 'cancel'])->name('members.renewals.cancel');
+    });
+
+    // Global renewal management routes
+    Route::middleware('admin')->prefix('renewals')->group(function () {
+        Route::get('/pending', [\App\Http\Controllers\MembershipRenewalController::class, 'pending'])->name('renewals.pending');
+        Route::post('/activate-multiple', [\App\Http\Controllers\MembershipRenewalController::class, 'activateMultiple'])->name('renewals.activate-multiple');
     });
 
     // Settings routes
@@ -248,6 +263,21 @@ Route::middleware(['auth', 'kyc.complete'])->group(function () {
         Route::get('/', [SalesReportController::class, 'index'])->name('sales-report.index');
         Route::post('/export', [SalesReportController::class, 'export'])->name('sales-report.export');
         Route::get('/members', [SalesReportController::class, 'getMembers'])->name('sales-report.members');
+    });
+    
+    // New Report routes
+    Route::middleware('admin')->prefix('reports')->group(function () {
+        // Members by Country Report
+        Route::prefix('members-by-country')->name('reports.members-by-country.')->group(function () {
+            Route::get('/', [SalesReportController::class, 'membersByCountryIndex'])->name('index');
+            Route::post('/export', [SalesReportController::class, 'membersByCountryExport'])->name('export');
+        });
+        
+        // Membership Type Report
+        Route::prefix('membership-type')->name('reports.membership-type.')->group(function () {
+            Route::get('/', [SalesReportController::class, 'membershipTypeIndex'])->name('index');
+            Route::post('/export', [SalesReportController::class, 'membershipTypeExport'])->name('export');
+        });
     });
     // Admin Quotations routes
     Route::middleware('admin')->prefix('admin')->group(function () {

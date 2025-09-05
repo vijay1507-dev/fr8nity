@@ -44,7 +44,7 @@ trait TracksSeeder
             ['seeder' => $class],
             [
                 'batch' => $batch,
-                'seeded_at' => now()
+                'seeded_at' => utcNow()
             ]
         );
     }

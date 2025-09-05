@@ -1,6 +1,6 @@
 @extends('layouts.dashboard')
 
-@section('title', 'Member Sales Report')
+@section('title', 'Member Report')
 
 @section('content')
 <div class="container-fluid">
@@ -8,8 +8,8 @@
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header">
-                    <h4 class="card-title mb-0">Member Sales Report</h4>
-                    <p class="card-subtitle text-muted">Generate your sales report based on date range</p>
+                    <h4 class="card-title mb-0">Member Report</h4>
+                    <p class="card-subtitle text-muted">Generate your report based on date range</p>
                 </div>
                 <div class="card-body col-md-8 mx-auto">
                     @if(session('success'))

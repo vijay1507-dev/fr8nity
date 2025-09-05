@@ -51,6 +51,8 @@
                                     <small class="text-muted">{{ number_format($adminData['membership_fees']['explorer']['count'] ?? 0) }} active members</small>
                                     <br>
                                     <small class="text-info">Annual Fee: ${{ number_format($adminData['membership_fees']['explorer']['annual_fee'] ?? 0) }}</small>
+                                    <br>
+                                    <button class="view-btn mt-2" onclick="redirectWithPeriod('{{ route('members.index') }}?tier=explorer')">View</button>
                                 </div>
                                 <div class="col-3 p-3 py-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Elevate">
@@ -61,6 +63,8 @@
                                     <small class="text-muted">{{ number_format($adminData['membership_fees']['elevate']['count'] ?? 0) }} active members</small>
                                     <br>
                                     <small class="text-info">Annual Fee: ${{ number_format($adminData['membership_fees']['elevate']['annual_fee'] ?? 0) }}</small>
+                                    <br>
+                                    <button class="view-btn mt-2" onclick="redirectWithPeriod('{{ route('members.index') }}?tier=elevate')">View</button>
                                 </div>
                                 <div class="col-3 p-3 py-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Summit">
@@ -71,6 +75,8 @@
                                     <small class="text-muted">{{ number_format($adminData['membership_fees']['summit']['count'] ?? 0) }} active members</small>
                                     <br>
                                     <small class="text-info">Annual Fee: ${{ number_format($adminData['membership_fees']['summit']['annual_fee'] ?? 0) }}</small>
+                                    <br>
+                                    <button class="view-btn mt-2" onclick="redirectWithPeriod('{{ route('members.index') }}?tier=summit')">View</button>
                                 </div>
                                 <div class="col-3 p-3 py-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Pinnacle">
@@ -81,19 +87,34 @@
                                     <small class="text-muted">{{ number_format($adminData['membership_fees']['pinnacle']['count'] ?? 0) }} active members</small>
                                     <br>
                                     <small class="text-info">Annual Fee: ${{ number_format($adminData['membership_fees']['pinnacle']['annual_fee'] ?? 0) }}</small>
+                                    <br>
+                                    <button class="view-btn mt-2" onclick="redirectWithPeriod('{{ route('members.index') }}?tier=pinnacle')">View</button>
                                 </div>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-12 col-lg-4 ">
-                        <div class="dashboard-card  p-0 h-100 d-flex flex-column">
+                        <div class="dashboard-card p-0 h-100 d-flex flex-column">
                             <div class="row flex-grow-1">
-                                <h6 class="text-center pt-3"> Average Revenue Per Month</h6>
-                                <div class="col-12 text-center p-4">
-                                    <img src="{{ asset('images/dashboardIcon5.svg') }}" alt="Average Revenue">
-                                    <h2 class="mb-0 mt-3" id="avg-revenue"> $ {{ number_format($adminData['average_revenue'] ?? 0) }}</h2>
-                                    <p class="pt-2">Monthly average revenue from all active members</p>
+                                <h6 class="text-center pt-3">Member Distribution by Tier</h6>
+                                <div class="col-12 p-3">
+                                    <div id="chart-container" style="position: relative; height: 200px;">
+                                        <canvas id="memberTierChart"></canvas>
+                                        <!-- Loading overlay for chart -->
+                                        <div id="chart-loading-overlay" class="chart-loading-overlay" style="display: none;">
+                                            <div class="loading-spinner">
+                                                <div class="spinner-ring"></div>
+                                                <div class="loading-text">Updating Chart...</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center mt-3">
+                                        <h4 class="mb-0" style="color: rgba(181, 131, 32, 1);" id="total-members">
+                                            Total: {{ number_format(($adminData['membership_fees']['explorer']['count'] ?? 0) + ($adminData['membership_fees']['elevate']['count'] ?? 0) + ($adminData['membership_fees']['summit']['count'] ?? 0) + ($adminData['membership_fees']['pinnacle']['count'] ?? 0)) }} Members
+                                        </h4>
+                                        <small class="text-muted">Active members across all tiers</small>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -111,6 +132,9 @@
                                     <img src="{{ asset('images/dashboardIcon5.svg') }}" alt="New Sign-ups">
                                     <h2 class="mb-0 mt-3" id="new-signups">{{ number_format($adminData['new_signups'] ?? 0) }}</h2>
                                     <p class="pt-2">New member registrations in the selected period</p>
+                                    <div class="text-center pb-3">
+                                        <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?new_signups=1')">View</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -124,14 +148,16 @@
                                     <h2 class="mb-0 mt-3" id="cancellations">
                                         {{ number_format($adminData['member_churn']['cancellations'] ?? 0) }}
                                     </h2>
-                                    <p class="pt-2">Cancellations </p>
+                                    <p class="pt-2">Cancellations</p>
+                                    <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?status=cancelled')">View</button>
                                 </div>
-                                <div class="col-6 p-3 py-4 text-center border-l">
+                                <div class="col-6 p-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Non-Renewals">
                                     <h2 class="mb-0 mt-3" id="non-renewals">
                                         {{ number_format($adminData['member_churn']['non_renewals'] ?? 0) }}
                                     </h2>
                                     <p class="pt-2">Non-Renewals</p>
+                                    <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?status=expired')">View</button>
                                 </div>
                             </div>
                         </div>
@@ -148,6 +174,7 @@
                                         {{ number_format($adminData['tier_growth']['upgrades'] ?? 0) }}
                                     </h2>
                                     <p class="pt-2">Upgrade </p>
+                                    <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?tier_change=upgrade')">View</button>
                                 </div>
                                 <div class="col-6 p-3 py-4 text-center border-l">
                                     <img src="{{ asset('images/dashboardIcon2.svg') }}" alt="Downgrades">
@@ -155,7 +182,63 @@
                                         {{ number_format($adminData['tier_growth']['downgrades'] ?? 0) }}
                                     </h2>
                                     <p class="pt-2">Downgrade</p>
+                                    <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?tier_change=downgrade')">View</button>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="">
+                    <h6 class="fw-semibold mb-0 mt-2">Referral & Business Flow Intelligence</h6>
+                </div>
+                    <!-- Inactive Members Section -->
+                    <div class="col-12 col-lg-4 ">
+                        <div class="dashboard-card  p-0 h-100 d-flex flex-column">
+                            <div class="row flex-grow-1">
+                                <h6 class="text-center pt-3">Inactive Members</h6>
+                                <div class="col-12 text-center px-4">
+                                    <img src="{{ asset('images/dashboardIcon5.svg') }}" alt="Inactive Members">
+                                    <h2 class="mb-0 mt-3" id="inactive-members-count">{{ number_format($adminData['inactive_members'] ?? 0) }}</h2>
+                                    <p class="pt-2">Active members with 0 points</p>
+                                </div>
+                            </div>
+                            <div class="text-center pb-3">
+                                <button class="view-btn" onclick="redirectWithPeriod('{{ route('members.index') }}?no_activity=1')">View</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Most Referred Leaders Section -->
+                    <div class="col-12 col-lg-8 d-flex">
+                        <div class="chart-card w-100">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <div>
+                                    <h1 class="chart-title">Most Referred Leaders</h1>
+                                </div>
+                            </div>
+
+                            <!-- Referral Leaders Wrapper -->
+                            <div class="leaderboard-wrapper p-3" style="max-height: 400px; overflow-y: auto;">
+                                @if(count($adminData['referral_leaders'] ?? []) > 0)
+                                    <ul class="list-unstyled mb-0">
+                                        @foreach($adminData['referral_leaders'] as $index => $leader)
+                                        <li class="d-flex align-items-center mb-3 p-2 rounded leaderboard-item">
+                                            <img src="{{ $leader['company_logo'] }}" class="rounded-circle me-3" width="50" height="50" alt="{{ $leader['company_name'] }}">
+                                            <div class="flex-grow-1">
+                                                <div class="text-muted small">#{{ $index + 1 }} Referrer</div>
+                                                <span class="fw-semibold d-block">{{ $leader['company_name'] }}</span>
+                                                <div class="text-muted small">{{ $leader['referral_count'] }} referrals</div>
+                                            </div>
+                                            <span class="badge bg-warning text-dark">Top Referrer</span>
+                                        </li>
+                                        @endforeach
+                                    </ul>
+                                @else
+                                    <div class="text-center text-muted py-4">
+                                        <p>No referral data available yet.</p>
+                                        <p class="small">Members will appear here once they start referring others!</p>
+                                    </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -177,16 +260,86 @@
 
 
 @section('scripts')
+    <style>
+        /* Chart Loading Animation Styles */
+        .chart-loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            border-radius: 8px;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .loading-spinner {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .spinner-ring {
+            width: 40px;
+            height: 40px;
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #B58320;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            box-shadow: 0 2px 8px rgba(181, 131, 32, 0.2);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #B58320;
+            text-align: center;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; }
+        }
+
+        /* Enhanced chart container */
+        #chart-container {
+            transition: all 0.3s ease-in-out;
+        }
+
+        /* Smooth transitions for chart updates */
+        #memberTierChart {
+            transition: filter 0.3s ease-in-out, opacity 0.3s ease-in-out;
+        }
+
+        /* Loading state for total members counter */
+        #total-members {
+            transition: all 0.3s ease-in-out;
+        }
+
+    </style>
+
     <script src="https://cdn.amcharts.com/lib/5/index.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/map.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/geodata/worldLow.js"></script>
     <script src="https://cdn.amcharts.com/lib/5/themes/Animated.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             // Period button functionality
             const periodButtons = document.querySelectorAll('.monthbtn');
-            let currentPeriod = 12; // Default to 1 year
+            window.currentPeriod = 12; // Default to 1 year (make it global)
 
             periodButtons.forEach(button => {
                 button.addEventListener('click', function() {
@@ -196,12 +349,132 @@
                     this.classList.add('active');
                     
                     const period = parseInt(this.dataset.period);
-                    currentPeriod = period;
+                    window.currentPeriod = period;
                     
                     // Update dashboard data
                     updateAdminDashboardData(period);
                 });
             });
+
+            // Initialize Member Tier Pie Chart
+            initializeMemberTierChart();
+
+            // Function to initialize the member tier pie chart
+            function initializeMemberTierChart() {
+                const ctx = document.getElementById('memberTierChart').getContext('2d');
+                
+                // Get initial data from PHP
+                const memberData = {
+                    explorer: {{ $adminData['membership_fees']['explorer']['count'] ?? 0 }},
+                    elevate: {{ $adminData['membership_fees']['elevate']['count'] ?? 0 }},
+                    summit: {{ $adminData['membership_fees']['summit']['count'] ?? 0 }},
+                    pinnacle: {{ $adminData['membership_fees']['pinnacle']['count'] ?? 0 }}
+                };
+
+                window.memberTierChart = new Chart(ctx, {
+                    type: 'pie',
+                    data: {
+                        labels: ['Explorer', 'Elevate', 'Summit', 'Pinnacle'],
+                        datasets: [{
+                            data: [memberData.explorer, memberData.elevate, memberData.summit, memberData.pinnacle],
+                            backgroundColor: [
+                                '#B58320', // Explorer - Gold
+                                '#8B6914', // Elevate - Dark Gold
+                                '#D4AF37', // Summit - Goldenrod
+                                '#FFD700'  // Pinnacle - Bright Gold
+                            ],
+                            borderColor: [
+                                '#9A6F1B',
+                                '#6B5010',
+                                '#B8941F',
+                                '#E6C200'
+                            ],
+                            borderWidth: 2,
+                            hoverOffset: 8,
+                            hoverBorderWidth: 3,
+                            hoverBackgroundColor: [
+                                '#D4A332', // Lighter gold on hover
+                                '#A67C1A',
+                                '#E6C149',
+                                '#FFE033'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        animation: {
+                            animateRotate: true,
+                            animateScale: true,
+                            duration: 1500,
+                            easing: 'easeInOutQuart'
+                        },
+                        interaction: {
+                            intersect: false,
+                            mode: 'point'
+                        },
+                        plugins: {
+                            legend: {
+                                position: 'bottom',
+                                labels: {
+                                    padding: 15,
+                                    usePointStyle: true,
+                                    font: {
+                                        size: 12
+                                    }
+                                }
+                            },
+                            tooltip: {
+                                enabled: true,
+                                backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                                titleColor: '#B58320',
+                                bodyColor: '#ffffff',
+                                borderColor: '#B58320',
+                                borderWidth: 1,
+                                cornerRadius: 8,
+                                displayColors: true,
+                                animation: {
+                                    duration: 300,
+                                    easing: 'easeOutQuart'
+                                },
+                                callbacks: {
+                                    label: function(context) {
+                                        const label = context.label || '';
+                                        const value = context.parsed || 0;
+                                        const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                        const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        return `${label}: ${value} members (${percentage}%)`;
+                                    }
+                                }
+                            }
+                        },
+                        onHover: function(event, elements) {
+                            event.native.target.style.cursor = elements.length > 0 ? 'pointer' : 'default';
+                        },
+                        onClick: function(event, elements) {
+                            if (elements.length > 0) {
+                                const index = elements[0].index;
+                                const tierNames = ['explorer', 'elevate', 'summit', 'pinnacle'];
+                                const tierName = tierNames[index];
+                                
+                                // Add click animation
+                                const chart = this;
+                                chart.update('none');
+                                setTimeout(() => {
+                                    redirectWithPeriod(`{{ route('members.index') }}?tier=${tierName}`);
+                                }, 150);
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Function to redirect with current period parameter (make it global)
+            window.redirectWithPeriod = function(baseUrl) {
+                const separator = baseUrl.includes('?') ? '&' : '?';
+                const url = baseUrl + separator + 'period=' + window.currentPeriod;
+                window.location.href = url;
+            };
 
             // Function to update admin dashboard data via AJAX
             function updateAdminDashboardData(period) {
@@ -318,10 +591,37 @@
                         }
                     }
 
-                    // Update average revenue
-                    const avgRevenueElement = document.getElementById('avg-revenue');
-                    if (avgRevenueElement && data.average_revenue !== undefined) {
-                        avgRevenueElement.textContent = '$ ' + Number(data.average_revenue || 0).toLocaleString();
+                    // Update pie chart data with enhanced animation
+                    if (data.membership_fees && window.memberTierChart) {
+                        console.log('Updating pie chart with new data:', data.membership_fees);
+                        
+                        const newData = [
+                            data.membership_fees.explorer?.count || 0,
+                            data.membership_fees.elevate?.count || 0,
+                            data.membership_fees.summit?.count || 0,
+                            data.membership_fees.pinnacle?.count || 0
+                        ];
+                        
+                        console.log('New chart data:', newData);
+                        
+                        // Update chart data with animation
+                        window.memberTierChart.data.datasets[0].data = newData;
+                        window.memberTierChart.update({
+                            duration: 800,
+                            easing: 'easeInOutQuart'
+                        });
+                        
+                        // Update total members count
+                        const totalMembers = newData.reduce((a, b) => a + b, 0);
+                        const totalMembersElement = document.getElementById('total-members');
+                        if (totalMembersElement) {
+                            totalMembersElement.style.color = 'rgba(181, 131, 32, 1)';
+                            totalMembersElement.textContent = 'Total: ' + Number(totalMembers).toLocaleString() + ' Members';
+                        }
+                        
+                        console.log('Chart updated successfully');
+                    } else {
+                        console.log('Chart update failed - missing data or chart not initialized');
                     }
 
                     // Update new sign-ups
@@ -354,6 +654,12 @@
                         }
                     }
 
+                    // Update inactive members count
+                    const inactiveMembersElement = document.getElementById('inactive-members-count');
+                    if (inactiveMembersElement && data.inactive_members !== undefined) {
+                        inactiveMembersElement.textContent = Number(data.inactive_members || 0).toLocaleString();
+                    }
+
                     // Update map data
                     if (data.country_members) {
                         updateMapData(data.country_members);
@@ -368,7 +674,7 @@
             function showLoadingState() {
                 // Add loading indicators to key elements
                 const elements = ['explorer-revenue', 'elevate-revenue', 'summit-revenue', 'pinnacle-revenue', 
-                                'avg-revenue', 'new-signups', 'cancellations', 'non-renewals', 'upgrades', 'downgrades'];
+                                'total-members', 'new-signups', 'cancellations', 'non-renewals', 'upgrades', 'downgrades', 'inactive-members-count'];
                 
                 elements.forEach(id => {
                     const element = document.getElementById(id);
@@ -386,12 +692,15 @@
                 if (mapContainer) {
                     mapContainer.style.opacity = '0.7';
                 }
+
+                // Show enhanced loading state for pie chart
+                showChartLoadingAnimation();
             }
 
             // Function to hide loading state
             function hideLoadingState() {
                 const elements = ['explorer-revenue', 'elevate-revenue', 'summit-revenue', 'pinnacle-revenue', 
-                                'avg-revenue', 'new-signups', 'cancellations', 'non-renewals', 'upgrades', 'downgrades'];
+                                'new-signups', 'cancellations', 'non-renewals', 'upgrades', 'downgrades', 'inactive-members-count'];
                 
                 elements.forEach(id => {
                     const element = document.getElementById(id);
@@ -401,11 +710,64 @@
                         element.style.fontSize = ''; 
                     }
                 });
-
+                
+                // Special handling for total-members to maintain its color
+                const totalMembersElement = document.getElementById('total-members');
+                if (totalMembersElement) {
+                    totalMembersElement.style.opacity = '1';
+                    totalMembersElement.style.color = 'rgba(181, 131, 32, 1)'; // Maintain gold color
+                    totalMembersElement.style.fontSize = ''; 
+                }
                 // Restore map opacity
                 const mapContainer = document.getElementById('chartdiv');
                 if (mapContainer) {
                     mapContainer.style.opacity = '1';
+                }
+
+                // Hide chart loading animation
+                hideChartLoadingAnimation();
+            }
+
+            // Function to show chart loading animation
+            function showChartLoadingAnimation() {
+                const chartContainer = document.getElementById('chart-container');
+                const loadingOverlay = document.getElementById('chart-loading-overlay');
+                const chartCanvas = document.getElementById('memberTierChart');
+                
+                if (chartContainer && loadingOverlay && chartCanvas) {
+                    // Add blur effect to chart
+                    chartCanvas.style.filter = 'blur(2px)';
+                    chartCanvas.style.opacity = '0.3';
+                    chartCanvas.style.transition = 'all 0.3s ease-in-out';
+                    
+                    // Show loading overlay with fade-in animation
+                    loadingOverlay.style.display = 'flex';
+                    loadingOverlay.style.opacity = '0';
+                    
+                    // Trigger fade-in animation
+                    setTimeout(() => {
+                        loadingOverlay.style.opacity = '1';
+                    }, 10);
+                }
+            }
+
+            // Function to hide chart loading animation
+            function hideChartLoadingAnimation() {
+                const loadingOverlay = document.getElementById('chart-loading-overlay');
+                const chartCanvas = document.getElementById('memberTierChart');
+                
+                if (loadingOverlay && chartCanvas) {
+                    // Fade out loading overlay
+                    loadingOverlay.style.opacity = '0';
+                    
+                    // Remove blur effect from chart
+                    chartCanvas.style.filter = 'none';
+                    chartCanvas.style.opacity = '1';
+                    
+                    // Hide overlay after fade-out completes
+                    setTimeout(() => {
+                        loadingOverlay.style.display = 'none';
+                    }, 300);
                 }
             }
 
@@ -623,6 +985,7 @@
                 min: am5.color(0xd4e6f1),
                 max: am5.color(0x154360)
             }]);
+
 
             // Click navigation
             worldSeries.mapPolygons.template.events.on("click", function (ev) {

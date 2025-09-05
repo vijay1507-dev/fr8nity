@@ -39,7 +39,7 @@
                             <label for="feature_image" class="form-label">Feature Image <span class="text-danger">*</span></label>
                             <input type="file" class="form-control @error('feature_image') is-invalid @enderror" 
                                    id="feature_image" name="feature_image" accept="image/*" required>
-                            <div class="form-text">Maximum file size: 2MB. Accepted formats: JPEG, PNG, JPG, GIF</div>
+                            <div class="form-text">Maximum file size: 10MB. Accepted formats: JPEG, PNG, JPG, GIF</div>
                             @error('feature_image')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
@@ -49,7 +49,7 @@
                             <label for="gallery" class="form-label">Gallery Images (Optional)</label>
                             <input type="file" class="form-control @error('gallery.*') is-invalid @enderror" 
                                    id="gallery" name="gallery[]" accept="image/*" multiple>
-                            <div class="form-text">You can select multiple images. Maximum file size per image: 2MB</div>
+                            <div class="form-text">You can select multiple images. Maximum file size per image: 10MB</div>
                             @error('gallery.*')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror

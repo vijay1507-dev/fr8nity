@@ -69,25 +69,26 @@
                 <!-- Rewards -->
                 <div class="dashboard-card mt-4">
                     <div class="card-header bg-transparent border-0 p-4">
-                        <h5 class="mb-0">Reward Points</h5>
+                        <h5 class="mb-0">{{ __('translation.rewards_configuration') }}</h5>
                         <small class="text-muted">{{ $membershipTier->rewards->count() }} reward types</small>
                     </div>
-                    <div class="card-body p-4">
+                    <div class="card-body px-4">
                         @if($membershipTier->rewards->count() > 0)
                             <div class="table-responsive">
                                 <table class="table table-hover">
                                     <thead class="table-light">
                                         <tr>
-                                            <th>Activity Type</th>
-                                            <th>Base Points</th>
-                                            <th>Multiplier</th>
+                                            <th>{{ __('translation.activity_type') }}</th>
+                                            <th>{{ __('translation.points') }}</th>
+                                            <th>{{ __('translation.multiplier') }}</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @foreach($membershipTier->rewards as $reward)
                                         <tr>
                                             <td>
-                                                <span class="fw-semibold">{{ $reward->activity_type }}</span>
+                                                <span class="fw-medium">{{ $reward->label }}</span>
+                                                <br><small class="text-muted">{{ $reward->activity_type }}</small>
                                             </td>
                                             <td>
                                                 <span class="fw-semibold">{{ number_format($reward->points) }}</span>
@@ -95,7 +96,6 @@
                                             <td>
                                                 <span class="text-muted">× {{ $reward->multiplier }}</span>
                                             </td>
-
                                         </tr>
                                         @endforeach
                                     </tbody>

@@ -89,7 +89,13 @@ class MembershipTierController extends Controller
             ->orderBy('sort_order')
             ->get();
 
-        return view('dashboard.membership-tiers.create', compact('benefits'));
+        $defaultActivityTypes = MembershipTierReward::select('activity_type')
+            ->selectRaw('MAX(CASE WHEN label IS NOT NULL AND label != "" THEN label ELSE NULL END) as label')
+            ->groupBy('activity_type')
+            ->orderBy('activity_type')
+            ->get();
+
+        return view('dashboard.membership-tiers.create', compact('benefits', 'defaultActivityTypes'));
     }
 
     /**
@@ -140,6 +146,7 @@ class MembershipTierController extends Controller
                     if (!empty($reward['activity_type']) && !empty($reward['points'])) {
                         $tier->rewards()->create([
                             'activity_type' => $reward['activity_type'],
+                            'label' => $reward['label'] ?? null,
                             'points' => $reward['points'],
                             'multiplier' => $reward['multiplier'] ?? 1.00,
                         ]);
@@ -228,6 +235,7 @@ class MembershipTierController extends Controller
                             // Update existing reward
                             $membershipTier->rewards()->where('id', $reward['id'])->update([
                                 'activity_type' => $reward['activity_type'],
+                                'label' => $reward['label'] ?? null,
                                 'points' => $reward['points'],
                                 'multiplier' => $reward['multiplier'] ?? 1.00,
                             ]);
@@ -236,6 +244,7 @@ class MembershipTierController extends Controller
                             // Create new reward
                             $newReward = $membershipTier->rewards()->create([
                                 'activity_type' => $reward['activity_type'],
+                                'label' => $reward['label'] ?? null,
                                 'points' => $reward['points'],
                                 'multiplier' => $reward['multiplier'] ?? 1.00,
                             ]);

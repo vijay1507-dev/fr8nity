@@ -14,6 +14,21 @@
                     <a href="{{ route('members.index') }}" class="btn btn-sm btn-outline-secondary ms-2">Clear Filter</a>
                 </div>
             @endif
+            @if(request('no_activity') == '1')
+                <div class="alert alert-warning mb-3">
+                    <strong>Filtered by Activity:</strong> Showing only active members with 0 points (No Activity)
+                    <a href="{{ route('members.index') }}" class="btn btn-sm btn-outline-secondary ms-2">Clear Filter</a>
+                </div>
+            @endif
+            @if(!empty($filterInfo))
+                <div class="alert alert-primary mb-3">
+                    <strong>Dashboard Filter Applied:</strong> 
+                    @foreach($filterInfo as $key => $value)
+                        {{ $value }}@if(!$loop->last), @endif
+                    @endforeach
+                    <a href="{{ route('members.index') }}" class="btn btn-sm btn-outline-secondary ms-2">Clear Filter</a>
+                </div>
+            @endif
             <table class="table table-bordered data-table">
                 <thead>
                     <tr>
@@ -52,6 +67,21 @@
                 data: function (d) {
                     @if(request('country'))
                         d.country = "{{ request('country') }}";
+                    @endif
+                    @if(request('no_activity') == '1')
+                        d.no_activity = "1";
+                    @endif
+                    @if(request('tier'))
+                        d.tier = "{{ request('tier') }}";
+                    @endif
+                    @if(request('status'))
+                        d.status = "{{ request('status') }}";
+                    @endif
+                    @if(request('new_signups') == '1')
+                        d.new_signups = "1";
+                    @endif
+                    @if(request('tier_change'))
+                        d.tier_change = "{{ request('tier_change') }}";
                     @endif
                 }
             },

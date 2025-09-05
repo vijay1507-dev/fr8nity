@@ -9,7 +9,7 @@
                 @if(auth()->user()->role !== \App\Models\User::MEMBER)
                     <div class="dropdown">
                         <button
-                            class="btn btn-{{ $member->status === 'approved' ? 'success' : ($member->status === 'cancelled' ? 'danger' : 'warning') }} dropdown-toggle"
+                            class="btn btn-{{ $member->status === 'approved' ? 'success' : ($member->status === 'cancelled' ? 'danger' : ($member->status === 'suspended' ? 'dark' : 'warning')) }} dropdown-toggle"
                             type="button" data-bs-toggle="dropdown">
                             Status: {{ ucfirst($member->status) }}
                         </button>
@@ -27,15 +27,56 @@
                             </li>
                             @elseif($member->status === 'approved')
                             <li>
+                                <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="pending">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-clock me-2 text-warning"></i>Set as Pending
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
+                                <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="suspended">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-pause-circle me-2 text-dark"></i>Set as Suspended
+                                    </button>
+                                </form>
+                            </li>
+                            <li>
                                 <button type="button" class="dropdown-item text-danger" data-bs-toggle="modal" data-bs-target="#cancelMembershipModal">
                                     <i class="bi bi-x-circle me-2"></i>Cancel Membership
                                 </button>
                             </li>
-                            @elseif($member->status === 'cancelled')
                             <li>
                                 <button type="button" class="dropdown-item text-success" data-bs-toggle="modal" data-bs-target="#renewMembershipModal">
                                     <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
                                 </button>
+                            </li>
+                            @elseif($member->status === 'suspended')
+                            <li>
+                                <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-check-circle me-2 text-success"></i>Reactivate Account
+                                    </button>
+                                </form>
+                            </li>
+                            @elseif($member->status === 'cancelled')
+                            <li>
+                                <form action="{{ route('members.update-status', $member) }}" method="POST">
+                                    @csrf
+                                    @method('PATCH')
+                                    <input type="hidden" name="status" value="approved">
+                                    <button type="submit" class="dropdown-item">
+                                        <i class="bi bi-check-circle me-2 text-success"></i>Approve Member
+                                    </button>
+                                </form>
                             </li>
                             @endif
                         </ul>
@@ -67,7 +108,7 @@
                         <div>
                             <label class="form-label" for="profile_photo">Profile Photo</label>
                             <input type="file" id="profile_photo" name="profile_photo" class="form-control" accept="image/*">
-                            <div class="form-text">Maximum file size: 2MB. Supported formats: JPG, PNG, GIF</div>
+                            <div class="form-text">Maximum file size: 10MB. Supported formats: JPG, PNG, GIF</div>
                             @error('profile_photo')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -87,7 +128,7 @@
                         <div>
                             <label class="form-label" for="company_logo">Company Logo</label>
                             <input type="file" id="company_logo" name="company_logo" class="form-control" accept="image/*">
-                            <div class="form-text">Maximum file size: 2MB. Supported formats: JPG, PNG, GIF</div>
+                            <div class="form-text">Maximum file size: 10MB. Supported formats: JPG, PNG, GIF</div>
                             @error('company_logo')
                                 <div class="text-danger">{{ $message }}</div>
                             @enderror
@@ -508,22 +549,98 @@
             <form action="{{ route('members.renew-membership', $member) }}" method="POST">
                 @csrf
                 <div class="modal-body">
-                    <div class="alert alert-info">
-                        <i class="bi bi-calendar-check me-2"></i>
-                        <strong>Automatic Renewal:</strong> Membership will be renewed for 1 year from today's date.
+                    <!-- Membership Status Check -->
+                    <div id="membershipStatusCheck">
+                        <div class="d-flex align-items-center justify-content-center mb-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Checking membership status...</span>
+                            </div>
+                            <span class="ms-2">Checking membership status...</span>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="renewal_reason" class="form-label">Renewal Reason*</label>
-                        <textarea class="form-control" id="renewal_reason" name="renewal_reason" rows="3" required 
-                                  placeholder="Please provide a reason for renewing this membership..."></textarea>
-                    </div>
-                    <div class="mb-3">
+                    
+                    <!-- Membership Information (initially hidden) -->
+                    <div id="membershipInfo" style="display: none;">
+                        <!-- Status Alert -->
+                        <div id="statusAlert" class="alert mb-3" role="alert">
+                            <div class="d-flex align-items-center">
+                                <i id="statusIcon" class="me-2"></i>
+                                <div>
+                                    <strong id="statusTitle"></strong>
+                                    <div id="statusMessage" class="small"></div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Current Membership Information -->
+                        <div class="card border-0 shadow-sm mb-3">
+                            <div class="card-body">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <div class="d-flex flex-column">
+                                            <small class="text-muted mb-1">Membership Tier</small>
+                                            <div class="d-flex align-items-center">
+                                                <span class="badge bg-primary me-2">{{ $member->membershipTier->name ?? 'N/A' }}</span>
+                                                <small class="text-muted">#{{ $member->membership_number ?? 'N/A' }}</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex flex-column">
+                                            <small class="text-muted mb-1">Days Until Expiry</small>
+                                            @if($member->membership_expires_at)
+                                                @php
+                                                    $expiryDate = \Carbon\Carbon::parse($member->membership_expires_at);
+                                                    $isExpired = $expiryDate->isPast();
+                                                    $daysRemaining = (int) abs($expiryDate->diffInDays(utcNow()));
+                                                @endphp
+                                                @if(!$isExpired)
+                                                        <span class="badge bg-success">{{ $daysRemaining }} days remaining</span>
+                                                    @elseif($daysRemaining == 0)
+                                                        @if($isExpired)
+                                                        <span class="badge bg-warning">Expired</span>
+                                                        @else
+                                                        <span class="badge bg-warning">Expires today</span>
+
+                                                        @endif
+                                                    @else
+                                                        <span class="badge bg-danger">Expired {{ $daysRemaining }} days ago</span>
+                                                    @endif
+                                            @else
+                                                <span class="badge bg-secondary">Not Set</span>
+                                            @endif
+                                        </div>
+                                    </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex flex-column">
+                                                <small class="text-muted mb-1">
+                                                    <i class="bi bi-calendar-event me-1"></i>Start Date
+                                                </small>
+                                                <span class="fw-semibold">
+                                                    {{ $member->membership_start_at ? date('M j, Y', strtotime($member->membership_start_at)) : 'Not Set' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="d-flex flex-column">
+                                                <small class="text-muted mb-1">
+                                                    <i class="bi bi-calendar-x me-1"></i>Expiry Date
+                                                </small>
+                                                <span class="fw-semibold" id="expiryDate">
+                                                    {{ $member->membership_expires_at ? date('M j, Y', strtotime($member->membership_expires_at)) : 'Not Set' }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                
+                            </div>
+                        </div>
                         
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer" id="modalFooter">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-success">
+                    <button type="submit" class="btn btn-success" id="renewButton" style="display: none;">
                         <i class="bi bi-arrow-clockwise me-2"></i>Renew Membership
                     </button>
                 </div>
@@ -547,6 +664,117 @@
     @if(auth()->user()->role == \App\Models\User::MEMBER && $member->city)
         $('#city').data('old-name', "{{ $member->city->name }}");
     @endif
+    // Handle renewal modal show event
+    const renewModal = document.getElementById('renewMembershipModal');
+    if (renewModal) {
+        renewModal.addEventListener('show.bs.modal', function() {
+            checkMembershipStatus();
+        });
+    }
+    
+    function checkMembershipStatus() {
+        // Get member data from PHP
+        const memberData = {
+            status: '{{ $member->status }}',
+            membership_expires_at: '{{ $member->membership_expires_at }}',
+            membership_start_at: '{{ $member->membership_start_at }}',
+            tier_name: '{{ $member->membershipTier->name ?? "N/A" }}'
+        };
+        
+        // Simulate checking process
+        setTimeout(() => {
+            // Hide loading spinner
+            document.getElementById('membershipStatusCheck').style.display = 'none';
+            
+            // Show membership info
+            document.getElementById('membershipInfo').style.display = 'block';
+            
+            // Determine membership status
+            const now = new Date();
+            const expiryDate = memberData.membership_expires_at ? new Date(memberData.membership_expires_at) : null;
+            const isExpired = expiryDate && expiryDate < now;
+            const isActive = memberData.status === 'approved' && !isExpired;
+            const isCancelled = memberData.status === 'cancelled';
+            
+            // Update status alert
+            updateStatusAlert(memberData.status, isExpired, isActive, isCancelled);
+            
+            // Show/hide renewal button and info based on status
+            if (isActive && !isExpired) {
+                // Active membership - show warning about early renewal
+                showRenewalWarning();
+            } else if (isExpired || isCancelled) {
+                // Expired or cancelled - allow renewal
+                showRenewalAllowed();
+            } else {
+                // Pending or other status - block renewal
+                showRenewalBlocked();
+            }
+        }, 1500); // Simulate loading time
+    }
+    
+    function updateStatusAlert(status, isExpired, isActive, isCancelled) {
+        const alert = document.getElementById('statusAlert');
+        const icon = document.getElementById('statusIcon');
+        const title = document.getElementById('statusTitle');
+        const message = document.getElementById('statusMessage');
+        
+        if (isActive && !isExpired) {
+            alert.className = 'alert alert-success mb-3';
+            icon.className = 'bi bi-check-circle-fill me-2';
+            title.textContent = 'Active Membership';
+            message.textContent = 'This member has an active membership plan.';
+        } else if (isExpired) {
+            alert.className = 'alert alert-warning mb-3';
+            icon.className = 'bi bi-exclamation-triangle-fill me-2';
+            title.textContent = 'Expired Membership';
+            message.textContent = 'This membership has expired and needs renewal.';
+        } else if (isCancelled) {
+            alert.className = 'alert alert-danger mb-3';
+            icon.className = 'bi bi-x-circle-fill me-2';
+            title.textContent = 'Cancelled Membership';
+            message.textContent = 'This membership has been cancelled and can be renewed.';
+        } else {
+            alert.className = 'alert alert-info mb-3';
+            icon.className = 'bi bi-info-circle-fill me-2';
+            title.textContent = 'Pending Membership';
+            message.textContent = 'This membership is pending approval.';
+        }
+    }
+    
+    function showRenewalWarning() {
+        const renewButton = document.getElementById('renewButton');
+        
+        renewButton.style.display = 'inline-block';
+        renewButton.className = 'btn btn-warning';
+        renewButton.innerHTML = '<i class="bi bi-exclamation-triangle me-2"></i>Renew Early';
+        renewButton.setAttribute('data-bs-target', '#earlyRenewalModal');
+    }
+    
+    function showRenewalAllowed() {
+        const renewButton = document.getElementById('renewButton');
+        
+        renewButton.style.display = 'inline-block';
+        renewButton.className = 'btn btn-success';
+        renewButton.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i>Renew Membership';
+    }
+    
+    function showRenewalBlocked() {
+        const renewButton = document.getElementById('renewButton');
+        
+        renewButton.style.display = 'none';
+        
+        // Add blocked message
+        const modalFooter = document.getElementById('modalFooter');
+        const existingMessage = modalFooter.querySelector('.renewal-blocked-message');
+        if (!existingMessage) {
+            const blockedMessage = document.createElement('div');
+            blockedMessage.className = 'renewal-blocked-message alert alert-info mb-0 me-2';
+            blockedMessage.innerHTML = '<small><i class="bi bi-info-circle me-1"></i>Renewal is not available for pending memberships.</small>';
+            modalFooter.insertBefore(blockedMessage, modalFooter.firstChild);
+        }
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         ClassicEditor
             .create(document.querySelector('#company_description'), {
@@ -584,4 +812,6 @@
             });
     });
 </script>
+
+@include('dashboard.members.partials.early-renewal-modal')
 @endsection 

@@ -54,7 +54,7 @@ class RegistrationService
                 'referrer_id' => $referrer->id,
                 'referred_id' => $user->id,
                 'referral_code' => $attributes['referral_code'] ?? null,
-                'registered_at' => now(),
+                'registered_at' => utcNow(),
             ]);
         }
 

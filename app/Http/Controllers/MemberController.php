@@ -14,7 +14,9 @@ use App\Services\MemberApprovalService;
 use App\Services\MembershipNumberService;
 use App\Services\MembershipLogService;
 use App\Rules\UniqueCompanyInCountry;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 class MemberController extends Controller
 {
@@ -39,6 +41,76 @@ class MemberController extends Controller
                 });
                 // Only show active members when country filter is applied
                 $data->where('is_active', true);
+            }
+
+            // Apply no activity filter (members with 0 points)
+            if ($request->filled('no_activity') && $request->no_activity == '1') {
+                $data->where('status', User::STATUS_APPROVED)
+                    ->where('is_active', true)
+                    ->whereNotExists(function($query) {
+                        $query->selectRaw(1)
+                            ->from('reward_points')
+                            ->whereColumn('reward_points.user_id', 'users.id')
+                            ->where('reward_points.points', '>', 0);
+                    });
+            }
+
+            // Apply tier filter (from dashboard)
+            if ($request->filled('tier')) {
+                $tier = \App\Models\MembershipTier::where('slug', $request->tier)->first();
+                if ($tier) {
+                    $data->where('membership_tier', $tier->id)
+                         ->where('status', User::STATUS_APPROVED);
+                }
+            }
+
+            // Apply status filter (from dashboard)
+            if ($request->filled('status')) {
+                if ($request->status === 'cancelled') {
+                    $data->where('status', User::STATUS_CANCELLED);
+                } elseif ($request->status === 'expired') {
+                    $data->where('membership_expires_at', '<', utcNow())
+                        ->where('status', '!=', User::STATUS_CANCELLED);
+                }
+            }
+
+            // Apply new signups filter (from dashboard)
+            if ($request->filled('new_signups') && $request->new_signups == '1') {
+                $period = $request->filled('period') ? (int)$request->period : 12;
+                $data->where('created_at', '>=', utcNow()->subMonths($period))
+                    ->where('status', User::STATUS_APPROVED);
+            }
+
+            // Apply tier change filter (from dashboard)
+            if ($request->filled('tier_change')) {
+                $period = $request->filled('period') ? (int)$request->period : 12;
+                $startDate = utcNow()->subMonths($period);
+                
+                // Get users with the most recent tier change matching the filter
+                $latestTierChanges = \App\Models\MembershipLog::where('action', \App\Models\MembershipLog::ACTION_CHANGE_TIER)
+                    ->where('created_at', '>=', $startDate)
+                    ->whereIn('status', [\App\Models\MembershipLog::STATUS_UPGRADE, \App\Models\MembershipLog::STATUS_DOWNGRADE])
+                    ->selectRaw('user_id, status, created_at')
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                    ->groupBy('user_id')
+                    ->map(function($userLogs) {
+                        // Return only the most recent log for each user
+                        return $userLogs->first();
+                    });
+
+                if ($request->tier_change === 'upgrade') {
+                    $userIds = $latestTierChanges->where('status', \App\Models\MembershipLog::STATUS_UPGRADE)->pluck('user_id')->toArray();
+                } elseif ($request->tier_change === 'downgrade') {
+                    $userIds = $latestTierChanges->where('status', \App\Models\MembershipLog::STATUS_DOWNGRADE)->pluck('user_id')->toArray();
+                }
+                
+                if (!empty($userIds)) {
+                    $data->whereIn('id', $userIds)->where('status', User::STATUS_APPROVED);
+                } else {
+                    // No users found with the specified tier change, return empty result
+                    $data->whereRaw('1 = 0');
+                }
             }
 
             return DataTables::of($data)
@@ -78,7 +150,43 @@ class MemberController extends Controller
             $countryName = $country ? $country->name : $request->country;
         }
 
-        return view('dashboard.members.index', compact('countryName'));
+        // Prepare filter information for the view
+        $filterInfo = [];
+        if ($request->filled('tier')) {
+            $tierNames = [
+                'explorer' => 'Explorer',
+                'elevate' => 'Elevate', 
+                'summit' => 'Summit',
+                'pinnacle' => 'Pinnacle'
+            ];
+            $filterInfo['tier'] = $tierNames[$request->tier] ?? $request->tier;
+        }
+        
+        if ($request->filled('status')) {
+            $statusNames = [
+                'cancelled' => 'Cancelled Members',
+                'expired' => 'Expired Members'
+            ];
+            $filterInfo['status'] = $statusNames[$request->status] ?? $request->status;
+        }
+        
+        if ($request->filled('new_signups') && $request->new_signups == '1') {
+            $period = $request->filled('period') ? (int)$request->period : 12;
+            $periodText = $period == 3 ? '3 months' : ($period == 6 ? '6 months' : '1 year');
+            $filterInfo['new_signups'] = "New Sign-ups (Last $periodText)";
+        }
+        
+        if ($request->filled('tier_change')) {
+            $period = $request->filled('period') ? (int)$request->period : 12;
+            $periodText = $period == 3 ? '3 months' : ($period == 6 ? '6 months' : '1 year');
+            $tierChangeNames = [
+                'upgrade' => "Upgrades (Last $periodText)",
+                'downgrade' => "Downgrades (Last $periodText)"
+            ];
+            $filterInfo['tier_change'] = $tierChangeNames[$request->tier_change] ?? $request->tier_change;
+        }
+
+        return view('dashboard.members.index', compact('countryName', 'filterInfo'));
     }
 
     /**
@@ -93,7 +201,14 @@ class MemberController extends Controller
         $membershipName = $member->membershipTier->name;
         $membershipTiers = MembershipTier::all();
         $totalPoints = $member->rewardPoints()->sum('points');
-        return view('dashboard.members.show', compact('member', 'membershipTiers','membershipName','totalPoints'));
+        
+        // Fetch membership logs for this member
+        $membershipLogs = \App\Models\MembershipLog::where('user_id', $member->id)
+            ->with(['changedBy', 'membershipTier'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        return view('dashboard.members.show', compact('member', 'membershipTiers','membershipName','totalPoints', 'membershipLogs'));
     }
 
     /**
@@ -173,7 +288,7 @@ class MemberController extends Controller
         }
 
         $request->validate([
-            'status' => ['required', 'in:pending,approved'],
+            'status' => ['required', 'in:pending,approved,suspended'],
         ]);
 
         $this->memberApprovalService->updateStatus($member, $request->status);
@@ -190,7 +305,17 @@ class MemberController extends Controller
         }
         
         $membershipTiers = MembershipTier::all();
-        return view('dashboard.members.edit', compact('member', 'membershipTiers'));
+        
+        // Fetch membership logs for this member (only for admin users)
+        $membershipLogs = collect();
+        if (Auth::user()->role !== User::MEMBER) {
+            $membershipLogs = \App\Models\MembershipLog::where('user_id', $member->id)
+                ->with(['changedBy', 'membershipTier'])
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+        
+        return view('dashboard.members.edit', compact('member', 'membershipTiers', 'membershipLogs'));
     }
 
     /**
@@ -205,9 +330,9 @@ class MemberController extends Controller
         // Different validation rules based on user role
         if (Auth::user()->role == User::MEMBER) {
             $rules = [
-                'company_logo' => ['nullable', 'image', 'max:2048'],
+                'company_logo' => ['nullable', 'image', 'max:10240'],
                 'company_description' => ['nullable', 'string', 'max:2000'],
-                'profile_photo' => ['nullable', 'image', 'max:2048'],
+                'profile_photo' => ['nullable', 'image', 'max:10240'],
             ];
 
             // Add password validation rules if password is being updated
@@ -256,7 +381,7 @@ class MemberController extends Controller
                 'designation' => ['required', 'string', 'max:255'],
                 'whatsapp_phone' => ['required'],
                 'company_name' => ['required', 'string', 'max:255', new UniqueCompanyInCountry($member->id)],
-                'company_logo' => ['nullable', 'image', 'max:2048'],
+                'company_logo' => ['nullable', 'image', 'max:10240'],
                 'company_description' => ['nullable', 'string', 'max:2000'],
                 'company_telephone' => ['required'],
                 'company_address' => ['required', 'string'],
@@ -271,7 +396,7 @@ class MemberController extends Controller
                 'is_network_member' => ['required', 'in:yes,no'],
                 'network_name' => ['required_if:is_network_member,yes', 'nullable', 'string', 'max:255'],
                 'membership_tier' => ['required'],
-                'profile_photo' => ['nullable', 'image', 'max:2048'],
+                'profile_photo' => ['nullable', 'image', 'max:10240'],
                 'certificate_document' => ['nullable', 'file', 'mimes:jpg,jpeg,png', 'max:5120'],
             ];
 
@@ -291,11 +416,14 @@ class MemberController extends Controller
             if ($request->hasFile('certificate_document')) {
                 $certificatePath = $request->file('certificate_document')->store('member-certificates', 'public');
                 $updateData['certificate_document'] = $certificatePath;
-                $updateData['certificate_uploaded_at'] = now();
+                $updateData['certificate_uploaded_at'] = utcNow();
             }
             
             // Update membership number based on tier change
             $membershipNumber = $member->membership_number;
+            $membershipStartAt = $member->membership_start_at;
+            $membershipExpiresAt = $member->membership_expires_at;
+            
             if ($request->membership_tier != $member->membership_tier) {
                 // Tier changed - update prefix but keep sequence number
                 if ($membershipNumber) {
@@ -304,8 +432,16 @@ class MemberController extends Controller
                     // No existing number - generate new one
                     $membershipNumber = $this->membershipNumberService->generateForTierId((int) $request->membership_tier);
                 }
+                
+                // Update membership dates only when tier changes
+                $tier = MembershipTier::find($request->membership_tier);
+                $membershipStartAt = utcNow();
+                $membershipExpiresAt = utcNow()->addYear(); 
+                if ($tier && $tier->name === 'Pinnacle') {
+                    $membershipExpiresAt = utcNow()->addYears(3);
+                }
             }
-            
+
             $updateData = [
                 'name' => $request->name,
                 'email' => $request->email,
@@ -327,11 +463,14 @@ class MemberController extends Controller
                 'network_name' => $request->network_name,
                 'membership_number' => $membershipNumber,
                 'membership_tier' => $request->membership_tier,
-                'membership_start_at' => now(),
-                'membership_expires_at' => now()->addYear(),
-                'certificate_document' => $certificatePath,
-                'certificate_uploaded_at' => now(),
+                'membership_start_at' => $membershipStartAt,
+                'membership_expires_at' => $membershipExpiresAt,
             ];
+            
+            if ($certificatePath) {
+                $updateData['certificate_document'] = $certificatePath;
+                $updateData['certificate_uploaded_at'] = utcNow();
+            }
 
             if (isset($path)) {
                 $updateData['profile_photo'] = $path;
@@ -352,14 +491,18 @@ class MemberController extends Controller
             $newMemberData = [
                 'membership_tier' => $request->membership_tier,
                 'membership_number' => $membershipNumber ?? $member->membership_number,
-                'membership_expires_at' => $member->membership_expires_at,
-                'membership_start_at' => $member->membership_start_at,
+                'membership_expires_at' => $membershipExpiresAt ?? $member->membership_expires_at,
+                'membership_start_at' => $membershipStartAt ?? $member->membership_start_at,
             ];
 
             // Check if membership-related fields changed
             $hasChanges = false;
             foreach ($oldMemberData as $key => $oldValue) {
-                if ($oldValue != $newMemberData[$key]) {
+                // Convert dates to strings for comparison to avoid object comparison issues
+                $oldVal = $oldValue instanceof \Carbon\Carbon ? $oldValue->toDateTimeString() : $oldValue;
+                $newVal = $newMemberData[$key] instanceof \Carbon\Carbon ? $newMemberData[$key]->toDateTimeString() : $newMemberData[$key];
+                
+                if ($oldVal != $newVal) {
                     $hasChanges = true;
                     break;
                 }
@@ -409,16 +552,16 @@ class MemberController extends Controller
         }
 
         $request->validate([
-            'cancellation_reason' => 'required|string|max:1000',
+            'cancellation_reason' => 'nullable|string|max:1000',
         ]);
 
         // Update member status to cancelled and deactivate access
         $member->update([
             'status' => User::STATUS_CANCELLED,
-            'cancelled_at' => now(),
+            'cancelled_at' => utcNow(),
             'cancellation_reason' => $request->cancellation_reason,
             'cancelled_by' => Auth::id(),
-            'is_active' => false, // Deactivate access to website
+            'is_active' => false, 
         ]);
 
         // Log the cancellation with previous membership details
@@ -431,22 +574,22 @@ class MemberController extends Controller
             'previous_annual_fee' => $member->membershipTier->annual_fee ?? 'N/A',
             'previous_annual_fee_currency' => $member->membershipTier->annual_fee_currency ?? 'USD',
             'previous_expiry_date' => $member->membership_expires_at,
-            'new_tier_name' => 'N/A', // Cancelled, so no new tier
-            'new_membership_number' => 'N/A', // Cancelled, so no new number
-            'new_annual_fee' => 'N/A', // Cancelled, so no new fee
-            'new_annual_fee_currency' => 'N/A',
-            'new_expiry_date' => null, // Cancelled, so no expiry date
+            'new_tier_name' => null, 
+            'new_membership_number' => null, 
+            'new_annual_fee' => null, 
+            'new_annual_fee_currency' => null,
+            'new_expiry_date' => null, 
             'status' => \App\Models\MembershipLog::STATUS_CANCELLED,
             'reason' => $request->cancellation_reason,
             'changed_by' => Auth::id(),
             'metadata' => [
-                'cancelled_at' => now()->toISOString(),
+                'cancelled_at' => utcNow()->toISOString(),
                 'previous_is_active' => $member->is_active,
                 'previous_status' => $member->status,
             ],
         ]);
 
-        return redirect()->route('members.edit', $member)
+        return redirect()->back()
             ->with('success', 'Membership cancelled successfully.');
     }
 
@@ -459,54 +602,25 @@ class MemberController extends Controller
             abort(404);
         }
 
-        $request->validate([
-            'renewal_reason' => 'required|string|max:1000',
-        ]);
+        // Validate membership status before renewal
+        if ($member->status === User::STATUS_PENDING) {
+            return redirect()->back()->with('error', 'Cannot renew pending membership. Please approve the membership first.');
+        }
 
-        // Calculate expiry date automatically (1 year from renewal date)
-        $renewalDate = now();
-        $expiryDate = $renewalDate->copy()->addYear();
+        // Create renewal plan instead of directly updating user
+        $renewalService = app(\App\Services\MembershipRenewalService::class);
         
-        // Update member status to approved and reactivate access
-        $member->update([
-            'status' => User::STATUS_APPROVED,
-            'membership_start_at' => $renewalDate, 
-            'membership_expires_at' => $expiryDate,
-            'cancelled_at' => null,
-            'cancellation_reason' => null,
-            'cancelled_by' => null,
-            'is_active' => true, // Reactivate access to website
-        ]);
+        try {
+            $renewal = $renewalService->createRenewalPlan(
+                $member,
+                $request->input('renewal_reason', 'Membership renewed by admin')
+            );
 
-        // Log the renewal with previous membership details
-        \App\Models\MembershipLog::create([
-            'user_id' => $member->id,
-            'action' => \App\Models\MembershipLog::ACTION_RENEWED,
-            'membership_tier_id' => $member->membership_tier,
-            'previous_tier_name' => 'N/A', // Was cancelled, so no previous tier
-            'previous_membership_number' => $member->membership_number,
-            'previous_annual_fee' => 'N/A', // Was cancelled, so no previous fee
-            'previous_annual_fee_currency' => 'N/A',
-            'previous_expiry_date' => $member->membership_expires_at,
-            'new_tier_name' => $member->membershipTier->name ?? 'N/A',
-            'new_membership_number' => $member->membership_number,
-            'new_annual_fee' => $member->membershipTier->annual_fee ?? 'N/A',
-            'new_annual_fee_currency' => $member->membershipTier->annual_fee_currency ?? 'USD',
-            'new_expiry_date' => $expiryDate,
-            'new_membership_start_at' => $renewalDate, // Log the new start date
-            'status' => \App\Models\MembershipLog::STATUS_RENEWED,
-            'reason' => $request->renewal_reason,
-            'changed_by' => Auth::id(),
-            'metadata' => [
-                'renewed_at' => now()->toISOString(),
-                'previous_is_active' => $member->is_active,
-                'previous_status' => $member->status,
-                'renewal_type' => 'same_plan', // Indicates renewal with same plan
-            ],
-        ]);
-
-        return redirect()->route('members.edit', $member)
-            ->with('success', 'Membership renewed successfully.');
+            return redirect()->route('members.edit', $member)
+                ->with('success', 'Renewal plan created successfully. It will be activated after the current membership expires.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to create renewal plan: ' . $e->getMessage());
+        }
     }
 
     /**
@@ -550,6 +664,86 @@ class MemberController extends Controller
             return view('website.member-directory-view-profile', compact('member', 'ports'));
         } catch (\Exception $e) {
             abort(404, 'Member not found');
+        }
+    }
+
+    /**
+     * Process early renewal for the specified member.
+     */
+    public function earlyRenewal(Request $request, User $member)
+    {
+        if ($member->role !== User::MEMBER) {
+            abort(404);
+        }
+
+        // Validate that member can have early renewal
+        if ($member->status !== User::STATUS_APPROVED) {
+            return redirect()->back()->with('error', 'Only approved members can renew early.');
+        }
+
+        if (!$member->membership_expires_at || Carbon::parse($member->membership_expires_at)->isPast()) {
+            return redirect()->back()->with('error', 'Cannot process early renewal for expired membership.');
+        }
+
+        // Validate renewal details
+        $request->validate([
+            'early_renewal_reason' => 'required|string|max:500',
+        ]);
+
+        // Create early renewal plan
+        $renewalService = app(\App\Services\MembershipRenewalService::class);
+        
+        try {
+            $renewal = $renewalService->createRenewalPlan(
+                $member,
+                $request->early_renewal_reason
+            );
+
+            return redirect()->route('members.edit', $member)
+                ->with('success', 'Early renewal plan created successfully. Membership will be extended from current expiry date.');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Failed to create early renewal plan: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Allocate signup reward points to a member
+     */
+    public function allocatePoints(Request $request, User $member)
+    {
+        // Ensure only Super Admin can access this
+        if (Auth::user()->role !== User::SUPER_ADMIN) {
+            abort(403, 'Unauthorized');
+        }
+
+        // Validate the request
+        $request->validate([
+            'points' => 'required|integer|min:1|max:1000',
+            'reason' => 'required|string|max:500',
+        ]);
+
+        // Ensure member is approved
+        if ($member->status !== User::STATUS_APPROVED) {
+            return redirect()->back()->with('error', 'Points can only be allocated to approved members.');
+        }
+
+        try {
+            // Create reward points entry
+            \DB::table('reward_points')->insert([
+                'user_id' => $member->id,
+                'activity_type' => 'signup_reward',
+                'points' => $request->points,
+                'description' => $request->reason,
+                'created_at' => utcNow(),
+                'updated_at' => utcNow(),
+            ]);
+
+            return redirect()->back()->with('success', 
+                "Successfully allocated {$request->points} signup reward points to {$member->name}.");
+
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 
+                'Failed to allocate points. Please try again.');
         }
     }
     

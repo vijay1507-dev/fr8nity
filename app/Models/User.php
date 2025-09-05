@@ -71,6 +71,7 @@ class User extends Authenticatable
     const STATUS_PENDING = 'pending';    // Profile pending approval, cannot login
     const STATUS_APPROVED = 'approved';  // Profile approved, can login (if is_active = true)
     const STATUS_CANCELLED = 'cancelled'; // Membership cancelled, cannot access website
+    const STATUS_SUSPENDED = 'suspended'; // Account suspended, cannot login
     /**
      * The attributes that should be hidden for serialization.
      *
@@ -122,6 +123,15 @@ class User extends Authenticatable
     }
 
     /**
+     * Scope: only suspended members
+     */
+    public function scopeSuspendedMembers(Builder $query): Builder
+    {
+        return $query->where('role', self::MEMBER)
+            ->where('status', self::STATUS_SUSPENDED);
+    }
+
+    /**
      * Scope: only approved members
      */
     public function scopeApprovedMembers(Builder $query): Builder
@@ -160,9 +170,9 @@ class User extends Authenticatable
      */
     public function scopeFilterForDirectory(Builder $query, array $filters): Builder
     {
-        // Base filter: only approved and active members
+        // Base filter: only approved and active members (exclude suspended)
         $query->where('role', self::MEMBER)
-            ->where('status', self::STATUS_APPROVED)  // Profile approved and not cancelled
+            ->where('status', self::STATUS_APPROVED)  // Profile approved and not cancelled or suspended
             ->where('is_active', true);                // Active access to website
 
         $query->when(!empty($filters['company_name']), function (Builder $q) use ($filters) {
@@ -212,7 +222,7 @@ class User extends Authenticatable
         }
 
         $this->two_factor_code = Str::random(6);
-        $this->two_factor_expires_at = now()->addMinutes(10);
+        $this->two_factor_expires_at = utcNow()->addMinutes(10);
         $this->save();
 
         $this->notify(new TwoFactorCodeNotification());
@@ -234,7 +244,7 @@ class User extends Authenticatable
     public function validTwoFactorCode($code)
     {
         return $this->two_factor_code === $code && 
-               $this->two_factor_expires_at > now();
+               $this->two_factor_expires_at > utcNow();
     }
 
     /**
@@ -293,6 +303,34 @@ class User extends Authenticatable
     public function membershipLogs()
     {
         return $this->hasMany(\App\Models\MembershipLog::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get membership renewals for this user
+     */
+    public function membershipRenewals()
+    {
+        return $this->hasMany(\App\Models\MembershipRenewal::class)->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get pending membership renewals
+     */
+    public function pendingRenewals()
+    {
+        return $this->hasMany(\App\Models\MembershipRenewal::class)
+                    ->where('status', \App\Models\MembershipRenewal::STATUS_PENDING)
+                    ->orderBy('created_at', 'desc');
+    }
+
+    /**
+     * Get active membership renewal
+     */
+    public function activeRenewal()
+    {
+        return $this->hasOne(\App\Models\MembershipRenewal::class)
+                    ->where('status', \App\Models\MembershipRenewal::STATUS_ACTIVE)
+                    ->latest();
     }
 
     public function referrals()
@@ -367,6 +405,14 @@ class User extends Authenticatable
     public function isCancelled()
     {
         return $this->status === self::STATUS_CANCELLED;
+    }
+
+    /**
+     * Check if membership is suspended
+     */
+    public function isSuspended()
+    {
+        return $this->status === self::STATUS_SUSPENDED;
     }
 
     /**

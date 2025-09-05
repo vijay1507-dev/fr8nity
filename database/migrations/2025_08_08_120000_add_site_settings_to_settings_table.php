@@ -20,8 +20,8 @@ return new class extends Migration
             $exists = DB::table('settings')->where('key', $setting['key'])->exists();
             if (!$exists) {
                 DB::table('settings')->insert(array_merge($setting, [
-                    'created_at' => now(),
-                    'updated_at' => now(),
+                    'created_at' => utcNow(),
+                    'updated_at' => utcNow(),
                 ]));
             }
         }

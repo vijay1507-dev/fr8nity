@@ -78,8 +78,8 @@ class SpotlightController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'type' => 'required|in:event_pulse,partner_showcase',
-            'feature_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'feature_image' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'status' => 'boolean',
             'order' => 'integer|min:0'
         ]);
@@ -134,8 +134,8 @@ class SpotlightController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'required|string',
             'type' => 'required|in:event_pulse,partner_showcase',
-            'feature_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
-            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'feature_image' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'gallery.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
             'status' => 'boolean',
             'order' => 'integer|min:0'
         ]);

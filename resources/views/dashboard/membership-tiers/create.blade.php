@@ -145,40 +145,75 @@
 
                         <!-- Rewards Configuration -->
                         <div class="col-12">
-                            <h6 class="fw-semibold mb-3 text-primary">Rewards Configuration</h6>
-                            <p class="text-muted mb-3">Configure reward points for different activities</p>
+                            <h6 class="fw-semibold mb-3 text-primary">{{ __('translation.rewards_configuration') }}</h6>
+                            <p class="text-muted mb-3">{{ __('translation.configure_reward_points') }}</p>
                             
                             <div id="rewardsContainer">
-                                <div class="reward-item border rounded p-3 mb-3">
-                                    <div class="row g-3">
-                                        <div class="col-md-4">
-                                            <label class="form-label">Activity Type</label>
-                                            <input type="text" class="form-control" name="rewards[0][activity_type]" 
-                                                   placeholder="e.g., referral_join, event_attendance">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Points</label>
-                                            <input type="number" class="form-control" name="rewards[0][points]" 
-                                                   placeholder="1000" min="0">
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label class="form-label">Multiplier</label>
-                                            <input type="number" class="form-control" name="rewards[0][multiplier]" 
-                                                   placeholder="1.00" min="0.01" max="10.00" step="0.01" value="1.00">
-                                        </div>
-                                        <div class="col-md-2 d-flex align-items-end">
-                                            <button type="button" class="btn btn-outline-danger btn-sm remove-reward" 
-                                                    onclick="removeReward(this)">
-                                                Remove
-                                            </button>
-                                        </div>
-                                    </div>
+                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th style="width: 30%;">{{ __('translation.activity_type') }}</th>
+                                                <th style="width: 25%;">{{ __('translation.activity_label') }}</th>
+                                                <th style="width: 22.5%;">{{ __('translation.points') }}</th>
+                                                <th style="width: 22.5%;">{{ __('translation.multiplier') }}</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if($defaultActivityTypes->isNotEmpty())
+                                                @foreach($defaultActivityTypes as $index => $activityTypeObj)
+                                                <tr>
+                                                    <td>
+                                                        <input type="hidden" name="rewards[{{ $index }}][activity_type]" value="{{ $activityTypeObj->activity_type }}">
+                                                        <span class="fw-medium">{{ $activityTypeObj->label ?: __('translation.' . $activityTypeObj->activity_type) }}</span>
+                                                        <br><small class="text-muted">{{ $activityTypeObj->activity_type }}</small>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="rewards[{{ $index }}][label]" 
+                                                               value="{{ $activityTypeObj->label }}" placeholder="Enter custom label">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="rewards[{{ $index }}][points]" 
+                                                               value="0" min="0">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="rewards[{{ $index }}][multiplier]" 
+                                                               value="1.00" min="0.01" max="10.00" step="0.01">
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            @else
+                                                @foreach($fallbackActivityTypes as $index => $activityType)
+                                                <tr>
+                                                    <td>
+                                                        <input type="hidden" name="rewards[{{ $index }}][activity_type]" value="{{ $activityType }}">
+                                                        <span class="fw-medium">{{ __('translation.' . $activityType) }}</span>
+                                                        <br><small class="text-muted">{{ $activityType }}</small>
+                                                    </td>
+                                                    <td>
+                                                        <input type="text" class="form-control" name="rewards[{{ $index }}][label]" 
+                                                               value="" placeholder="Enter custom label">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="rewards[{{ $index }}][points]" 
+                                                               value="0" min="0">
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" name="rewards[{{ $index }}][multiplier]" 
+                                                               value="1.00" min="0.01" max="10.00" step="0.01">
+                                                    </td>
+                                                </tr>
+                                                @endforeach
+                                            @endif
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             
-                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="addReward()">
+                            <!-- <button type="button" class="btn btn-outline-primary btn-sm" onclick="addReward()">
                                 Add Reward
-                            </button>
+                            </button> -->
                         </div>
                     </div>
 

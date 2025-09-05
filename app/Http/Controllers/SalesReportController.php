@@ -182,5 +182,92 @@ class SalesReportController extends Controller
         ]);
     }
 
+    /**
+     * Display the members by country report index page
+     */
+    public function membersByCountryIndex()
+    {
+        return view('dashboard.reports.members-by-country.index');
+    }
+
+    /**
+     * Export members by country report as CSV
+     */
+    public function membersByCountryExport(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'nullable|date',
+            'date_to' => 'nullable|date|after_or_equal:date_from',
+        ]);
+
+        $dateFrom = $request->date_from;
+        $dateTo = $request->date_to;
+
+        // Get members grouped by country
+        $members = $this->salesReportService->getMembersByCountry($dateFrom, $dateTo);
+
+        // Check if any records found
+        if ($members->isEmpty()) {
+            return redirect()
+                ->back()
+                ->with('error', 'No member records found for the selected date range. Please try different criteria.');
+        }
+
+        // Generate CSV content
+        $csvData = $this->salesReportService->generateMembersByCountryCsvData($members, $dateFrom, $dateTo);
+
+        // Generate filename
+        $filename = $this->salesReportService->generateMembersByCountryFilename($dateFrom, $dateTo);
+
+        // Return CSV response
+        return response($csvData, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
+
+    /**
+     * Display the membership type report index page
+     */
+    public function membershipTypeIndex()
+    {
+        return view('dashboard.reports.membership-type.index');
+    }
+
+    /**
+     * Export membership type report as CSV
+     */
+    public function membershipTypeExport(Request $request)
+    {
+        $request->validate([
+            'date_from' => 'nullable|date',
+            'date_to' => 'nullable|date|after_or_equal:date_from',
+        ]);
+
+        $dateFrom = $request->date_from;
+        $dateTo = $request->date_to;
+
+        // Get members grouped by membership type
+        $members = $this->salesReportService->getMembersByMembershipType($dateFrom, $dateTo);
+
+        // Check if any records found
+        if ($members->isEmpty()) {
+            return redirect()
+                ->back()
+                ->with('error', 'No member records found for the selected date range. Please try different criteria.');
+        }
+
+        // Generate CSV content
+        $csvData = $this->salesReportService->generateMembershipTypeCsvData($members, $dateFrom, $dateTo);
+
+        // Generate filename
+        $filename = $this->salesReportService->generateMembershipTypeFilename($dateFrom, $dateTo);
+
+        // Return CSV response
+        return response($csvData, 200, [
+            'Content-Type' => 'text/csv',
+            'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+        ]);
+    }
 
 }

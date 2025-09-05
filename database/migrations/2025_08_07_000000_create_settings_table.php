@@ -24,8 +24,8 @@ return new class extends Migration
             'value' => '15',
             'type' => 'integer',
             'description' => 'Number of days before membership expiry to start sending reminder emails',
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => utcNow(),
+            'updated_at' => utcNow(),
         ]);
     }
 
