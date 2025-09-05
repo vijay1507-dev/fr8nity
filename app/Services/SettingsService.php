@@ -18,6 +18,16 @@ class SettingsService
         Setting::set('membership_reminder_days', $days);
     }
 
+    public function getRenewalDaysPriorExpiring(): int
+    {
+        return (int) Setting::get('renewal_days_prior_expiring', 30);
+    }
+
+    public function setRenewalDaysPriorExpiring(int $days): void
+    {
+        Setting::set('renewal_days_prior_expiring', $days);
+    }
+
     public function getSiteSettings(): array
     {
         return [

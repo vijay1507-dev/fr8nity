@@ -12,7 +12,8 @@ use Illuminate\Support\Facades\DB;
 class MembershipRenewalService
 {
     public function __construct(
-        private MembershipLogService $membershipLogService
+        private MembershipLogService $membershipLogService,
+        private SettingsService $settingsService
     ) {}
 
     /**
@@ -356,13 +357,13 @@ class MembershipRenewalService
                     $finalPoints = $basePoints / 2;
                     $activityType = 'renewal_after_expiry';
                     $description = "Membership renewal after expiry - {$finalPoints} points awarded";
-                } elseif ($daysFromExpiry <= 30) {
-                    // Early renewal within last 30 days - full points
+                } elseif ($daysFromExpiry <= $this->settingsService->getRenewalDaysPriorExpiring()) {
+                    // Early renewal within last configured days - full points
                     $finalPoints = $basePoints;
                     $activityType = 'early_renewal';
-                    $description = "Early membership renewal (within 30 days) - {$finalPoints} points awarded";
+                    $description = "Early membership renewal (within {$this->settingsService->getRenewalDaysPriorExpiring()} days) - {$finalPoints} points awarded";
                 } else {
-                    // Very early renewal (more than 30 days before expiry) - apply multiplier
+                    // Very early renewal (more than configured days before expiry) - apply multiplier
                     $finalPoints = $basePoints * $multiplier;
                     $activityType = 'early_renewal_bonus';
                     $roundedDays = round($daysFromExpiry);
