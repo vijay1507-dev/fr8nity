@@ -24,7 +24,7 @@ return new class extends Migration
     {
         Schema::table('membership_logs', function (Blueprint $table) {
             $table->enum('action', ['approve', 'update', 'change_tier', 'renewal', 'cancelled', 'renewed'])->change();
-            $table->enum('status', ['upgrade', 'downgrade', 'renewal', 'initial', 'cancelled', 'renewed'])->change();
+            $table->enum('status', ['approve','upgrade', 'downgrade', 'renewal', 'initial', 'cancelled', 'renewed'])->change();
         });
     }
 };
