@@ -153,9 +153,10 @@
                                     <table class="table table-bordered">
                                         <thead class="table-light">
                                             <tr>
-                                                <th style="width: 40%;">{{ __('translation.activity_type') }}</th>
-                                                <th style="width: 30%;">{{ __('translation.points') }}</th>
-                                                <th style="width: 30%;">{{ __('translation.multiplier') }}</th>
+                                                <th style="width: 30%;">{{ __('translation.activity_type') }}</th>
+                                                <th style="width: 25%;">{{ __('translation.activity_label') }}</th>
+                                                <th style="width: 22.5%;">{{ __('translation.points') }}</th>
+                                                <th style="width: 22.5%;">{{ __('translation.multiplier') }}</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -164,8 +165,12 @@
                                                 <td>
                                                     <input type="hidden" name="rewards[{{ $index }}][id]" value="{{ $reward->id }}">
                                                     <input type="hidden" name="rewards[{{ $index }}][activity_type]" value="{{ $reward->activity_type }}">
-                                                    <span class="fw-medium">{{ __('translation.' . $reward->activity_type) }}</span>
+                                                    <span class="fw-medium">{{ $reward->label }}</span>
                                                     <br><small class="text-muted">{{ $reward->activity_type }}</small>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" name="rewards[{{ $index }}][label]" 
+                                                           value="{{ $reward->label }}" placeholder="Enter custom label">
                                                 </td>
                                                 <td>
                                                     <input type="number" class="form-control" name="rewards[{{ $index }}][points]" 
@@ -193,6 +198,10 @@
                                                     <input type="hidden" name="rewards[{{ $index }}][activity_type]" value="{{ $activityType }}">
                                                     <span class="fw-medium">{{ __('activity_types.' . $activityType) }}</span>
                                                     <br><small class="text-muted">{{ $activityType }}</small>
+                                                </td>
+                                                <td>
+                                                    <input type="text" class="form-control" name="rewards[{{ $index }}][label]" 
+                                                           value="" placeholder="Enter custom label">
                                                 </td>
                                                 <td>
                                                     <input type="number" class="form-control" name="rewards[{{ $index }}][points]" 

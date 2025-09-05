@@ -14,6 +14,7 @@ return [
 
     // Table Headers
     'activity_type' => 'Activity Type',
+    'activity_label' => 'Activity Label',
     'points' => 'Points',
     'multiplier' => 'Multiplier',
 

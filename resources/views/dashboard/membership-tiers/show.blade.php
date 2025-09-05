@@ -87,7 +87,8 @@
                                         @foreach($membershipTier->rewards as $reward)
                                         <tr>
                                             <td>
-                                                <span class="fw-semibold">{{ __('translation.' . $reward->activity_type) }}</span>
+                                                <span class="fw-medium">{{ $reward->label }}</span>
+                                                <br><small class="text-muted">{{ $reward->activity_type }}</small>
                                             </td>
                                             <td>
                                                 <span class="fw-semibold">{{ number_format($reward->points) }}</span>
@@ -95,7 +96,6 @@
                                             <td>
                                                 <span class="text-muted">× {{ $reward->multiplier }}</span>
                                             </td>
-
                                         </tr>
                                         @endforeach
                                     </tbody>

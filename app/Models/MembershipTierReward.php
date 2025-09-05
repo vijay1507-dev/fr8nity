@@ -9,6 +9,7 @@ class MembershipTierReward extends Model
     protected $fillable = [
         'membership_tier_id',
         'activity_type',
+        'label',
         'points',
         'multiplier',
     ];
