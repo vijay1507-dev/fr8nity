@@ -8,7 +8,7 @@ use App\Notifications\ProfileApprovalNotification;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Services\MembershipNumberService;
-
+use App\Models\MembershipLog;
 class MemberApprovalService
 {
     public function __construct(
@@ -52,28 +52,38 @@ class MemberApprovalService
             $membershipNumber = $this->membershipNumberService->generateForTierId((int) $member->membership_tier);
         }
 
-        // Determine membership expiry date based on tier
-        $tier = $member->membershipTier;
-        $expiryDate = utcNow()->addYear(); 
-        if ($tier && $tier->name === 'Pinnacle') {
-            $expiryDate = utcNow()->addYears(3);
+        $startDate = $member->membership_start_at;
+        $expiryDate = $member->membership_expires_at;
+        $logStatus = MembershipLog::STATUS_APPROVE;
+        $isNewApproval = false;
+
+        if (!$expiryDate || $expiryDate->isPast()) {
+            $tier = $member->membershipTier;
+            $startDate = utcNow();
+            $expiryDate = $tier && $tier->name === 'Pinnacle'
+                ? utcNow()->addYears(3)
+                : utcNow()->addYear();
+            $logStatus = MembershipLog::STATUS_INITIAL;
+            $isNewApproval = true;
         }
 
-        $member->update([
+        $updateData = [
             'status' => 'approved',
             'is_active' => true,
-            'password' => Hash::make($notification->getPassword()),
             'membership_number' => $membershipNumber,
-            'membership_start_at' => utcNow(),
+            'membership_start_at' => $startDate,
             'membership_expires_at' => $expiryDate,
-        ]);
+        ];
+        if ($isNewApproval) {
+            $updateData['password'] = Hash::make($notification->getPassword());
+        }
+        $member->update($updateData);
 
-        // Log the initial approval
-        $this->membershipLogService->logInitialApproval($member, Auth::id() ?? 1);
-
-        $this->awardReferralPointsIfApplicable($member);
-
-        $member->notify($notification);
+        $this->membershipLogService->logInitialApproval($member, Auth::id() ?? 1, $logStatus);
+        if ($isNewApproval) {
+            $this->awardReferralPointsIfApplicable($member);
+            $member->notify($notification);
+        }
     }
 
     public function setPendingMember(User $member): void

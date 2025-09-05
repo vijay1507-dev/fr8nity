@@ -13,7 +13,7 @@ class MembershipLogService
     /**
      * Create a log for initial member approval
      */
-    public function logInitialApproval(User $member, int $adminId): MembershipLog
+    public function logInitialApproval(User $member, int $adminId, string $status=null): MembershipLog
     {
         $tier = MembershipTier::find($member->membership_tier);
         
@@ -31,7 +31,7 @@ class MembershipLogService
             'new_annual_fee' => $tier?->annual_fee,
             'new_annual_fee_currency' => $tier?->annual_fee_currency,
             'new_expiry_date' => $member->membership_expires_at,
-            'status' => MembershipLog::STATUS_INITIAL,
+            'status' => $status,
             'changed_by' => $adminId,
             'metadata' => [
                 'initial_approval' => true,

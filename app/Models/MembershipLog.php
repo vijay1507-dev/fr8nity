@@ -52,6 +52,7 @@ class MembershipLog extends Model
     const ACTION_CHANGE_TIER = 'change_tier';
 
     // Status constants
+    const STATUS_APPROVE = 'approve';
     const STATUS_UPGRADE = 'upgrade';
     const STATUS_DOWNGRADE = 'downgrade';
     const STATUS_RENEWAL = 'renewal';
