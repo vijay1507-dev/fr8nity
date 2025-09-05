@@ -48,6 +48,7 @@ class MembershipLog extends Model
     const ACTION_CANCELLED = 'cancelled';
     const ACTION_EARLY_RENEWAL = 'early_renewal';
     const ACTION_UPDATE = 'update';
+    const ACTION_SUSPEND = 'suspend';
     const ACTION_PENDING = 'pending';
     const ACTION_CHANGE_TIER = 'change_tier';
 

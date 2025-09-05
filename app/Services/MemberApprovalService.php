@@ -136,7 +136,7 @@ class MemberApprovalService
         // Log the status change to suspended
         \App\Models\MembershipLog::create([
             'user_id' => $member->id,
-            'action' => \App\Models\MembershipLog::ACTION_UPDATE,
+            'action' => \App\Models\MembershipLog::ACTION_SUSPEND,
             'membership_tier_id' => $member->membership_tier,
             'previous_tier_name' => $member->membershipTier->name ?? 'N/A',
             'previous_membership_number' => $member->membership_number,
@@ -148,7 +148,7 @@ class MemberApprovalService
             'new_annual_fee' => $member->membershipTier->annual_fee ?? 'N/A',
             'new_annual_fee_currency' => $member->membershipTier->annual_fee_currency ?? 'USD',
             'new_expiry_date' => $member->membership_expires_at,
-            'status' => \App\Models\MembershipLog::STATUS_INITIAL,
+            'status' => \App\Models\MembershipLog::STATUS_PENDING,
             'reason' => 'Account suspended - login access revoked',
             'changed_by' => Auth::id() ?? 1,
             'metadata' => [
@@ -170,7 +170,7 @@ class MemberApprovalService
         // Update member status to approved and reactivate access (keep existing password)
         $member->update([
             'status' => User::STATUS_APPROVED,
-            'is_active' => true, // Reactivate access to website
+            'is_active' => true, 
         ]);
 
         // Log the reactivation from suspended status
