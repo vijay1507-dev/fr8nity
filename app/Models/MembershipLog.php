@@ -48,6 +48,7 @@ class MembershipLog extends Model
     const ACTION_CANCELLED = 'cancelled';
     const ACTION_EARLY_RENEWAL = 'early_renewal';
     const ACTION_UPDATE = 'update';
+    const ACTION_PENDING = 'pending';
     const ACTION_CHANGE_TIER = 'change_tier';
 
     // Status constants
@@ -55,6 +56,7 @@ class MembershipLog extends Model
     const STATUS_DOWNGRADE = 'downgrade';
     const STATUS_RENEWAL = 'renewal';
     const STATUS_INITIAL = 'initial';
+    const STATUS_PENDING = 'pending';
     const STATUS_CANCELLED = 'cancelled';
     const STATUS_EARLY_RENEWAL = 'early_renewal';
     const STATUS_RENEWED = 'renewed';

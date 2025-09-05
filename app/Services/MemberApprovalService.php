@@ -78,16 +78,15 @@ class MemberApprovalService
 
     public function setPendingMember(User $member): void
     {
-        // Update member status to pending and deactivate access
         $member->update([
             'status' => User::STATUS_PENDING,
-            'is_active' => false, // Deactivate access to website
+            'is_active' => false, 
         ]);
 
         // Log the status change to pending
         \App\Models\MembershipLog::create([
             'user_id' => $member->id,
-            'action' => \App\Models\MembershipLog::ACTION_UPDATE,
+            'action' => \App\Models\MembershipLog::ACTION_PENDING,
             'membership_tier_id' => $member->membership_tier,
             'previous_tier_name' => $member->membershipTier->name ?? 'N/A',
             'previous_membership_number' => $member->membership_number,
@@ -99,7 +98,7 @@ class MemberApprovalService
             'new_annual_fee' => $member->membershipTier->annual_fee ?? 'N/A',
             'new_annual_fee_currency' => $member->membershipTier->annual_fee_currency ?? 'USD',
             'new_expiry_date' => $member->membership_expires_at,
-            'status' => \App\Models\MembershipLog::STATUS_INITIAL, // Use initial status since member needs re-approval
+            'status' => \App\Models\MembershipLog::STATUS_PENDING, 
             'reason' => 'Status changed back to pending - requires re-approval',
             'changed_by' => Auth::id() ?? 1,
             'metadata' => [

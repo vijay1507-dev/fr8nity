@@ -417,7 +417,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-{{ $log->status_badge_class }}">{{ $log->status_label }}</span>
+                                                    <span class="bg-light text-dark">{{ $log->status_label }}</span>
                                                 </td>
                                                 <td>
                                                     @if($log->previous_tier_name && $log->new_tier_name && $log->previous_tier_name !== $log->new_tier_name)
