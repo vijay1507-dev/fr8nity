@@ -307,21 +307,26 @@ class DashboardService
      */
     private function getTierGrowthData(Carbon $startDate): array
     {
-        $upgrades = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
-            ->where('status', MembershipLog::STATUS_UPGRADE)
+        // Get the most recent tier change for each user in the period
+        // This ensures each user is counted only once based on their latest action
+        $latestTierChanges = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
+            ->where('created_at', '>=', $startDate)
             ->whereHas('user', function($query) {
                 $query->where('status', User::STATUS_APPROVED);
             })
-            ->distinct('user_id')
-            ->count('user_id');
+            ->whereIn('status', [MembershipLog::STATUS_UPGRADE, MembershipLog::STATUS_DOWNGRADE])
+            ->selectRaw('user_id, status, created_at')
+            ->orderBy('created_at', 'desc')
+            ->get()
+            ->groupBy('user_id')
+            ->map(function($userLogs) {
+                // Return only the most recent log for each user
+                return $userLogs->first();
+            });
 
-        $downgrades = MembershipLog::where('action', MembershipLog::ACTION_CHANGE_TIER)
-            ->where('status', MembershipLog::STATUS_DOWNGRADE)
-            ->whereHas('user', function($query) {
-                $query->where('status', User::STATUS_APPROVED);
-            })
-            ->distinct('user_id')
-            ->count('user_id');
+        // Count upgrades and downgrades from the latest changes per user
+        $upgrades = $latestTierChanges->where('status', MembershipLog::STATUS_UPGRADE)->count();
+        $downgrades = $latestTierChanges->where('status', MembershipLog::STATUS_DOWNGRADE)->count();
 
         return [
             'upgrades' => $upgrades,
@@ -367,12 +372,12 @@ class DashboardService
         }
 
         foreach ($tiers as $tier) {
-            // Get count of users for this tier within the specified period
+            // Get count of all currently active users for this tier
+            // Note: We don't filter by created_at here as we want to show current membership distribution
             $memberCount = User::where('role', User::MEMBER)
                 ->where('membership_tier', $tier->id)
                 ->where('status', 'approved') 
                 ->where('deleted_at', null)
-                ->where('created_at', '>=', $startDate) 
                 ->count();
 
             if (isset($fees[$tier->slug])) {

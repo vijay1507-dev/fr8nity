@@ -84,18 +84,32 @@ class MemberController extends Controller
             // Apply tier change filter (from dashboard)
             if ($request->filled('tier_change')) {
                 $period = $request->filled('period') ? (int)$request->period : 12;
+                $startDate = utcNow()->subMonths($period);
+                
+                // Get users with the most recent tier change matching the filter
+                $latestTierChanges = \App\Models\MembershipLog::where('action', \App\Models\MembershipLog::ACTION_CHANGE_TIER)
+                    ->where('created_at', '>=', $startDate)
+                    ->whereIn('status', [\App\Models\MembershipLog::STATUS_UPGRADE, \App\Models\MembershipLog::STATUS_DOWNGRADE])
+                    ->selectRaw('user_id, status, created_at')
+                    ->orderBy('created_at', 'desc')
+                    ->get()
+                    ->groupBy('user_id')
+                    ->map(function($userLogs) {
+                        // Return only the most recent log for each user
+                        return $userLogs->first();
+                    });
+
                 if ($request->tier_change === 'upgrade') {
-                    $data->whereHas('membershipLogs', function($query) use ($period) {
-                        $query->where('action', \App\Models\MembershipLog::ACTION_CHANGE_TIER)
-                              ->where('status', \App\Models\MembershipLog::STATUS_UPGRADE)
-                              ->where('created_at', '>=', utcNow()->subMonths($period));
-                    })->where('status', User::STATUS_APPROVED);
+                    $userIds = $latestTierChanges->where('status', \App\Models\MembershipLog::STATUS_UPGRADE)->pluck('user_id')->toArray();
                 } elseif ($request->tier_change === 'downgrade') {
-                    $data->whereHas('membershipLogs', function($query) use ($period) {
-                        $query->where('action', \App\Models\MembershipLog::ACTION_CHANGE_TIER)
-                              ->where('status', \App\Models\MembershipLog::STATUS_DOWNGRADE)
-                              ->where('created_at', '>=', utcNow()->subMonths($period));
-                    })->where('status', User::STATUS_APPROVED);
+                    $userIds = $latestTierChanges->where('status', \App\Models\MembershipLog::STATUS_DOWNGRADE)->pluck('user_id')->toArray();
+                }
+                
+                if (!empty($userIds)) {
+                    $data->whereIn('id', $userIds)->where('status', User::STATUS_APPROVED);
+                } else {
+                    // No users found with the specified tier change, return empty result
+                    $data->whereRaw('1 = 0');
                 }
             }
 
