@@ -367,11 +367,12 @@ class DashboardService
         }
 
         foreach ($tiers as $tier) {
-            // Get total count of active users for this tier (regardless of start date)
+            // Get count of users for this tier within the specified period
             $memberCount = User::where('role', User::MEMBER)
                 ->where('membership_tier', $tier->id)
-                ->where('status', 'approved') // Only approved members (not cancelled)
+                ->where('status', 'approved') 
                 ->where('deleted_at', null)
+                ->where('created_at', '>=', $startDate) 
                 ->count();
 
             if (isset($fees[$tier->slug])) {
