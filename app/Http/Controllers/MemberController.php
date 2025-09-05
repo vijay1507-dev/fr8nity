@@ -538,7 +538,7 @@ class MemberController extends Controller
         }
 
         $request->validate([
-            'cancellation_reason' => 'required|string|max:1000',
+            'cancellation_reason' => 'nullable|string|max:1000',
         ]);
 
         // Update member status to cancelled and deactivate access
@@ -547,7 +547,7 @@ class MemberController extends Controller
             'cancelled_at' => utcNow(),
             'cancellation_reason' => $request->cancellation_reason,
             'cancelled_by' => Auth::id(),
-            'is_active' => false, // Deactivate access to website
+            'is_active' => false, 
         ]);
 
         // Log the cancellation with previous membership details
@@ -560,11 +560,11 @@ class MemberController extends Controller
             'previous_annual_fee' => $member->membershipTier->annual_fee ?? 'N/A',
             'previous_annual_fee_currency' => $member->membershipTier->annual_fee_currency ?? 'USD',
             'previous_expiry_date' => $member->membership_expires_at,
-            'new_tier_name' => 'N/A', // Cancelled, so no new tier
-            'new_membership_number' => 'N/A', // Cancelled, so no new number
-            'new_annual_fee' => 'N/A', // Cancelled, so no new fee
-            'new_annual_fee_currency' => 'N/A',
-            'new_expiry_date' => null, // Cancelled, so no expiry date
+            'new_tier_name' => null, 
+            'new_membership_number' => null, 
+            'new_annual_fee' => null, 
+            'new_annual_fee_currency' => null,
+            'new_expiry_date' => null, 
             'status' => \App\Models\MembershipLog::STATUS_CANCELLED,
             'reason' => $request->cancellation_reason,
             'changed_by' => Auth::id(),
@@ -575,7 +575,7 @@ class MemberController extends Controller
             ],
         ]);
 
-        return redirect()->route('members.edit', $member)
+        return redirect()->back()
             ->with('success', 'Membership cancelled successfully.');
     }
 

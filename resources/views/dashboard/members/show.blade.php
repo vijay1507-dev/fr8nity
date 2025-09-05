@@ -391,7 +391,7 @@
                                         <tr>
                                             <th width="12%">Action</th>
                                             <th width="8%">Status</th>
-                                            <th width="12%">Tier Change</th>
+                                            <th width="12%">Tier</th>
                                             <th width="12%">Membership No.</th>
                                             <th width="10%">Annual Fee</th>
                                             <th width="10%">Valid Until</th>
@@ -508,17 +508,11 @@
                 <form action="{{ route('members.cancel-membership', $member) }}" method="POST">
                     @csrf
                     <div class="modal-body">
-                        <p class="mb-3">Are you sure you want to cancel this member's membership? This action will:</p>
-                        <ul class="text-danger">
-                            <li>Set their status to cancelled</li>
-                            <li>Deactivate their access to the website</li>
-                            <li>Log the cancellation with reason</li>
-                        </ul>
                         <div class="mb-3">
-                            <label for="cancellation_reason" class="form-label">Cancellation Reason <span class="text-danger">*</span></label>
+                            <label for="cancellation_reason" class="form-label">Cancellation Reason</label>
                             <textarea class="form-control @error('cancellation_reason') is-invalid @enderror" 
                                       id="cancellation_reason" name="cancellation_reason" rows="3" 
-                                      placeholder="Please provide a reason for cancellation..." required></textarea>
+                                      placeholder="Please provide a reason for cancellation..." ></textarea>
                             @error('cancellation_reason')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
