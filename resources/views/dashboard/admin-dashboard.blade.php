@@ -196,7 +196,7 @@
                         <div class="dashboard-card  p-0 h-100 d-flex flex-column">
                             <div class="row flex-grow-1">
                                 <h6 class="text-center pt-3">Inactive Members</h6>
-                                <div class="col-12 text-center p-4">
+                                <div class="col-12 text-center px-4">
                                     <img src="{{ asset('images/dashboardIcon5.svg') }}" alt="Inactive Members">
                                     <h2 class="mb-0 mt-3" id="inactive-members-count">{{ number_format($adminData['inactive_members'] ?? 0) }}</h2>
                                     <p class="pt-2">Active members with 0 points</p>
